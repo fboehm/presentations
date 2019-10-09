@@ -1,0 +1,9 @@
+---
+title: "README"
+author: "Frederick J. Boehm"
+date: "10/9/2019"
+output: github_document
+---
+
+I'm preparing materials for a 10-minute slides presentation on my phd thesis research.
+
