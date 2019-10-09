@@ -7,3 +7,5 @@ output: github_document
 
 I'm preparing materials for a 10-minute slides presentation on my phd thesis research.
 
+Presentation will occur at a webinar on October 17, 2019.
+
