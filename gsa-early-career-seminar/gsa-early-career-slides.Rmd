@@ -1,9 +1,8 @@
 ---
-title: "Presentation Ninja"
-subtitle: "⚔<br/>with xaringan"
-author: "Yihui Xie"
-institute: "RStudio, Inc."
-date: "2016/12/12 (updated: `r Sys.Date()`)"
+title: "Testing pleiotropy in multiparental populations"
+author: "Frederick Boehm (frederick.boehm@gmail.com)"
+institute: "University of Massachusetts Medical School"
+date: "October 17, 2019"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -12,77 +11,53 @@ output:
       highlightLines: true
       countIncrementalSlides: false
 ---
+class: center
 
-background-image: url(https://upload.wikimedia.org/wikipedia/commons/b/be/Sharingan_triple.svg)
+# Complex trait genetics
 
-```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE)
+```{r vitruvian, eval = FALSE, echo = FALSE}
+knitr::include_graphics(here::here("figs", "vitruvian-eleni.jpg"))
 ```
 
-???
 
-Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sharingan_triple.svg)
+.footnote[Image credit: Eleni Jaecklein]
 
----
-class: center, middle
 
-# xaringan
-
-### /ʃaː.'riŋ.ɡan/
-
----
-class: inverse, center, middle
-
-# Get Started
 
 ---
 
-# Hello World
+# Multiparental populations
 
-Install the **xaringan** package from [Github](https://github.com/yihui/xaringan):
+*include info about DO genomes*
+- Arise from more than two inbred founder lines
 
-```{r eval=FALSE, tidy=FALSE}
-devtools::install_github("yihui/xaringan")
-```
+- Example: Diversity Outbred mice
+  - 8 inbred founder lines
+    - 3 wild-derived lines
+    - 5 common laboratory lines
+  
+  
 
---
-
-You are recommended to use the [RStudio IDE](https://www.rstudio.com/products/rstudio/), but you do not have to.
-
-- Create a new R Markdown document from the menu `File -> New File -> R Markdown -> From Template -> Ninja Presentation`;<sup>1</sup>
-
---
-
-- Click the `Knit` button to compile it;
-
---
-
-- or use the [RStudio Addin](https://rstudio.github.io/rstudioaddins/)<sup>2</sup> "Infinite Moon Reader" to live preview the slides (every time you update and save the Rmd document, the slides will be automatically reloaded in RStudio Viewer.
-
-.footnote[
-[1] 中文用户请看[这份教程](http://slides.yihui.name/xaringan/zh-CN.html)
-
-[2] See [#2](https://github.com/yihui/xaringan/issues/2) if you do not see the template or addin in RStudio.
-]
-
----
-background-image: url(`r xaringan:::karl`)
-background-position: 50% 50%
-class: center, bottom, inverse
-
-# You only live once!
 
 ---
 
-# Hello Ninja
+# Pleiotropy 
 
-As a presentation ninja, you certainly should not be satisfied by the "Hello World" example. You need to understand more about two things:
 
-1. The [remark.js](https://remarkjs.com) library;
+---
 
-1. The **xaringan** package;
+# Testing pleiotropy
 
-Basically **xaringan** injected the chakra of R Markdown (minus Pandoc) into **remark.js**. The slides are rendered by remark.js in the web browser, and the Markdown source needed by remark.js is generated from R Markdown (**knitr**).
+- Applies when 2 traits map to approximately the same genomic region
+
+*include univariate QTL mapping results for Recla analysis*
+
+---
+
+# Testing pleiotropy
+
+
+
 
 ---
 
