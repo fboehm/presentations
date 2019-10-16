@@ -11,7 +11,6 @@ output:
       highlightLines: true
       countIncrementalSlides: false
 ---
-class: center
 
 # Complex trait genetics
 
@@ -28,21 +27,24 @@ knitr::include_graphics(here::here("figs", "vitruvian-mouse-eleni.jpg"))
 
 # Multiparental populations
 
-*include info about DO genomes*
 - Arise from more than two inbred founder lines
-
 - Example: Diversity Outbred mice
   - 8 inbred founder lines
     - 3 wild-derived lines
     - 5 common laboratory lines
+<<<<<<< HEAD
 
   
 ???
 Maybe use KB's genomes of DO mice figure here
+=======
+  
+???
 
----
+*include info about DO genomes*
+>>>>>>> 6e8bc5344a873b1cac293a7ac0dfe1f3b8383e45
 
-# Pleiotropy 
+
 
 - A single QTL affects two traits
 
@@ -51,6 +53,10 @@ Maybe use KB's genomes of DO mice figure here
 # Testing pleiotropy
 
 - Applies when 2 traits map to approximately the same genomic region
+- Null hypothesis: presence of one pleiotropic QTL
+- Alternative hypothesis: presence of two distinct QTL
+
+???
 
 *include univariate QTL mapping results for Recla analysis*
 
@@ -58,8 +64,28 @@ Maybe use KB's genomes of DO mice figure here
 
 # Testing pleiotropy
 
+<<<<<<< HEAD
 1. Univariate QTL scans to identify regions of interest
 1. Bivariate QTL scan for two traits with overlapping peaks
+=======
+
+---
+
+# Additional resources
+
+1. 2019 G3 paper: "Testing pleiotropy vs. separate QTL in multiparental populations". Boehm FJ, Chesler EJ, Yandell BS, Broman KW (https://www.g3journal.org/content/9/7/2317)
+1. `qtl2pleio` R package on Github: https://github.com/fboehm/qtl2pleio
+1. My email: frederick.boehm@gmail.com
+1. My website: https://fboehm.us
+
+
+---
+
+# References
+
+
+
+>>>>>>> 6e8bc5344a873b1cac293a7ac0dfe1f3b8383e45
 
 
 ---
