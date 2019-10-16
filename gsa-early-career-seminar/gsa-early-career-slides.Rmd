@@ -14,7 +14,7 @@ output:
 
 # Complex trait genetics
 
-```{r vitruvian, eval = TRUE, echo = FALSE, out.height=450, out.width=600}
+```{r vitruvian, echo = FALSE, out.height=450, out.width=600}
 knitr::include_graphics(here::here("figs", "vitruvian-mouse-eleni.jpg"))
 ```
 
@@ -25,7 +25,7 @@ knitr::include_graphics(here::here("figs", "vitruvian-mouse-eleni.jpg"))
 
 # Complex trait genetics
 
-```{r attie, eval = TRUE, echo = FALSE, out.height=450, out.width=600}
+```{r attie, echo = FALSE, out.height=450, out.width=600}
 knitr::include_graphics(here::here("figs", "mouse_on_chips.png"))
 ```
 
@@ -37,10 +37,10 @@ knitr::include_graphics(here::here("figs", "mouse_on_chips.png"))
 # Multiparental populations
 
 
-```{r mpp, eval = TRUE, echo = FALSE, out.height=400, out.width=600}
+```{r mpp, eval = TRUE, echo = FALSE, out.height=400}
 ##############################
 # HS (light background)
-# from kbroman/QTLfigs
+# from kbroman/QTLfigs on github
 ##############################
 
 n.lines <- 80
@@ -67,7 +67,7 @@ for(i in 1:8) {
 }
 
 set.seed(11716365)
-source("R/meiosis_func.R")
+source(here::here("R/meiosis_func.R"))
 gen <- vector("list", n.lines)
 for(i in 1:n.lines)
   gen[[i]] <- create.par(100, sample(1:8, 2))
@@ -213,7 +213,9 @@ text(u[1],yloc-20,expression(G[20]),adj=c(0,0.5))
 
 ```
 
-  
+.footnote[Image credit: Karl Broman]
+
+
 ???
 
 *include info about DO genomes*
@@ -243,19 +245,38 @@ text(u[1],yloc-20,expression(G[20]),adj=c(0,0.5))
 1. Univariate QTL scans to identify regions of interest
 1. Bivariate QTL scan for two traits with overlapping peaks
 
+$$\text{Test statistic} = \text{max}(\text{log likelihood}) - \text{max}(\text{log likelihood under pleiotropy})$$
+```{r load_tidyverse, echo = FALSE}
+suppressPackageStartupMessages(library(tidyverse))
+```
+
+```{r grid, echo = FALSE, out.width = 400, out.height = 400}
+trait1 <- paste0("marker", rep(1:4, each = 4))
+trait2 <- paste0("marker", rep(1:4, times = 4))
+tibble::tibble(trait1, trait2) %>%
+  dplyr::mutate(color = trait1 == trait2) %>%
+  ggplot() + geom_point(aes(trait1, trait2, colour = color)) + theme(legend.position = "none")
+```
+
+
+
+
 ---
 
-# Recla data
+# Recla analysis
 
 - 261 Diversity Outbred mice in behavioral genetics study
 - "hot plate latency" (57 cM) and "percent time in light" (55 cM) both map to Chr 8
+- Do they share a single QTL? 
+- Bootstrap p-value: 0.1
+
 
 ---
 
 # Future directions
 
 - More than two traits
-- Expression hotspot dissection
+- Expression trait hotspot dissection
 - Submit `qtl2pleio` R package to CRAN
 
 
