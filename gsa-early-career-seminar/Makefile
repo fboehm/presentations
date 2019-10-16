@@ -9,7 +9,7 @@ $(DOCNAME).html: $(DOCNAME).Rmd
 
 
 $(DOCNAME).pdf: $(DOCNAME).html
-	R -e "file <- paste0('file://', normalizePath('$^'));webshot::webshot(file, '$@', delay = 5)"
+	R -e "webshot::webshot('$^', '$@', delay = 15)"
 	
 clean:
 	rm -R $(DOCNAME)_files; rm $(DOCNAME).pdf; rm $(DOCNAME).html
