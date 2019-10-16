@@ -15,8 +15,8 @@ class: center
 
 # Complex trait genetics
 
-```{r vitruvian, eval = FALSE, echo = FALSE}
-knitr::include_graphics(here::here("figs", "vitruvian-eleni.jpg"))
+```{r vitruvian, eval = TRUE, echo = FALSE, out.height=450, out.width=600}
+knitr::include_graphics(here::here("figs", "vitruvian-mouse-eleni.jpg"))
 ```
 
 
@@ -35,14 +35,16 @@ knitr::include_graphics(here::here("figs", "vitruvian-eleni.jpg"))
   - 8 inbred founder lines
     - 3 wild-derived lines
     - 5 common laboratory lines
-  
-  
 
+  
+???
+Maybe use KB's genomes of DO mice figure here
 
 ---
 
 # Pleiotropy 
 
+- A single QTL affects two traits
 
 ---
 
@@ -56,7 +58,8 @@ knitr::include_graphics(here::here("figs", "vitruvian-eleni.jpg"))
 
 # Testing pleiotropy
 
-
+1. Univariate QTL scans to identify regions of interest
+1. Bivariate QTL scan for two traits with overlapping peaks
 
 
 ---
