@@ -1,0 +1,152 @@
+---
+main_topsize: 0.3 #percent coverage of the poster
+main_bottomsize: 0.1
+#ESSENTIALS
+title: '**Statistical power to detect QTL improves after inferring allelic series**'
+title_textsize: "60pt"
+author:
+  - name: '**Frederick J. Boehm**'
+    affil: 1
+    main: true
+    orcid: '0000-0002-1644-5931'
+    email: frederick.boehm@gmail.com
+  - name: Clare M. Smith
+    affil: 2
+  - name: Richard Baker
+    affil: 1
+  - name: Megan Proulx
+    affil: 1
+  - name: Daniel M. Gatti
+    affil: 3
+  - name: Michael Kiritsy
+    affil: 1
+  - name: Sherry Kurtz
+    affil: 4
+  - name: Karen Elkins
+    affil: 4
+  - name: Gillian Beamer
+    affil: 5
+  - name: Christopher M. Sassetti
+    affil: 1
+affiliation:
+  - num: 1
+    address: University of Massachusetts Medical School
+  - num: 2
+    address: Duke University
+  - num: 3
+    address: College of the Atlantic
+  - num: 4
+    address: U.S. Food and Drug Administration
+  - num: 5
+    address: Tufts University
+main_findings:
+  - "**Enhance QTL detection** with less flexible models **informed by allelic series**."
+logoleft_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
+logoright_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
+logocenter_name: qr-fboehmus.png
+output: 
+  posterdown::posterdown_betterport:
+    self_contained: false
+    pandoc_args: --mathjax
+    number_sections: false
+bibliography: packages.bib
+link-citations: true
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      tidy = FALSE,
+                      message = FALSE,
+                      fig.align = 'center',
+                      out.width = "100%")
+options(knitr.table.format = "html") 
+```
+
+# Introduction
+
+Systems genetics studies in model organisms have informed our understanding of biology and disease processes. 
+Multiparental crosses of more than two founders incorporate greater levels of genetic diversity than two-parent crosses.
+Two widely used mouse resources are the Collaborative Cross and Diversity Outbred mice. 
+Collaborative Cross includes approximately 60 inbred mouse lines, each of which incorporates DNA from eight founder lines.
+Diversity Outbred mice are outbred, highly heterozygous, and are genetic mosaics of the same eight founders.
+Quantitative trait locus (QTL) mapping studies have identified genetic loci affecting diverse traits, including phenotypes related to immune responses to *M. tuberculosis* infection, in Diversity Outbred and Collaborative Cross mice. 
+
+
+
+```{r, include=FALSE}
+knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
+```
+
+## Objectives
+
+1. Traditional QTL mapping in Diversity Outbred mice
+2. Infer allelic series at QTL
+3. QTL mapping, informed by allelic series, of same phenotypes in Collaborative Cross mice
+
+# Methods
+
+Widely used statistical models in QTL mapping in multiparental populations allow for each founder haplotype to have its own effect on trait values.
+
+$$
+Y = x_1\beta_1 + x_2\beta_2 + x_3\beta_3 + x_4\beta_4 + \\
+x_5\beta_5 + x_6\beta_6 + x_7\beta_7 + x_8\beta_8 + \epsilon
+$$
+
+However, many QTL have fewer than eight alleles in the Diversity Outbred and Collaborative Cross. Allelic series provides tells us the number of alleles and which founder haplotypes have which alleles. 
+
+If a QTL in Diversity Outbred or Collaborative Cross mice has only three alleles, we may model its trait as:
+
+$$
+Y = p_1\beta_1 + p_2\beta_2 + p_3\beta_3 + \epsilon
+$$
+
+
+
+
+To reference a citation you can add your `.bib` file to the working directory and name it in the YAML metadata or generate an automated one as done here, then you only need to reference the label value in the `.bib` file. For example this package is built on top of the wonderful {pagedown} package and I will cite it at the end of this sentance using this in the rmd `[@R-pagedown]` [@R-pagedown].
+
+To get a better understanding of how to include features like these please refer to the {posterdown} [wiki](https://github.com/posterdown/wiki).
+
+**_Now on to the results!_**
+
+# Results
+
+Here you may have some figures to show off, bellow I have made a scatterplot with the infamous Iris dataset and I can even reference to the figure automatically like this, `Figure \@ref(fig:irisfigure)`, Figure \@ref(fig:irisfigure).
+
+```{r, irisfigure, fig.cap='Here is a caption for the figure. This can be added by using the "fig.cap" option in the r code chunk options, see this [link](https://yihui.name/knitr/options/#plots) from the legend himself, [Yihui Xie](https://twitter.com/xieyihui).', out.width="80%"}
+par(mar=c(2,2,0,1))
+plot(x = iris$Sepal.Length, y = iris$Sepal.Width,
+     col = iris$Species, pch = 19, xlab = "Sepal Length",
+     ylab = "Sepal Width")
+```
+
+Maybe you want to show off some of that fancy code you spent so much time on to make that figure, well you can do that too! Just use the `echo=TRUE` option in the r code chunk options, Figure \@ref(fig:myprettycode)!
+
+```{r myprettycode, echo=TRUE, fig.cap='Boxplots, so hot right now!', fig.height=6, out.width="80%"}
+#trim whitespace
+par(mar=c(2,2,0,0))
+#plot boxplots
+boxplot(iris$Sepal.Width~iris$Species,
+        col = "#008080", 
+        border = "#0b4545",
+        ylab = "Sepal Width (cm)",
+        xlab = "Species")
+```
+
+How about a neat table of data? See, Table \@ref(tab:iristable):
+
+```{r, iristable}
+knitr::kable(
+  iris[1:15,1:5], format = "html",
+  caption = "A table made with the **knitr::kable** function.",
+  align = "c", col.names = c("Sepal <br> Length",
+                             "Sepal <br> Width",
+                             "Petal <br> Length",
+                             "Petal <br> Width",
+                             "Species"),
+  escape = FALSE)
+```
+
+# References
+
