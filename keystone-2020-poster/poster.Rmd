@@ -10,6 +10,7 @@ author:
     main: true
     orcid: '0000-0002-1644-5931'
     email: frederick.boehm@gmail.com
+    website: https://fboehm.us
   - name: Clare M. Smith
     affil: 2
   - name: Richard Baker
