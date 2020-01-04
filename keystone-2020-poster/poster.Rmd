@@ -1,4 +1,6 @@
 ---
+poster_width: "36in"
+poster_height: "48in"
 main_topsize: 0.3 #percent coverage of the poster
 main_bottomsize: 0.1
 #ESSENTIALS
@@ -73,6 +75,9 @@ Collaborative Cross includes approximately 60 inbred mouse lines, each of which 
 Diversity Outbred mice are outbred, highly heterozygous, and are genetic mosaics of the same eight founders.
 Quantitative trait locus (QTL) mapping studies have identified genetic loci affecting diverse traits, including phenotypes related to immune responses to *M. tuberculosis* infection, in Diversity Outbred and Collaborative Cross mice. 
 
+```{r vitruvian}
+knitr::include_graphics("../figs/vitruvian-mouse-eleni.jpg")
+```
 
 
 ```{r, include=FALSE}
