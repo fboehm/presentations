@@ -8,7 +8,7 @@ $(DOCNAME).html: $(DOCNAME).Rmd
 	R -e "rmarkdown::render('$<')"
 
 $(DOCNAME).pdf: $(DOCNAME).html
-	R -e "pagedown::chrome_print(input = 'poster.html', )"
+	R -e "pagedown::chrome_print(input = 'poster.html')"
 
 
 clean:
