@@ -299,7 +299,8 @@ Wesley Crouse and colleagues developed a Bayesian method called "Tree-based Infe
 
 We recode founder allele probabilities according to allelic series. For example, in the case above where we have three alleles represented among the eight founders, let's suppose that the allelic series tells us that founders A, B, and C share allele 1, D and E share allele 2, and F, G, and H share allele 3. We can then relate the probabilities as:
 
-$$p_1 = p_A + p_B + p_C \\
+$$
+p_1 = p_A + p_B + p_C \\
 p_2 = p_D + p_E \\
 p_3 = p_F + p_G + p_H
 $$
