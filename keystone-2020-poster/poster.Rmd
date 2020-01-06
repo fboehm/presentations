@@ -5,7 +5,7 @@ main_bottomsize: 0.1
 title: '**Statistical power to detect QTL improves after inferring allelic series**'
 title_textsize: "60pt"
 author:
-  - name: '**Frederick J. Boehm**'
+  - name: '**Frederick J. Boehm**'  
     affil: 1
     main: true
     orcid: '0000-0002-1644-5931'
