@@ -1,11 +1,17 @@
 ---
 poster_width: "36in"
-poster_height: "48in"
+poster_height: "44in"
 main_topsize: 0.25 #percent coverage of the poster
 main_bottomsize: 0.1
 #ESSENTIALS
 title: '**Statistical power to detect QTL improves after inferring allelic series**'
 title_textsize: "60pt"
+primary_colour: "#30A9E5"
+secondary_colour: "#0A7FB9"
+accent_colour: "#074869"
+logoleft_name: ""	
+logoright_name: "../figs/umasslogoformal.gif"
+body_textsize: "50px"
 author:
   - name: '**Frederick J. Boehm**'  
     affil: 1
@@ -44,8 +50,6 @@ affiliation:
     address: Tufts University
 main_findings:
   - "**Enhance QTL detection** with less flexible models **informed by allelic series**."
-logoleft_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
-logoright_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
 logocenter_name: qr-fboehmus.png
 output: 
   posterdown::posterdown_betterport:
@@ -85,7 +89,7 @@ Quantitative trait locus (QTL) mapping studies have identified genetic loci affe
 knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
 ```
 
-```{r mpp, eval = TRUE, echo = FALSE, out.height=400, out.width="65%"}
+```{r mpp, eval = TRUE, echo = FALSE, out.height=400, out.width="85%"}
 ##############################
 # HS (light background)
 # from kbroman/QTLfigs on github
@@ -280,7 +284,7 @@ Y = p_A\beta_A + p_B\beta_B + p_C\beta_C + p_D\beta_D + \\
 p_E\beta_E + p_F\beta_F + p_G\beta_G + p_H\beta_H + \epsilon
 $$
 
-However, many QTL have fewer than eight alleles in the Diversity Outbred and Collaborative Cross mice. Allelic series tells us the number of alleles and which founder haplotypes have which alleles. 
+However, many QTL presumably have fewer than eight alleles in the Diversity Outbred and Collaborative Cross mice. Allelic series tells us the number of alleles and which founder haplotypes have which alleles. 
 
 If a QTL in Diversity Outbred or Collaborative Cross mice has only three alleles, we may model its trait as:
 
@@ -307,11 +311,20 @@ $$
 With the numeric values of $p_1$, $p_2$, and $p_3$, we perform standard QTL mapping across the genome. 
 
 
+# Anticipated results
+
+We expect that our approach to mapping QTL in Collaborative Cross mice is more powerful than traditional methods that allow for eight distinct alleles. However, such power enhancements rely on accurate inference of the allelic series. 
+
+# Next steps
+
+1. Characterize power enhancements with simulated traits
+1. Investigate methods for inferring allelic series
+1. Apply methods to Mtb-related traits in Diversity Outbred and Collaborative Cross mice
 
 
-# Results
 
-  
+
+
 
 
 # References
