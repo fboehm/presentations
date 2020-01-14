@@ -11,7 +11,7 @@ secondary_colour: "#0A7FB9"
 accent_colour: "#074869"
 logoleft_name: ""	
 logoright_name: "../figs/umasslogoformal.gif"
-body_textsize: "50px"
+body_textsize: "49.5px"
 author:
   - name: '**Frederick J. Boehm**'  
     affil: 1
@@ -72,7 +72,7 @@ options(knitr.table.format = "html")
 
 # Introduction
 
-```{r vitruvian}
+```{r vitruvian, fig.cap="Image courtesy of Eleni Jacklein."}
 knitr::include_graphics("../figs/vitruvian-mouse-eleni.jpg")
 ```
 
@@ -89,7 +89,7 @@ Quantitative trait locus (QTL) mapping studies have identified genetic loci affe
 knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
 ```
 
-```{r mpp, eval = TRUE, echo = FALSE, out.height=400, out.width="85%"}
+```{r mpp, eval = TRUE, echo = FALSE, out.height=400, out.width="85%", fig.cap = "Haplotype size decreases as generation number increases in Diversity Outbred mice."}
 ##############################
 # HS (light background)
 # from kbroman/QTLfigs on github
