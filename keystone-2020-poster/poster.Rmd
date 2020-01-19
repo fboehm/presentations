@@ -302,7 +302,7 @@ We recode founder allele probabilities according to allelic series. For example,
 $$p_1 = p_A + p_B + p_C \\
 p_2 = p_D + p_E \\
 p_3 = p_F + p_G + p_H
-$$
+$$ 
 With the numeric values of $p_1$, $p_2$, and $p_3$, we perform standard QTL mapping across the genome. 
 
 
