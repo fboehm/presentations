@@ -1,0 +1,26 @@
+---
+title: "BCG vaccine effects in DO mice"
+output: powerpoint_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Study design
+
+- Nearly 1000 DO mice
+- Vaccinated and unvaccinated are challenged with Mtb
+- Measured lung CFU, spleen CFU, lung histopathology, and body weight
+- In nearly 100 vaccinated mice, obtained blood samples (pre- and post-vaccination) for RNA seq analysis
+
+## Follow-up plans
+
+- Align reads to individual DO genomes
+- Quantify reads and calculate quantitative traits for QTL mapping
+- Compare and integrate results with CC QTL mapping
+  - Do RNAseq peaks overlap with peaks in CC? 
+  
+  
+
+
