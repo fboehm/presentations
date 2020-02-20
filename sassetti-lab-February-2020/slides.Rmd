@@ -1,5 +1,5 @@
 ---
-title: "Presentation Ninja"
+title: "Inferring QTL allelic series in multiparental populations"
 subtitle: "⚔<br/>with xaringan"
 author: "Fred Boehm"
 institute: "U. Mass. Medical School"
@@ -13,22 +13,18 @@ output:
       countIncrementalSlides: false
 ---
 
-background-image: url(https://upload.wikimedia.org/wikipedia/commons/b/be/Sharingan_triple.svg)
 
-```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE)
+# What is allelic series? 
+
+- Multiparental populations, like the CC & DO, have more than two founders
+- QTL exhibit contrasts in allele effects
+
+```{r}
+# setup Recla analysis
+
 ```
 
-???
 
-Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sharingan_triple.svg)
-
----
-class: center, middle
-
-# xaringan
-
-### /ʃaː.'riŋ.ɡan/
 
 ---
 class: inverse, center, middle
