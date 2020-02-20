@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Study design
 
-
+  
 
 
 - Nearly 1000 DO mice
