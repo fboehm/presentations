@@ -102,35 +102,6 @@ plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, m
 # Early results
 
 
-```{r}
-# prep for call to mcmc function
-config <- matrix(data = c(1, 0, 0, 
-                          1, 0, 0, 
-                          1, 0, 0, 
-                          0, 1, 0, 
-                          1, 0, 0, 
-                          1, 0, 0,
-                          0, 0, 1, 
-                          0, 0, 1), 
-                 nrow = 8, ncol = 3, byrow = TRUE)
-# find peak position
-chr8_peak <- out[ , 10, drop = FALSE] %>%
-  qtl2::find_peaks(map = pseudomap) %>%
-  dplyr::filter(chr == 8) %>%
-  dplyr::mutate(peak_index = which(pseudomap$`8` == pos))
-# discard subjects with missingness
-missing <- is.na(wlph[ , 10])
-aa <- aprobs$`8`[ !missing, , chr8_peak$peak_index]
-tr <- wlph[ !missing, 10, drop = FALSE]
-# call to mcmc function
-m_out <- reducedscan::jannink_mcmc(initial_values = list(configuration = config, 
-                                                         effects = c(-0.1, -0.7, 0.6), 
-                                                         residual_variance = 1
-                                                ), 
-                                  genoprobs = aa, 
-                                  trait = tr 
-                                  )
-```
 
 
 ---
