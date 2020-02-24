@@ -1,6 +1,5 @@
 ---
-title: "Inferring QTL allelic series in multiparental populations"
-subtitle: "⚔<br/>with xaringan"
+title: "Enhancing QTL mapping power with allelic series"
 author: "Fred Boehm"
 institute: "U. Mass. Medical School"
 date: "February 26, 2020 (updated: `r Sys.Date()`)"
@@ -32,7 +31,7 @@ p_{G}b_G +
 p_{H}b_H + 
 \epsilon$$
 
-
+---
 
 # What are allele effects?
 
@@ -41,7 +40,7 @@ p_{H}b_H +
 - Thus, in DO and CC, some QTL have fewer than 8 alleles
 
 
-
+---
 
 # What are allele effects?
 
@@ -50,9 +49,7 @@ p_{H}b_H +
 
 ```{r, echo = FALSE}
 # setup Recla analysis
-library(dplyr)
-library(ggplot2)
-library(qtl2pleio)
+library(magrittr)
 library(qtl2)
 file <- paste0("https://raw.githubusercontent.com/rqtl/",
                "qtl2data/master/DO_Recla/recla.zip")
@@ -62,13 +59,13 @@ recla[[6]][ , 1, drop = FALSE] -> sex
 # insert pseudomarkers
 insert_pseudomarkers(recla, step = 0.10) -> pseudomap
 gm <- pseudomap$`8`
-probs <- calc_genoprob(recla, map = pseudomap, cores = 1)
+probs <- calc_genoprob(recla, map = pseudomap, cores = 0)
 aprobs <- genoprob_to_alleleprob(probs)
 kinship <- calc_kinship(aprobs, "loco")
 recla$pheno -> ph
 log(ph) -> lph
 apply(FUN = broman::winsorize, X = lph, MARGIN = 2) -> wlph
-as_tibble(wlph) -> wlph_tib
+tibble::as_tibble(wlph) -> wlph_tib
 sex2 <- matrix(as.numeric(sex == "female"), ncol = 1)
 colnames(sex2) <- "female"
 rownames(sex2) <- rownames(aprobs[[1]])
@@ -76,14 +73,17 @@ out <- scan1(genoprobs = aprobs,
              pheno = wlph, 
              kinship = kinship, 
              addcovar = sex2, 
-             reml = TRUE
+             reml = TRUE,
+             cores = 0
              )
 scan1coef(aprobs[ , 8], pheno = wlph[ , 10], kinship = kinship$`8`, 
           reml = TRUE,
-          addcovar = sex2) -> s1c_10
+          addcovar = sex2,
+          cores = 0) -> s1c_10
 scan1coef(aprobs[ , 8], pheno = wlph[ , 22], kinship = kinship$`8`, 
           reml = TRUE,
-          addcovar = sex2) -> s1c_22
+          addcovar = sex2,
+          cores = 0) -> s1c_22
 # subset scan1output objects
 s1c_10s <- s1c_10[650:999, ] 
 # 650:999 is the same as the interval for the two-dimensional scan.
@@ -96,7 +96,7 @@ plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, m
 # Methods for inferring allelic series in QTL studies
 
 1. Parametric bayesian methods [@jannink2003estimating; @wu2004optimal]
-1. Nonparametric bayesian methods, such as TIMBR (Crouse, et al. forthcoming)
+1. Nonparametric bayesian methods, such as TIMBR (Crouse, et al., forthcoming)
 
 
 ---
@@ -111,6 +111,9 @@ plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, m
 ## Negatives
 
 - Details of methods aren't yet reported
+- Sensitivity to prior specification
+- Default input is 36-state genotype probabilities
+
 
 
 ---
@@ -124,9 +127,118 @@ plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, m
 
 # TIMBR examples
 
+```{r loadpkgs}
+library(magrittr)
+library(TIMBR)
+PATH_TO_DATA <- "/home/fred/work/research/qtl2effects/data"
+```
+
+```{r read-csv}
+(peaks <- readr::read_csv(file.path(PATH_TO_DATA, "clinical_suggestive_peak_info.csv")))
+traits <- readr::read_csv(file.path(PATH_TO_DATA, "pheno_all_clinical_v4_suggestive.csv")) %>%
+  rename(mouse_id = X1)
+```
+
+```{r load-genotypes}
+fns <- dir(file.path(PATH_TO_DATA, "36-state-genotypes"))
+geno <- list()
+for (i in seq_along(fns)){
+  load(file.path(file.path(PATH_TO_DATA, "36-state-genotypes", fns[i])))
+  geno[[i]] <- prsmth
+}
+names(geno) <- stringr::str_split_fixed(fns, ".genotype.probs.Rdata", 2)[, 1]
+```
 
 
+```{r prior_M-define}
+##### From GK example code
+# Specify allelic series prior
+# Suggested by Wes
+# Influences how much prior weight it places on more or less complicated allelic series
+#prior_M <- list(model.type = "crp", # crp - Chinese Restaurant Process
+#                prior.alpha.type = "gamma",
+#                prior.alpha.shape = 1,
+#                prior.alpha.rate = 2.333415)
 
+# a second prior that Wes suggested
+# it places only 0.05 prior weight on there being exactly one allele
+prior_M <- list(model.type = "crp",
+                prior.alpha.type = "gamma",
+                prior.alpha.shape = 2.3009322,
+                prior.alpha.rate = 0.7488104)
+```
+
+
+```{r load-covariates}
+load(file.path(PATH_TO_DATA, "reduced_map_qtl2_mapping_objects.Rdata"))
+```
+
+
+```{r timbr}
+res_fn <- "../data/timbr-results-group-meeting-February-2020.rds"
+if (!file.exists(res_fn)){
+  data(mcv.data) # get A matrix - from TIMBR package
+  results <- list()
+  peak_num <- 1
+  # get genotypes
+  foo <- peaks %>%
+    dplyr::select(probe) %>%
+    filter(probe == probe[peak_num]) %>%
+    purrr::map(.f = function(probe) {
+      lapply(X = geno, 
+             FUN = function(gg) gg[rownames(gg) %in% probe, drop = FALSE]
+             )
+      }
+             ) %>%
+    bind_cols() %>%
+    as.matrix() %>%
+    t() %>%
+    as.data.frame() %>%
+    tibble::as_tibble() %>%
+    dplyr::mutate(mouse_id = names(geno)) %>%
+    (function(x){colnames(x)[1:36] <- colnames(geno[[1]]); return(x)}) %>%
+    dplyr::inner_join(traits, by = "mouse_id")
+  # covariates
+  dat <- addcovar %>%
+    tibble::as_tibble() %>%
+    dplyr::mutate(mouse_id = rownames(addcovar)) %>%
+    dplyr::inner_join(foo, by = "mouse_id")
+    
+  # define prior_d
+  prior_d <- list(P = dat %>%
+                    dplyr::select(AA:GH) %>%
+                    as.matrix() %>%
+                    (function(x){rownames(x) <- dat$mouse_id; return(x)}),
+                  A = mcv.data$prior.D$A, # Describes the mapping from full genoprobs to additive dosages
+                  fixed.diplo = FALSE)
+  yy <- dat %>%
+    dplyr::select(peaks$lodcolumn[peak_num]) %>%
+    as.matrix() # Order needs to match genoprobs
+  
+  ## TIMBR calls
+  set.seed(2020-01-15)
+  for (i in 1:10){
+    results[[i]] <- TIMBR(y = yy,
+                     
+                     Z = cbind(1, as.numeric(dat$block2), as.numeric(dat$block3)), 
+                   prior.D = prior_d,
+                   prior.M = prior_M)
+  
+  }
+  saveRDS(results, res_fn)
+} else {
+  results <- readRDS(res_fn)
+}
+
+```
+
+```{r}
+TIMBR::TIMBR.plot.haplotypes(results[[1]])
+```
+
+```{r}
+results[1] %>% purrr::map(.f = function(x)head(x$p.M.given.y))
+```
 
 ---
 
@@ -134,34 +246,40 @@ plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, m
 
 - Knowing allelic series in one cohort, like CC, may inform QTL mapping in a second cohort, like DO (and vice versa)
 
-- Use allelic series to "collapse" n by 8 founder allele probabilities matrices to n by l allele probabilities matrices
+- Use allelic series to "collapse" $n$ by $8$ founder allele probabilities matrices to $n$ by $l$ allele probabilities matrices
     - Enhance statistical power to detect QTL
 
 
 
 
 
+???
 
+$l< 8$
 
 
 ---
 
 # Our goals for applying TIMBR
 
-1. Infer allelic series at QTL in Diversity Outbred mice
-
 
 ---
 
 # Diversity Outbred data
 
+- Kurtz and Elkins have shared their genotypes and phenotypes for DO mice
+
+```{r}
 
 
 
+```
 
----
 
 
+???
+
+- Sometimes, publicly available DO data includes only founder allele probabilities and not 36-state probabilities
 
 
 
