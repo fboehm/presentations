@@ -269,11 +269,6 @@ $l< 8$
 
 - Kurtz and Elkins have shared their genotypes and phenotypes for DO mice
 
-```{r}
-
-
-
-```
 
 
 
