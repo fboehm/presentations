@@ -15,6 +15,8 @@ output:
 ---
 
 
+
+
 # What are allele effects? 
 
 - In CC and DO, we work with 8 founder allele probabilities
@@ -95,6 +97,72 @@ plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, m
 
 1. Parametric bayesian methods [@jannink2003estimating; @wu2004optimal]
 1. Nonparametric bayesian methods, such as TIMBR (Crouse, et al. forthcoming)
+
+
+---
+
+# TIMBR
+
+## Positives
+
+- Software is publicly available 
+- Authors are accessible and helpful
+
+## Negatives
+
+- Details of methods aren't yet reported
+
+
+---
+
+# TIMBR's goals
+
+- Infer allelic series (number of alleles and configuration among founders)
+- Estimate allele effects
+
+---
+
+# TIMBR examples
+
+
+
+
+
+---
+
+# Importance of inferring allelic series
+
+- Knowing allelic series in one cohort, like CC, may inform QTL mapping in a second cohort, like DO (and vice versa)
+
+- Use allelic series to "collapse" n by 8 founder allele probabilities matrices to n by l allele probabilities matrices
+    - Enhance statistical power to detect QTL
+
+
+
+
+
+
+
+
+---
+
+# Our goals for applying TIMBR
+
+1. Infer allelic series at QTL in Diversity Outbred mice
+
+
+---
+
+# Diversity Outbred data
+
+
+
+
+
+---
+
+
+
 
 
 ---
