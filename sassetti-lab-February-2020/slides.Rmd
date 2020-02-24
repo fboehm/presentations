@@ -155,9 +155,9 @@ plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, m
 
 # Diversity Outbred data
 
+```{r}
 
-
-
+```
 
 ---
 
