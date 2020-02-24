@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Inferring QTL allelic series in multiparental populations</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fred Boehm" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Inferring QTL allelic series in multiparental populations
+## ⚔<br/>with xaringan
+### Fred Boehm
+### U. Mass. Medical School
+### February 26, 2020 (updated: 2020-02-24)
+
+---
+
+
+
+
+
+# What are allele effects? 
+
+- In CC and DO, we work with 8 founder allele probabilities
+
+
+`$${Trait} = p_{A}b_A +  
+p_{B}b_B +
+p_{C}b_C +
+p_{D}b_D +
+p_{E}b_E +
+p_{F}b_F +
+p_{G}b_G +
+p_{H}b_H + 
+\epsilon$$`
+
+---
+
+# What are allele effects?
+
+- Standard QTL methods allow for every founder to have its own allele
+- However, founders often share alleles
+- Thus, in DO and CC, some QTL have fewer than 8 alleles
+
+
+---
+
+# What are allele effects?
+
+- QTL exhibit contrasts in allele effects
+- How many alleles are present here? 
+
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+![](slides_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+
+---
+
+# Methods for inferring allelic series in QTL studies
+
+1. Parametric bayesian methods [@jannink2003estimating; @wu2004optimal]
+1. Nonparametric bayesian methods, such as TIMBR (Crouse, et al. forthcoming)
+
+
+---
+
+# TIMBR
+
+## Positives
+
+- Software is publicly available 
+- Authors are accessible and helpful
+
+## Negatives
+
+- Details of methods aren't yet reported
+- Sensitive to prior specification
+- Default input is 36-state genotype probabilities
+
+
+
+---
+
+# TIMBR's goals
+
+- Infer allelic series (number of alleles and configuration among founders)
+- Estimate allele effects
+
+---
+
+# TIMBR examples
+
+
+```r
+library(tidyverse)
+```
+
+```
+## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+```
+
+```
+## ✓ tibble  2.1.3     ✓ purrr   0.3.3
+## ✓ tidyr   1.0.0     ✓ stringr 1.4.0
+## ✓ readr   1.3.1     ✓ forcats 0.4.0
+```
+
+```
+## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter()   masks stats::filter()
+## x dplyr::lag()      masks stats::lag()
+## x readr::read_csv() masks qtl2::read_csv()
+```
+
+```r
+library(TIMBR)
+PATH_TO_DATA &lt;- "/home/fred/work/research/qtl2effects/data"
+```
+
+
+```r
+(peaks &lt;- readr::read_csv(file.path(PATH_TO_DATA, "clinical_suggestive_peak_info.csv")))
+```
+
+```
+## Warning: Missing column names filled in: 'X1' [1]
+```
+
+```
+## Parsed with column specification:
+## cols(
+##   X1 = col_double(),
+##   lodindex = col_double(),
+##   lodcolumn = col_character(),
+##   chr = col_double(),
+##   pos = col_double(),
+##   lod = col_double(),
+##   Pval = col_double(),
+##   probe = col_character(),
+##   Mb = col_double()
+## )
+```
+
+```
+## # A tibble: 17 x 9
+##       X1 lodindex lodcolumn   chr   pos   lod   Pval probe          Mb
+##    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+##  1     7       12 IL9           2  12.0  7.85 0.123  UNC2746217   24.6
+##  2     8       12 IL9           2  21.1  8.62 0.045  ICR1006      41.5
+##  3     1        1 spleenCFU     2  87.7  7.04 0.218  UNCHS007866 174. 
+##  4     9       13 IL10          2  87.7  6.85 0.269  UNCHS007866 174. 
+##  5     2        2 spleenCEQ     2  89.2  9.15 0.0226 UNCHS007879 178. 
+##  6    16       27 VEGF          3  55.1  6.86 0.294  UNC6249945  131. 
+##  7    17       27 VEGF          4  73.0  6.83 0.303  UNCHS013373 154. 
+##  8    14       18 LIX           7  10.5  6.75 0.309  UNC12572462  30.4
+##  9    12       16 KC            7  10.8  6.84 0.280  JAX00634558  30.5
+## 10    15       18 LIX           7  13.7  6.78 0.299  UNC12626190  36.1
+## 11     3        3 lungCFU       7  16.1  7.47 0.113  UNC12652997  37.8
+## 12    13       16 KC            7  20.1  7.57 0.104  UNC12727835  45.2
+## 13    11       14 IL17         15  29.1  7.84 0.0514 UNC25887889  74.1
+## 14     4        3 lungCFU      15  31.0  7.13 0.181  UNCHS040935  78.2
+## 15     5        9 IL1B         17  14.1  6.80 0.276  UNCHS044121  31.6
+## 16    10       13 IL10         17  47.4  7.16 0.180  UNC28470258  82.5
+## 17     6       10 IL2          18  21.0  7.04 0.212  UNC29225900  49.4
+```
+
+```r
+traits &lt;- readr::read_csv(file.path(PATH_TO_DATA, "pheno_all_clinical_v4_suggestive.csv")) %&gt;%
+  rename(mouse_id = X1)
+```
+
+```
+## Warning: Missing column names filled in: 'X1' [1]
+```
+
+```
+## Parsed with column specification:
+## cols(
+##   X1 = col_character(),
+##   spleenCFU = col_double(),
+##   spleenCEQ = col_double(),
+##   lungCFU = col_double(),
+##   IL1B = col_double(),
+##   IL2 = col_double(),
+##   IL9 = col_double(),
+##   IL10 = col_double(),
+##   IL17 = col_double(),
+##   KC = col_double(),
+##   LIX = col_double(),
+##   VEGF = col_double()
+## )
+```
+
+
+```r
+fns &lt;- dir(file.path(PATH_TO_DATA, "36-state-genotypes"))
+geno &lt;- list()
+for (i in seq_along(fns)){
+  load(file.path(file.path(PATH_TO_DATA, "36-state-genotypes", fns[i])))
+  geno[[i]] &lt;- prsmth
+}
+names(geno) &lt;- stringr::str_split_fixed(fns, ".genotype.probs.Rdata", 2)[, 1]
+```
+
+
+
+```r
+##### From GK example code
+# Specify allelic series prior
+# Suggested by Wes
+# Influences how much prior weight it places on more or less complicated allelic series
+#prior_M &lt;- list(model.type = "crp", # crp - Chinese Restaurant Process
+#                prior.alpha.type = "gamma",
+#                prior.alpha.shape = 1,
+#                prior.alpha.rate = 2.333415)
+
+# a second prior that Wes suggested
+# it places only 0.05 prior weight on there being exactly one allele
+prior_M &lt;- list(model.type = "crp",
+                prior.alpha.type = "gamma",
+                prior.alpha.shape = 2.3009322,
+                prior.alpha.rate = 0.7488104)
+```
+
+
+
+```r
+load(file.path(PATH_TO_DATA, "reduced_map_qtl2_mapping_objects.Rdata"))
+```
+
+
+
+```r
+res_fn &lt;- "../data/timbr-results-group-meeting-February-2020.rds"
+if (!file.exists(res_fn)){
+  data(mcv.data) # get A matrix - from TIMBR package
+  results &lt;- list()
+  peak_num &lt;- 1
+  # get genotypes
+  foo &lt;- peaks %&gt;%
+    dplyr::select(probe) %&gt;%
+    filter(probe == probe[peak_num]) %&gt;%
+    purrr::map(.f = function(probe) {
+      lapply(X = geno, 
+             FUN = function(gg) gg[rownames(gg) %in% probe, drop = FALSE]
+             )
+      }
+             ) %&gt;%
+    bind_cols() %&gt;%
+    as.matrix() %&gt;%
+    t() %&gt;%
+    as.data.frame() %&gt;%
+    tibble::as_tibble() %&gt;%
+    dplyr::mutate(mouse_id = names(geno)) %&gt;%
+    (function(x){colnames(x)[1:36] &lt;- colnames(geno[[1]]); return(x)}) %&gt;%
+    dplyr::inner_join(traits, by = "mouse_id")
+  # covariates
+  dat &lt;- addcovar %&gt;%
+    tibble::as_tibble() %&gt;%
+    dplyr::mutate(mouse_id = rownames(addcovar)) %&gt;%
+    dplyr::inner_join(foo, by = "mouse_id")
+    
+  # define prior_d
+  prior_d &lt;- list(P = dat %&gt;%
+                    dplyr::select(AA:GH) %&gt;%
+                    as.matrix() %&gt;%
+                    (function(x){rownames(x) &lt;- dat$mouse_id; return(x)}),
+                  A = mcv.data$prior.D$A, # Describes the mapping from full genoprobs to additive dosages
+                  fixed.diplo = FALSE)
+  yy &lt;- dat %&gt;%
+    dplyr::select(peaks$lodcolumn[peak_num]) %&gt;%
+    as.matrix() # Order needs to match genoprobs
+  
+  ## TIMBR calls
+  set.seed(2020-01-15)
+  for (i in 1:10){
+    results[[i]] &lt;- TIMBR(y = yy,
+                     
+                     Z = cbind(1, as.numeric(dat$block2), as.numeric(dat$block3)), 
+                   prior.D = prior_d,
+                   prior.M = prior_M)
+  
+  }
+  saveRDS(results, res_fn)
+} else {
+  results &lt;- readRDS(res_fn)
+}
+```
+
+
+```r
+TIMBR::TIMBR.plot.haplotypes(results[[1]])
+```
+
+![](slides_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+
+```r
+results[1] %&gt;% purrr::map(.f = function(x)head(x$p.M.given.y))
+```
+
+```
+## [[1]]
+## 
+## 0,0,0,0,0,1,0,0 0,1,1,1,1,2,1,1 0,0,1,0,0,2,0,0 0,0,0,0,0,1,2,0 0,0,0,0,1,2,0,0 
+##          0.3473          0.0385          0.0360          0.0262          0.0148 
+## 0,0,0,1,0,2,0,0 
+##          0.0140
+```
+
+---
+
+# Importance of inferring allelic series
+
+- Knowing allelic series in one cohort, like CC, may inform QTL mapping in a second cohort, like DO (and vice versa)
+
+- Use allelic series to "collapse" `\(n\)` by 8 founder allele probabilities matrices to `\(n\)` by `\(l\)` allele probabilities matrices
+    - Enhance statistical power to detect QTL
+
+
+
+
+
+
+
+
+---
+
+# Our goals for applying TIMBR
+
+1. Infer allelic series at QTL in Diversity Outbred mice
+
+
+---
+
+# Diversity Outbred data
+
+- 8 founder allele probabilities
+- TIMBR's default input is 36-state genotype probabilities
+
+
+
+
+
+
+
+
+
+---
+
+# Early results
+
+
+
+
+---
+class: inverse, center, middle
+
+# References
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
