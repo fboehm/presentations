@@ -282,7 +282,12 @@ $l< 8$
 
 ---
 
-# Our goals for applying TIMBR
+# Our goals for using allelic series inferences 
+
+1. Map QTL in DO after identifying allelic series for QTL in CC
+1. 
+
+
 
 
 ---
