@@ -14,7 +14,7 @@ output:
 ---
 
 ```{r}
-knitr::opts_chunk(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
@@ -160,7 +160,7 @@ PATH_TO_DATA <- "/home/fred/work/research/qtl2effects/data"
 ```{r read-csv}
 (peaks <- readr::read_csv(file.path(PATH_TO_DATA, "clinical_suggestive_peak_info.csv")))
 traits <- readr::read_csv(file.path(PATH_TO_DATA, "pheno_all_clinical_v4_suggestive.csv")) %>%
-  rename(mouse_id = X1)
+  dplyr::rename(mouse_id = X1)
 ```
 
 ```{r load-genotypes}
@@ -207,7 +207,7 @@ if (!file.exists(res_fn)){
   # get genotypes
   foo <- peaks %>%
     dplyr::select(probe) %>%
-    filter(probe == probe[peak_num]) %>%
+    dplyr::filter(probe == probe[peak_num]) %>%
     purrr::map(.f = function(probe) {
       lapply(X = geno, 
              FUN = function(gg) gg[rownames(gg) %in% probe, drop = FALSE]
@@ -286,8 +286,8 @@ $l< 8$
 
 # Our goals for using allelic series inferences 
 
-1. Map QTL in DO after identifying allelic series for QTL in CC
-1. 
+1. Map QTL in DO after identifying allelic series in CC
+1. Map QTL in CC after identifying allelic series in DO
 
 
 
@@ -297,7 +297,18 @@ $l< 8$
 # Diversity Outbred data
 
 - Kurtz and Elkins have shared their genotypes and phenotypes for DO mice
-
+  - 344 DO mice 
+  - GigaMUGA-derived genotypes
+  - 9 traits: 
+    - Survival days
+    - Pct. weight loss
+    - Mtb burden lung average
+    - Mtb burden spleen average
+    - Pct. normal lung average
+    - Peak body weight 
+    - Body weight at euthanasia
+    - Pct. peak body weight at euthanasia
+    - Weight loss
 
 
 
@@ -343,6 +354,14 @@ $l< 8$
 1. Collapse genotypes of other cohort and QTL scan
 
 
+---
+
+# Translating CC to DO
+
+
+---
+
+# Translating DO to CC
 
 
 
