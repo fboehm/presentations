@@ -309,7 +309,10 @@ $l< 8$
 
 # Example
 
-```{r, child="~/work/research/qtl2tb/Rmd/fda_reducedscan.Rmd"}
+```{r, child="~/work/research/qtl2tb/Rmd/fda_reducedscan.Rmd", eval = FALSE}
+```
+
+```{r}
 
 ```
 
