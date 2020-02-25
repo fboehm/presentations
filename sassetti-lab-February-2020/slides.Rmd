@@ -13,7 +13,9 @@ output:
       countIncrementalSlides: false
 ---
 
-
+```{r, echo = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
 
 
 # What are allele effects? 
@@ -107,7 +109,7 @@ if (!file.exists("../data/recla_s1out.rds")){
 s1c_10s <- s1c_10[650:999, ] 
 # 650:999 is the same as the interval for the two-dimensional scan.
 s1c_22s <- s1c_22[650:999, ]
-plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, main = "percent time in light", xlab = "Chr 8 position (cM)")
+plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, main = "percent time in light", xlab = "Chr 8 position (cM)", legend = "topright")
 ```
 
 ---
@@ -131,7 +133,7 @@ plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, m
 
 - Details of methods aren't yet reported
 - Sensitivity to prior specification
-- Default input is 36-state genotype probabilities
+- Input is 36-state genotype probabilities
 
 
 
@@ -152,10 +154,10 @@ library(TIMBR)
 PATH_TO_DATA <- "/home/fred/work/research/qtl2effects/data"
 ```
 
-```{r read-csv}
-(peaks <- readr::read_csv(file.path(PATH_TO_DATA, "clinical_suggestive_peak_info.csv")))
+```{r read-csv, results='hide', message = FALSE}
+peaks <- readr::read_csv(file.path(PATH_TO_DATA, "clinical_suggestive_peak_info.csv"))
 traits <- readr::read_csv(file.path(PATH_TO_DATA, "pheno_all_clinical_v4_suggestive.csv")) %>%
-  rename(mouse_id = X1)
+  dplyr::rename(mouse_id = X1)
 ```
 
 ```{r load-genotypes}
@@ -202,7 +204,7 @@ if (!file.exists(res_fn)){
   # get genotypes
   foo <- peaks %>%
     dplyr::select(probe) %>%
-    filter(probe == probe[peak_num]) %>%
+    dplyr::filter(probe == probe[peak_num]) %>%
     purrr::map(.f = function(probe) {
       lapply(X = geno, 
              FUN = function(gg) gg[rownames(gg) %in% probe, drop = FALSE]
@@ -259,6 +261,7 @@ TIMBR::TIMBR.plot.haplotypes(results[[1]])
 results[1] %>% purrr::map(.f = function(x)head(x$p.M.given.y))
 ```
 
+
 ---
 
 # Importance of inferring allelic series
@@ -268,7 +271,11 @@ results[1] %>% purrr::map(.f = function(x)head(x$p.M.given.y))
 - Use allelic series to "collapse" $n$ by $8$ founder allele probabilities matrices to $n$ by $l$ allele probabilities matrices
     - Enhance statistical power to detect QTL
 
+$$Y = p_1b_1 + p_2b_2 + \epsilon$$
 
+$$p_1 = p_A + p_B + p_C + p_D + p_E + p_G + p_H$$
+
+$$p_2 = p_F$$
 
 
 
@@ -277,17 +284,35 @@ results[1] %>% purrr::map(.f = function(x)head(x$p.M.given.y))
 $l< 8$
 
 
+
+
 ---
 
-# Our goals for applying TIMBR
+# Our goals for using allelic series inferences 
+
+1. Map QTL in DO after identifying allelic series in CC
+1. Map QTL in CC after identifying allelic series in DO
+
+
 
 
 ---
 
 # Diversity Outbred data
 
-- Kurtz and Elkins have shared their genotypes and phenotypes for DO mice
-
+- Kurtz and Elkins (FDA):
+  - 344 DO mice 
+  - GigaMUGA-derived genotypes
+  - 9 traits: 
+      - Survival days
+      - Pct. weight loss
+      - Mtb burden lung average
+      - Mtb burden spleen average
+      - Pct. normal lung average
+      - Peak body weight 
+      - Body weight at euthanasia
+      - Pct. peak body weight at euthanasia
+      - Weight loss
 
 
 
@@ -301,9 +326,49 @@ $l< 8$
 
 # Example
 
-```{r, child="~/work/research/qtl2tb/Rmd/fda_reducedscan.Rmd"}
+```{r, child="~/work/research/qtl2tb/Rmd/fda_reducedscan.Rmd", eval = FALSE}
+```
+
+```{r}
 
 ```
+
+
+---
+
+# Next steps
+
+1. Allelic series inferences and QTL mapping with simulated traits
+  a. Quantify QTL mapping power of our approach
+  
+  
+  
+  
+---
+
+# Power study
+
+1. Simulate traits in both cohorts (CC and DO)  
+  a. Vary allelic series  
+      - number of alleles and configurations  
+  b. Vary allelic effects (relative to error variance)  
+  c. Vary QTL position  
+  d. Don't vary prior hyperparameters  
+1. Use TIMBR to infer most likely allelic series for every trait  
+1. Collapse genotypes of other cohort and QTL scan  
+
+
+---
+
+# Translating CC to DO
+
+
+---
+
+# Translating DO to CC
+
+
+
 
 ---
 class: inverse, center, middle
