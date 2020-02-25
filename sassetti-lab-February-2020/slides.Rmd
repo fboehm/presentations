@@ -323,7 +323,24 @@ $l< 8$
 
 # Next steps
 
+1. Allelic series inferences and QTL mapping with simulated traits
+  a. Quantify QTL mapping power of our approach
+  
+  
+  
+  
+---
 
+# Power study
+
+1. Simulate traits in both cohorts (CC and DO)
+  a. Vary allelic series
+    - number of alleles and configurations
+  b. Vary allelic effects (relative to error variance)
+  c. Vary QTL position 
+  d. Don't vary prior hyperparameters
+1. Use TIMBR to infer most likely allelic series for every trait
+1. Collapse genotypes of other cohort and QTL scan
 
 
 
