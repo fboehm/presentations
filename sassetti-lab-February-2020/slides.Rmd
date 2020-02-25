@@ -51,39 +51,61 @@ p_{H}b_H +
 # setup Recla analysis
 library(magrittr)
 library(qtl2)
-file <- paste0("https://raw.githubusercontent.com/rqtl/",
-               "qtl2data/master/DO_Recla/recla.zip")
-recla <- read_cross2(file)
-# make sex a covariate for use in qtl2pleio::scan_pvl
-recla[[6]][ , 1, drop = FALSE] -> sex
-# insert pseudomarkers
-insert_pseudomarkers(recla, step = 0.10) -> pseudomap
-gm <- pseudomap$`8`
-probs <- calc_genoprob(recla, map = pseudomap, cores = 0)
-aprobs <- genoprob_to_alleleprob(probs)
-kinship <- calc_kinship(aprobs, "loco")
-recla$pheno -> ph
-log(ph) -> lph
-apply(FUN = broman::winsorize, X = lph, MARGIN = 2) -> wlph
-tibble::as_tibble(wlph) -> wlph_tib
-sex2 <- matrix(as.numeric(sex == "female"), ncol = 1)
-colnames(sex2) <- "female"
-rownames(sex2) <- rownames(aprobs[[1]])
-out <- scan1(genoprobs = aprobs, 
-             pheno = wlph, 
-             kinship = kinship, 
-             addcovar = sex2, 
-             reml = TRUE,
-             cores = 0
-             )
-scan1coef(aprobs[ , 8], pheno = wlph[ , 10], kinship = kinship$`8`, 
-          reml = TRUE,
-          addcovar = sex2,
-          cores = 0) -> s1c_10
-scan1coef(aprobs[ , 8], pheno = wlph[ , 22], kinship = kinship$`8`, 
-          reml = TRUE,
-          addcovar = sex2,
-          cores = 0) -> s1c_22
+afn <- "../data/aprobs_recla.rds"
+if (!file.exists(afn)){
+  file <- paste0("https://raw.githubusercontent.com/rqtl/",
+                 "qtl2data/master/DO_Recla/recla.zip")
+  recla <- read_cross2(file)
+  # make sex a covariate for use in qtl2pleio::scan_pvl
+  recla[[6]][ , 1, drop = FALSE] -> sex
+  # insert pseudomarkers
+  insert_pseudomarkers(recla, step = 0.10) -> pseudomap
+  gm <- pseudomap$`8`
+  probs <- calc_genoprob(recla, map = pseudomap, cores = 0)
+  aprobs <- genoprob_to_alleleprob(probs)
+  
+  kinship <- calc_kinship(aprobs, "loco")
+  recla$pheno -> ph
+  log(ph) -> lph
+  apply(FUN = broman::winsorize, X = lph, MARGIN = 2) -> wlph
+  tibble::as_tibble(wlph) -> wlph_tib
+  sex2 <- matrix(as.numeric(sex == "female"), ncol = 1)
+  colnames(sex2) <- "female"
+  rownames(sex2) <- rownames(aprobs[[1]])
+  saveRDS(wlph, "../data/recla_wlph.rds")
+  saveRDS(sex2, "../data/recla_sex2.rds")
+  saveRDS(kinship, "../data/kinship.rds")
+} else {
+  aprobs <- readRDS(afn)
+  wlph <- readRDS("../data/recla_wlph.rds")
+  sex2 <- readRDS("../data/recla_sex2.rds")
+  kinship <- readRDS("../data/recla_kinship.rds")
+  
+}
+if (!file.exists("../data/recla_s1out.rds")){
+  out <- scan1(genoprobs = aprobs, 
+               pheno = wlph, 
+               kinship = kinship, 
+               addcovar = sex2, 
+               reml = TRUE,
+               cores = 0
+               )
+  scan1coef(aprobs[ , 8], pheno = wlph[ , 10], kinship = kinship$`8`, 
+            reml = TRUE,
+            addcovar = sex2,
+            cores = 0) -> s1c_10
+  scan1coef(aprobs[ , 8], pheno = wlph[ , 22], kinship = kinship$`8`, 
+            reml = TRUE,
+            addcovar = sex2,
+            cores = 0) -> s1c_22
+  saveRDS(out, "../data/recla_s1out.rds")
+  saveRDS(s1c_10, "../data/recla_s1c_10.rds")
+  saveRDS(s1c_22, "../data/recla_s1c_22.rds")
+} else {
+  out <- readRDS("../data/recla_s1out.rds")
+  s1c_10 <- readRDS("../data/recla_s1c_10.rds")
+  s1c_22 <- readRDS("../data/recla_s1c_22.rds")
+}  
 # subset scan1output objects
 s1c_10s <- s1c_10[650:999, ] 
 # 650:999 is the same as the interval for the two-dimensional scan.
@@ -280,10 +302,11 @@ $l< 8$
 
 ---
 
-# Early results
+# Example
 
+```{r, child="~/work/research/qtl2tb/Rmd/fda_reducedscan.Rmd"}
 
-
+```
 
 ---
 class: inverse, center, middle
