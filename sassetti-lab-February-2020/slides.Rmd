@@ -13,7 +13,9 @@ output:
       countIncrementalSlides: false
 ---
 
-
+```{r}
+knitr::opts_chunk(echo = FALSE)
+```
 
 
 # What are allele effects? 
@@ -315,6 +317,18 @@ $l< 8$
 ```{r}
 
 ```
+
+
+---
+
+# Next steps
+
+
+
+
+
+
+
 
 ---
 class: inverse, center, middle
