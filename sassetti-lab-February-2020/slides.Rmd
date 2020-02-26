@@ -9,7 +9,7 @@ output:
     lib_dir: libs
     nature:
       highlightStyle: github
-      highlightLines: true
+      highlightLines: true  
       countIncrementalSlides: false
 ---
 
@@ -161,7 +161,7 @@ plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, m
 
 ---
 
-# TIMBR examples
+# TIMBR examples (Spleen CFU on Chr 2)
 
 ```{r loadpkgs}
 library(magrittr)
@@ -269,11 +269,11 @@ if (!file.exists(res_fn)){
 ```
 
 ```{r}
-TIMBR::TIMBR.plot.haplotypes(results[[1]])
+TIMBR::TIMBR.plot.haplotypes(results[[3]])
 ```
 
-```{r}
-results[1] %>% purrr::map(.f = function(x)head(x$p.M.given.y))
+```{r, results='markup', echo = TRUE}
+results[3] %>% purrr::map(.f = function(x)head(x$p.M.given.y))
 ```
 
 
@@ -316,7 +316,7 @@ $l< 8$
 # Diversity Outbred data
 
 - Kurtz and Elkins (FDA):
-  - 344 DO mice 
+  - 344 DO mice (initially)
   - GigaMUGA-derived genotypes
   - 9 traits: 
       - Survival days
@@ -339,23 +339,86 @@ $l< 8$
 
 ---
 
-# Example
+# Example with DO and CC
 
-```{r, child="~/work/research/qtl2tb/Rmd/fda_reducedscan.Rmd", eval = FALSE}
+- Per CC TIMBR results, collapse probabilities per F:ABCDEGH allelic series  
+- QTL scan with collapsed probabilities  
+- DO have a survival days QTL on Chr 5
+    - 8-allele scan: $LOD = 6.9$, $p < $
+    - 2-allele scan: $LOD = 6.1$, $p < 0.001$
+
+
+```{r}
+PATH_TO_FDA_DATA <- "~/work/research/qtl2tb/data"
+load(file.path(PATH_TO_FDA_DATA, "fda_qtl_input_wo73.Rdata"))
+fn <- file.path(PATH_TO_FDA_DATA, "fda-scan1out.rds")
+if (!file.exists(fn)){
+  s1out <- qtl2::scan1(probs, pheno_rz, kinship = K, addcovar = covar, cores = parallel::detectCores() - 1)
+  saveRDS(s1out, fn)
+} else {
+  s1out <- readRDS(fn)
+}
+```
+
+```{r,results="hide"}
+s1out %>%
+  qtl2::find_peaks(map = map, threshold = 6)
+s1cout <- qtl2::scan1coef(list(probs$chr5), pheno_rz[, 1, drop = FALSE], kinship = K$chr5, addcovar = covar, cores = parallel::detectCores() - 1, zerosum = FALSE)
+```
+
+```{r, fig.height= 5}
+qtl2::plot_coefCC(s1cout[1000:2300, ], scan1_output = s1out, map = map, legend = "bottomright")
+```
+
+
+
+
+```{r}
+# allelic series for CAST v NOT CAST
+as <- matrix(data = c(1, 0, 
+                      1, 0, 
+                      1, 0, 
+                      1, 0, 
+                      1, 0, 
+                      0, 1, 
+                      1, 0, 
+                      1, 0
+                      ), nrow = 8, byrow = TRUE
+             )
+rprobs <- reducedscan::reduce_probs(probs, allelic_series = as)
 ```
 
 ```{r}
-
+fn <- file.path(PATH_TO_FDA_DATA, "fda-rscan1out.rds")
+if (!file.exists(fn)){
+  rs1out <- qtl2::scan1(rprobs, pheno_rz, kinship = K, addcovar = covar, cores = parallel::detectCores() - 1)
+} else {
+  rs1out <- readRDS(fn)
+}
 ```
+
+```{r, results = "hide"}
+rs1out %>%
+  qtl2::find_peaks(map = map)
+```
+
 
 
 ---
 
 # Next steps
 
-1. Allelic series inferences and QTL mapping with simulated traits
-  a. Quantify QTL mapping power of our approach
-  
+1. Power study  
+  a. Allelic series inferences and QTL mapping with simulated traits  
+1. Inferences in DO, CC, and both  
+  a. Detect new QTL 
+1. Other applications of allelic series inferences:  
+  a. Hotspot refinement  
+  a. Multivariate mapping and pleiotropy testing  
+  a. Mediation analysis  
+
+
+
   
   
   
@@ -365,7 +428,6 @@ $l< 8$
 
 1. Simulate traits in both cohorts (CC and DO)  
   a. Vary allelic series  
-      - number of alleles and configurations  
   b. Vary allelic effects (relative to error variance)  
   c. Vary QTL position  
   d. Don't vary prior hyperparameters  

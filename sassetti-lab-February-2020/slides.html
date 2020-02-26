@@ -14,7 +14,7 @@ class: center, middle, inverse, title-slide
 # Enhancing QTL mapping power with allelic series
 ### Fred Boehm
 ### U. Mass. Medical School
-### February 26, 2020 (updated: 2020-02-25)
+### February 26, 2020 (updated: 2020-02-26)
 
 ---
 
@@ -93,7 +93,7 @@ p_{H}b_H +
 
 - Thousands of samples to empirically approximate "posterior" distribution 
 - Outputs all needed information from every sample  
-  - allelic configuration 
+  - allelic series  
   - allelic effects 
 - Analyst then chooses how to summarize samples  
 
@@ -103,7 +103,7 @@ p_{H}b_H +
 
 ---
 
-# TIMBR examples
+# TIMBR examples (Spleen CFU on Chr 2)
 
 
 
@@ -123,19 +123,23 @@ p_{H}b_H +
 ![](slides_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 
 
+```r
+results[3] %&gt;% purrr::map(.f = function(x)head(x$p.M.given.y))
+```
+
 ```
 ## [[1]]
 ## 
 ## 0,0,0,0,0,1,0,0 0,1,1,1,1,2,1,1 0,0,1,0,0,2,0,0 0,0,0,0,0,1,2,0 0,0,0,0,1,2,0,0 
-##          0.3473          0.0385          0.0360          0.0262          0.0148 
-## 0,0,0,1,0,2,0,0 
-##          0.0140
+##          0.3246          0.0410          0.0374          0.0271          0.0150 
+## 0,1,1,1,1,2,0,1 
+##          0.0147
 ```
 
 
 ---
 
-# Importance of inferring allelic series
+# Why infer allelic series?
 
 - Knowing allelic series in one cohort, like CC, may inform QTL mapping in a second cohort, like DO (and vice versa)
 
@@ -172,7 +176,7 @@ p_{H}b_H +
 # Diversity Outbred data
 
 - Kurtz and Elkins (FDA):
-  - 344 DO mice 
+  - 344 DO mice (initially)
   - GigaMUGA-derived genotypes
   - 9 traits: 
       - Survival days
@@ -195,7 +199,26 @@ p_{H}b_H +
 
 ---
 
-# Example
+# Example with DO and CC
+
+- Per CC TIMBR results, collapse probabilities per F:ABCDEGH allelic series  
+- QTL scan with collapsed probabilities  
+- DO have a survival days QTL on Chr 5
+    - 8-allele scan: `\(LOD = 6.9\)`, $p &lt; $
+    - 2-allele scan: `\(LOD = 6.1\)`, `\(p &lt; 0.001\)`
+
+
+
+
+
+
+![](slides_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+
+
+
+
+
 
 
 
@@ -206,9 +229,17 @@ p_{H}b_H +
 
 # Next steps
 
-1. Allelic series inferences and QTL mapping with simulated traits
-  a. Quantify QTL mapping power of our approach
-  
+1. Power study  
+  a. Allelic series inferences and QTL mapping with simulated traits  
+1. Inferences in DO, CC, and both  
+  a. Detect new QTL 
+1. Other applications of allelic series inferences:  
+  a. Hotspot refinement  
+  a. Multivariate mapping and pleiotropy testing  
+  a. Mediation analysis  
+
+
+
   
   
   
@@ -218,7 +249,6 @@ p_{H}b_H +
 
 1. Simulate traits in both cohorts (CC and DO)  
   a. Vary allelic series  
-      - number of alleles and configurations  
   b. Vary allelic effects (relative to error variance)  
   c. Vary QTL position  
   d. Don't vary prior hyperparameters  
