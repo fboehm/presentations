@@ -363,14 +363,15 @@ $l< 8$
 
 ---
 
-# Translating CC to DO
+# Translating between CC and DO
+
+- Identify in CC more nuanced molecular traits affected by QTL in DO
+- Identify in DO narrow intervals for QTL peaks first discovered in CC
 
 
----
+???
 
-# Translating DO to CC
-
-
+Goes in both directions
 
 
 ---
