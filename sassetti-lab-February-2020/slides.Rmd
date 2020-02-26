@@ -151,7 +151,7 @@ plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, m
 
 - Thousands of samples to empirically approximate "posterior" distribution 
 - Outputs all needed information from every sample  
-  - allelic configuration 
+  - allelic series  
   - allelic effects 
 - Analyst then chooses how to summarize samples  
 
@@ -279,7 +279,7 @@ results[1] %>% purrr::map(.f = function(x)head(x$p.M.given.y))
 
 ---
 
-# Importance of inferring allelic series
+# Why infer allelic series?
 
 - Knowing allelic series in one cohort, like CC, may inform QTL mapping in a second cohort, like DO (and vice versa)
 
