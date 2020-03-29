@@ -1,0 +1,102 @@
+---
+main_topsize: 0.2 #percent coverage of the poster
+main_bottomsize: 0.1
+#ESSENTIALS
+title: '**Leveraging allelic series to enhance QTL detection**'
+author:
+  - name: '**Frederick J. Boehm**'
+    affil: 1
+    main: true
+    orcid: '0000-0002-1644-5931'
+    email: frederick.boehm@umassmed.edu
+  - name: Clare M. Smith
+    affil: 2
+  - name: Megan Proulx
+    affil: 1
+  - name: Daniel M. Gatti
+    affil: 3
+  - name: Michael Kiritsy
+    affil: 1
+  - name: Sherry Kurtz
+    affil: 4
+  - name: Karen Elkins
+    affil: 4
+  - name: Gillian Beamer
+    affil: 5
+  - name: Christopher M. Sassetti
+    affil: 1
+affiliation:
+  - num: 1
+    address: Microbiology and Physiological Systems, University of Massachusetts Medical School
+  - num: 2
+    address: Duke University
+  - num: 3
+    address: College of the Atlantic
+  - num: 4
+    address: Food and Drug Administration
+  - num: 5
+    address: Tufts University
+main_findings:
+  - "Inferring QTL allelic series reduces the phenotype modeling parameter space"
+logoleft_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
+logoright_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
+logocenter_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/qr-code-black.png
+output: 
+  posterdown::posterdown_betterport:
+    self_contained: false
+    pandoc_args: --mathjax
+    number_sections: false
+bibliography: packages.bib
+link-citations: true
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      tidy = FALSE,
+                      message = FALSE,
+                      fig.align = 'center',
+                      out.width = "100%")
+options(knitr.table.format = "html") 
+```
+
+# Introduction
+
+
+
+```{r, include=FALSE}
+knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
+```
+
+## Objectives
+
+1. Quantify power enhancement with reduced phenotype models
+1. Infer QTL allelic series in CC mice
+1. Use allelic series to map QTL in DO mice
+
+
+# Methods
+
+- In CC and DO, we typically work with 8 founder allele probabilities
+
+$${Trait} = p_{A}b_A +  
+p_{B}b_B +
+p_{C}b_C +
+p_{D}b_D +
+p_{E}b_E +
+p_{F}b_F +
+p_{G}b_G +
+p_{H}b_H + 
+\epsilon$$
+
+- Standard QTL methods allow for every founder to have its own allele
+- However, founders often share alleles
+- Thus, in DO and CC, some QTL have fewer than 8 alleles
+
+
+**_Now on to the results!_**
+
+# Results
+
+
+# References
