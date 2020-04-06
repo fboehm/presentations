@@ -46,7 +46,7 @@ output:
     self_contained: false
     pandoc_args: --mathjax
     number_sections: false
-bibliography: packages.bib
+bibliography: ../research.bib
 link-citations: true
 ---
 
@@ -62,21 +62,6 @@ options(knitr.table.format = "html")
 
 # Introduction
 
-
-
-```{r, include=FALSE}
-knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
-```
-
-## Objectives
-
-1. Quantify power enhancement with reduced phenotype models
-1. Infer QTL allelic series in CC mice
-1. Use allelic series to map QTL in DO mice
-
-
-# Methods
-
 - In CC and DO, we typically work with 8 founder allele probabilities
 
 $${Trait} = p_{A}b_A +  
@@ -89,14 +74,47 @@ p_{G}b_G +
 p_{H}b_H + 
 \epsilon$$
 
-- Standard QTL methods allow for every founder to have its own allele
+- Standard QTL methods allow every founder to have its own allele
 - However, founders often share alleles
 - Thus, in DO and CC, some QTL have fewer than 8 alleles
+- Using this in our QTL scans may enhance QTL detection
+
+
+```{r, include=FALSE}
+knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
+```
+
+## Objectives
+
+1. Infer QTL allelic series in CC mice
+1. Use allelic series to map QTL in DO mice
+
+
+# Methods
+
+- We measured *M. tuberculosis* burden in lungs and spleen in a DO cohort (___ mice) and a CC cohort (53 lines)
+
+- We mapped QTL in CC cohort with standard methods
+
+- We used Tree-based Inference of Multi-allelism with Bayesian Regression (TIMBR) [@crouse2018timbr] to infer allelic series at CC QTL
+
+- For each CC QTL, we scanned the DO cohort with reduced models that reflected the CC QTL allelic series
+
+    - Example of reducing a model with inferred allelic series
+    For the allelic series: 0,1,1,0,2,1,0,0:
+    1. Set $p_0 = p_A + p_D + p_G + p_H$,
+    $p_1 = p_B + p_C + p_F$
+    $p_2 = p_E$
+    2. Use model $$Y = \beta_0p_0 + \beta_1 p_1 + \beta_2p_2 + \epsilon$$ in QTL scan
+
+
 
 
 **_Now on to the results!_**
 
 # Results
+
+
 
 
 # References
