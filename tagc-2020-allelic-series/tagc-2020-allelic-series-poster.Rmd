@@ -37,12 +37,10 @@ affiliation:
   - num: 5
     address: Tufts University
 main_findings:
-  - "Inferring QTL allelic series reduces the phenotype modeling parameter space"
-logoleft_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
-logoright_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
-logocenter_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/qr-code-black.png
+  - "Allelic series informs QTL mapping in a second cohort"
+logocenter_name: flowcode.png
 output: 
-  posterdown::posterdown_betterport:
+  posterdown::posterdown_betterland:
     self_contained: false
     pandoc_args: --mathjax
     number_sections: false
@@ -66,10 +64,10 @@ options(knitr.table.format = "html")
 
 $${Trait} = p_{A}b_A +  
 p_{B}b_B +
-p_{C}b_C +
+p_{C}b_C + \\
 p_{D}b_D +
 p_{E}b_E +
-p_{F}b_F +
+p_{F}b_F + \\
 p_{G}b_G +
 p_{H}b_H + 
 \epsilon$$
@@ -77,24 +75,21 @@ p_{H}b_H +
 - Standard QTL methods allow every founder to have its own allele
 - However, founders often share alleles
 - Thus, in DO and CC, some QTL have fewer than 8 alleles
-- Using this in our QTL scans may enhance QTL detection
+- Using this fact in our QTL scans may enhance QTL detection [@jansen2003mapping]
 
 
-```{r, include=FALSE}
-knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
-```
 
 ## Objectives
 
 1. Infer QTL allelic series in CC mice
-1. Use allelic series to map QTL in DO mice
-
+1. Use CC QTL allelic series to map QTL in DO mice
 
 # Methods
 
-- We measured *M. tuberculosis* burden in lungs and spleen in a DO cohort (___ mice) and a CC cohort (53 lines)
+- We measured *M. tuberculosis* burden in lungs and spleen in a DO cohort (763 mice) and a CC cohort (53 lines)
+    - We also measured cytokine levels in the CC cohort
 
-- We mapped QTL in CC cohort with standard methods
+- We mapped QTL in CC cohort with standard methods [@broman2019r]
 
 - We used Tree-based Inference of Multi-allelism with Bayesian Regression (TIMBR) [@crouse2018timbr] to infer allelic series at CC QTL
 
@@ -110,11 +105,55 @@ knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
 
 
 
-**_Now on to the results!_**
 
 # Results
 
+```{r, echo = FALSE}
+load("~/work/research/qtl2tb/analysis/data/derived_data/fda_qtl_input.Rdata")
+library(magrittr)
+bfn <-  "~/work/research/qtl2tb/analysis/data/derived_data/cc-timbr-clinical-M1-with-reduced-peaks-cis.rds"
+t4 <- tibble::as_tibble(readRDS(bfn)) %>%
+  dplyr::mutate(chr = as.numeric(as.character(chr))) %>%
+  dplyr::select(1:3, pos_Mb, lod, 4, 6:12, 14:15) %>%
+  dplyr::rename(pos = pos_Mb)
+```
+
+
+1. Traditional QTL mapping in CC identified 40 QTL peaks for 11 traits
+1. For each CC QTL, we:
+    1. inferred allelic series
+    1. fitted reduced linear models (informed by allelic series) for QTL detection in DO
+    1. identified any proximal DO QTL with LOD greater than 2
 
 
 
+
+
+
+```{r, echo = FALSE}
+t4$cis_peaks[[36]] %>%
+  tibble::as_tibble() %>%
+  dplyr::mutate(chr = as.numeric(as.character(chr))) %>%
+  dplyr::bind_rows(t4[36, 1:5]) %>%
+  dplyr::mutate(cohort = c("DO", "DO", "CC")) %>%
+  dplyr::mutate(trait = c("Peak weight in DO", "Euthanasia weight in DO", "VEGF in CC")) %>%
+  dplyr::select(-1, -2) %>%
+  dplyr::select(trait, cohort, chr, pos, lod) %>%
+  dplyr::arrange(pos) %>% 
+  gt::gt() %>%
+  gt::tab_header(title = "QTL peaks on Chr 3") %>%
+  gt::fmt_number(columns = dplyr::vars(pos, lod))
+```
+
+
+# Future research
+
+1. Determine DO QTL p-values with approximate permutation tests [@churchill1994empirical]  
+1. Use multiple allelic series per CC QTL  
+
+
+    
+    
 # References
+
+
