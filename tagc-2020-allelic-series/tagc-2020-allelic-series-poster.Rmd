@@ -86,7 +86,7 @@ p_{H}b_H +
 
 # Methods
 
-- We measured *M. tuberculosis* burden in lungs and spleen in a DO cohort (763 mice) and a CC cohort (53 lines)
+- We measured *M. tuberculosis* burden in lungs and spleens in a DO cohort (763 mice) and a CC cohort (52 lines)
     - We also measured cytokine levels in the CC cohort
 
 - We mapped QTL in CC cohort with standard methods [@broman2019r]
@@ -111,15 +111,24 @@ p_{H}b_H +
 ```{r, echo = FALSE}
 load("~/work/research/qtl2tb/analysis/data/derived_data/fda_qtl_input.Rdata")
 library(magrittr)
+# read s1perms for CC traits
+cc_s1perm_out <- readRDS("~/work/research/qtl2tb/analysis/data/derived_data/cc_s1perm_out.rds")
 bfn <-  "~/work/research/qtl2tb/analysis/data/derived_data/cc-timbr-clinical-M1-with-reduced-peaks-cis.rds"
 t4 <- tibble::as_tibble(readRDS(bfn)) %>%
   dplyr::mutate(chr = as.numeric(as.character(chr))) %>%
   dplyr::select(1:3, pos_Mb, lod, 4, 6:12, 14:15) %>%
-  dplyr::rename(pos = pos_Mb)
+  dplyr::rename(pos = pos_Mb) %>%
+  dplyr::mutate(pvalue = purrr::map2_dbl(.x = lodcolumn, .y = lod, .f = function(x, y){
+    maxlods <- cc_s1perm_out[, colnames(cc_s1perm_out) == x]
+    mean(maxlods >= y)
+  })) %>%
+  dplyr::filter(pvalue < 0.37)
+  
+
 ```
 
 
-1. Traditional QTL mapping in CC identified 40 QTL peaks for 11 traits
+1. Traditional QTL mapping in CC identified 14 suggestive peaks
 1. For each CC QTL, we:
     1. inferred allelic series
     1. fitted reduced linear models (informed by allelic series) for QTL detection in DO
@@ -131,25 +140,30 @@ t4 <- tibble::as_tibble(readRDS(bfn)) %>%
 
 
 ```{r, echo = FALSE}
-t4$cis_peaks[[36]] %>%
+rownum <- 14
+t4$cis_peaks[[rownum]] %>%
   tibble::as_tibble() %>%
   dplyr::mutate(chr = as.numeric(as.character(chr))) %>%
-  dplyr::bind_rows(t4[36, 1:5]) %>%
-  dplyr::mutate(cohort = c("DO", "DO", "CC")) %>%
-  dplyr::mutate(trait = c("Peak weight in DO", "Euthanasia weight in DO", "VEGF in CC")) %>%
+  dplyr::bind_rows(t4[rownum, 1:5]) %>%
+  dplyr::mutate(cohort = c("DO", "CC")) %>%
+  dplyr::mutate(trait = c("Spleen CFU in DO", "VEGF in CC")) %>%
   dplyr::select(-1, -2) %>%
   dplyr::select(trait, cohort, chr, pos, lod) %>%
   dplyr::arrange(pos) %>% 
   gt::gt() %>%
-  gt::tab_header(title = "QTL peaks on Chr 3") %>%
+  gt::tab_header(title = "QTL peaks on Chr 4") %>%
   gt::fmt_number(columns = dplyr::vars(pos, lod))
 ```
+
+
+
 
 
 # Future research
 
 1. Determine DO QTL p-values with approximate permutation tests [@churchill1994empirical]  
-1. Use multiple allelic series per CC QTL  
+1. Consider multiple allelic series per CC QTL  
+
 
 
     
