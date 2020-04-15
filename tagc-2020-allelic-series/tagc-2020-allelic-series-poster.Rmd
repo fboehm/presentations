@@ -1,6 +1,7 @@
 ---
 main_topsize: 0.2 #percent coverage of the poster
 main_bottomsize: 0.1
+knit: pagedown::chrome_print
 #ESSENTIALS
 title: '**Leveraging allelic series to enhance QTL detection**'
 author:
