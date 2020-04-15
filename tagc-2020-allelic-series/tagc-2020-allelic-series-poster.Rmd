@@ -74,8 +74,10 @@ p_{H}b_H +
 \epsilon$$
 
 - Standard QTL methods allow every founder to have its own allele
-- However, founders often share alleles
-- Thus, in DO and CC, some QTL have fewer than 8 alleles
+- However, founders often share alleles 
+- Crouse and Valdar (personal communication) developed a method for inferring 
+the number of alleles at a QTL
+- In DO and CC, some QTL have fewer than 8 alleles
 - Using this fact in our QTL scans may enhance QTL detection [@jansen2003mapping]
 
 
@@ -83,7 +85,7 @@ p_{H}b_H +
 ## Objectives
 
 1. Infer QTL allelic series in CC mice
-1. Use CC QTL allelic series to map QTL in DO mice
+1. Use CC QTL allelic series to inform QTL mapping in DO mice
 
 # Methods
 
