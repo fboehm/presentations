@@ -86,7 +86,7 @@ options(knitr.table.format = "html")
 
 # Introduction
 
-- We examined Mtb-related traits in both a Colllaborative Cross cohort (52 lines) and a Diversity Outbred cohort (763 mice)  
+- We examined Mtb-related traits in both a Collaborative Cross cohort (52 lines) and a Diversity Outbred cohort (763 mice)  
 - In CC and DO QTL mapping, we typically work with 8 founder allele probabilities
 
 $${Trait} = p_{A}b_A +  
