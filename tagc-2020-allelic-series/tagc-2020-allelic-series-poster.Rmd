@@ -1,6 +1,9 @@
 ---
+main_width: 0.5
+main_textsize: "170px"	
 main_topsize: 0.2 #percent coverage of the poster
 main_bottomsize: 0.1
+body_textsize: "36px"
 knit: pagedown::chrome_print
 #ESSENTIALS
 title: '**Leveraging allelic series to enhance QTL detection**'
@@ -38,8 +41,27 @@ affiliation:
   - num: 5
     address: Tufts University
 main_findings:
-  - "Allelic series informs QTL mapping in a second cohort"
-logocenter_name: flowcode.png
+  - "CC **allelic series informs QTL mapping** in DO
+  
+   
+    
+     
+      
+       
+        
+         
+          
+           
+            
+             
+              
+               
+                
+                 
+                  
+                   
+                    
+                      ![](../figs/vitruvian-mouse-eleni.jpg){.main_pic}"
 output: 
   posterdown::posterdown_betterland:
     self_contained: false
@@ -49,7 +71,7 @@ bibliography: ../research.bib
 link-citations: true
 ---
 
-```{r, include=FALSE}
+```{r, setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
                       warning = FALSE,
                       tidy = FALSE,
@@ -59,9 +81,13 @@ knitr::opts_chunk$set(echo = FALSE,
 options(knitr.table.format = "html") 
 ```
 
+
+
+
 # Introduction
 
-- In CC and DO, we typically work with 8 founder allele probabilities
+- We examined Mtb-related traits in both a Colllaborative Cross cohort (52 lines) and a Diversity Outbred cohort (763 mice)  
+- In CC and DO QTL mapping, we typically work with 8 founder allele probabilities
 
 $${Trait} = p_{A}b_A +  
 p_{B}b_B +
@@ -73,12 +99,10 @@ p_{G}b_G +
 p_{H}b_H + 
 \epsilon$$
 
-- Standard QTL methods allow every founder to have its own allele
-- However, founders often share alleles 
 - Crouse and Valdar (personal communication) developed a method for inferring 
-the number of alleles at a QTL
+the allelic series at a QTL
 - In DO and CC, some QTL have fewer than 8 alleles
-- Using this fact in our QTL scans may enhance QTL detection [@jansen2003mapping]
+- Using this fact in our QTL scans may enhance QTL detection [@jansen2003mapping]  
 
 
 
@@ -89,8 +113,13 @@ the number of alleles at a QTL
 
 # Methods
 
-- We measured *M. tuberculosis* burden in lungs and spleens in a DO cohort (763 mice) and a CC cohort (52 lines)
-    - We also measured cytokine levels in the CC cohort
+```{r, fig.cap="Experimental design in DO mice"}
+knitr::include_graphics("ppt/do_flow.jpg")
+```
+
+```{r, fig.cap="Experimental design in CC mice"}
+knitr::include_graphics("ppt/cc_flow.jpg")
+```
 
 - We mapped QTL in CC cohort with standard methods [@broman2019r]
 
@@ -98,11 +127,11 @@ the number of alleles at a QTL
 
 - For each CC QTL, we scanned the DO cohort with reduced models that reflected the CC QTL allelic series
 
-    - Example of reducing a model with inferred allelic series
+    - Example of reducing a model with inferred allelic series  
     For the allelic series: 0,1,1,0,2,1,0,0:
-    1. Set $p_0 = p_A + p_D + p_G + p_H$,
-    $p_1 = p_B + p_C + p_F$
-    $p_2 = p_E$
+    1. Set $p_0 = p_A + p_D + p_G + p_H$,  
+    $p_1 = p_B + p_C + p_F$,  
+    $p_2 = p_E$  
     2. Use model $$Y = \beta_0p_0 + \beta_1 p_1 + \beta_2p_2 + \epsilon$$ in QTL scan
 
 
@@ -111,7 +140,7 @@ the number of alleles at a QTL
 
 # Results
 
-```{r, echo = FALSE}
+```{r, loading, echo = FALSE}
 load("~/work/research/qtl2tb/analysis/data/derived_data/fda_qtl_input.Rdata")
 library(magrittr)
 # read s1perms for CC traits
@@ -131,18 +160,18 @@ t4 <- tibble::as_tibble(readRDS(bfn)) %>%
 ```
 
 
-1. Traditional QTL mapping in CC identified 14 suggestive peaks
-1. For each CC QTL, we:
+1. Traditional QTL mapping in CC identified 14 suggestive peaks   
+1. For each CC QTL, we:  
     1. inferred allelic series
     1. fitted reduced linear models (informed by allelic series) for QTL detection in DO
-    1. identified any proximal DO QTL with LOD greater than 2
+    1. identified any proximal DO QTL with LOD greater than 3
 
 
 
 
 
 
-```{r, echo = FALSE}
+```{r, gt, echo = FALSE}
 rownum <- 14
 t4$cis_peaks[[rownum]] %>%
   tibble::as_tibble() %>%
@@ -154,6 +183,18 @@ t4$cis_peaks[[rownum]] %>%
   dplyr::select(trait, cohort, chr, pos, lod) %>%
   dplyr::arrange(pos) %>% 
   gt::gt() %>%
+  gt::tab_style(
+    style = gt::cell_text(size = "xx-large"), 
+    locations = gt::cells_title()
+    ) %>%
+  gt::tab_style(
+    style = gt::cell_text(size = "x-large"), 
+    locations = gt::cells_column_labels(columns = TRUE)
+    ) %>%
+  gt::tab_style(
+    style = gt::cell_text(size = "x-large", color = "blue"), 
+    locations = gt::cells_body()
+    ) %>%
   gt::tab_header(title = "QTL peaks on Chr 4") %>%
   gt::fmt_number(columns = dplyr::vars(pos, lod))
 ```
@@ -171,6 +212,17 @@ t4$cis_peaks[[rownum]] %>%
 
     
     
-# References
 
+
+# Image credits
+
+https://webcomicms.net/clipart-10020867-pictures-cartoon-mouse
+
+https://www.latimes.com/science/story/2020-04-13/old-vaccines-for-other-germs-being-tested-against-the-new-coronavirus
+
+https://www.lshtm.ac.uk/research/research-action/features/ending-tb-race-control-disease-hiding
+
+Vitruvian Mouse by Eleni Jaecklein
+
+# References
 
