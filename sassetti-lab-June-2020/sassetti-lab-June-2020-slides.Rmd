@@ -1,0 +1,398 @@
+---
+title: "Enhancing QTL mapping with allelic series inferences"
+author: "Fred Boehm"
+institute: "U. Mass. Medical School"
+date: "June 24, 2020 (updated: `r Sys.Date()`)"
+bibliography: ../research.bib
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true  
+      countIncrementalSlides: false
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+
+```{r setup}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+options(future.globals.maxSize= 8 * 1024^3)
+```
+
+
+```{r}
+PATH_TO_DDATA <- "~/work/research/qtl2tb/analysis/data/derived_data"
+load(file.path(PATH_TO_DDATA, "reduced_map_qtl2_mapping_objects.Rdata"))
+library(magrittr)
+load(file.path(PATH_TO_DDATA, "fda_qtl_input.Rdata"))
+do_mapdf <- qtl2convert::map_list_to_df(map) %>%
+  dplyr::rename(pos_Mb = pos)
+cc_mapdf <- qtl2convert::map_list_to_df(map.1) %>%
+  dplyr::rename(pos_cM = pos) %>%
+  dplyr::left_join(do_mapdf) 
+```
+
+```{r, scan1-cc}
+cc_kinship <- qtl2::calc_kinship(genoprobs.1, "loco")
+cc_pre_pheno <- read.csv(file.path(PATH_TO_DDATA, "pheno_all_clinical_v4_suggestive.csv"))
+cc_pheno<- as.matrix(cc_pre_pheno[, -1])
+rownames(cc_pheno) <- cc_pre_pheno[ , 1]
+
+cc_s1 <- qtl2::scan1(genoprobs = genoprobs.1, 
+                     pheno = cc_pheno, 
+                     kinship = cc_kinship, 
+                     addcovar = addcovar, 
+                     reml = TRUE
+                     )
+cc_peaks <- qtl2::find_peaks(cc_s1, map = qtl2convert::map_df_to_list(cc_mapdf, pos_column = "pos_Mb"), threshold = 5, prob = 0.95) %>%
+  tibble::as_tibble() %>%
+  dplyr::rename(cc_peak_bayes_lower = ci_lo, cc_peak_bayes_upper = ci_hi)
+```
+
+```{r}
+# permutations
+dfn <- file.path(PATH_TO_DDATA, "cc_s1perm_out.rds")
+if (!file.exists(dfn)){
+  s1perm_out <- qtl2::scan1perm(genoprobs = genoprobs.1, pheno = cc_pheno, kinship = cc_kinship, addcovar = addcovar, reml = TRUE, n_perm = 1000, cores = parallel::detectCores())
+  saveRDS(s1perm_out, file = dfn)  
+} else {
+  s1perm_out <- readRDS(dfn)
+}
+```
+
+```{r load-genotypes}
+fn36 <- file.path(PATH_TO_DDATA, "cc36.rds")
+gp <- readRDS(fn36)
+```
+
+```{r TIMBR-setup}
+future::plan("multiprocess")
+fn <- file.path(PATH_TO_DDATA, "cc-timbr-clinical-M1.rds")
+if (!file.exists(fn)){
+  prior_M1 <- list(model.type = "crp", # crp - Chinese Restaurant Process
+    prior.alpha.type = "gamma",
+    prior.alpha.shape = 1,
+    prior.alpha.rate = 2.333415)
+  prior_M2 <- list(model.type = "crp",
+                  prior.alpha.type = "gamma",
+                  prior.alpha.shape = 2.3009322,
+                  prior.alpha.rate = 0.7488104
+                  )
+  library(TIMBR)
+  data(mcv.data) # get A matrix
+  set.seed(3411192) # to ensure getting the same samples with TIMBR
+  t_out <- cc_peaks %>%
+    dplyr::mutate(marker_index = purrr::map2_int(.x = pos, .y = chr, .f = function(x, y){
+      ppcm <- cc_mapdf %>%
+        dplyr::filter(chr == y, x == pos_Mb) %>%
+        dplyr::select(pos_cM) %>%
+        unlist()
+      
+      return(which(map.1[[y]] == ppcm))
+      })) %>%
+    dplyr::filter(chr != "X") %>% # No TIMBR for X chr yet!
+    dplyr::mutate(timbr = furrr::future_pmap(.l = list(lodcolumn, chr, marker_index), .f = function(lodcolumn, chr, marker_index){
+      phe_pre <- cc_pheno[ , colnames(cc_pheno) == lodcolumn, drop = FALSE]
+      phe <- phe_pre[!is.na(phe_pre), , drop = FALSE]
+      pr_pre <- gp[[chr]][, , marker_index]
+      pr <- pr_pre[rownames(pr_pre) %in% rownames(phe), ]
+      cov_pre <- cbind(1, addcovar)
+      cov_pre2 <- cov_pre[rownames(cov_pre) %in% rownames(phe), ]
+      cov <- qtl2:::drop_depcols(cov_pre2)
+      TIMBR::TIMBR(y = phe, 
+                   prior.D = list(P = pr, 
+                                  A = mcv.data$prior.D$A, # works for autosomes
+                                  fixed.diplo = FALSE), 
+                   prior.M = prior_M1, 
+                   #samples = 3, samples.ml = 3,
+                   samples = 10000, samples.ml = 10000,
+                   Z = cov, 
+                   verbose = TRUE
+                   )  
+  }))
+  saveRDS(t_out, fn)
+} else {
+  t_out <- readRDS(fn)
+}
+
+```
+
+```{r}
+(t2 <- t_out %>%
+  dplyr::mutate(most_probable_series = purrr::map_chr(.x = timbr, 
+                                                      .f = function(x)names(x$p.M.given.y[1])), 
+                most_probable_series_prob = purrr::map_dbl(.x = timbr, 
+                                                           .f = function(x)x$p.M.given.y[1]),
+                second_most_probable_series = purrr::map_chr(.x = timbr, 
+                                                      .f = function(x)names(x$p.M.given.y[2])), 
+                second_most_probable_series_prob = purrr::map_dbl(.x = timbr, 
+                                                           .f = function(x)x$p.M.given.y[2])) %>%
+  dplyr::mutate(top_pairs = purrr::map(.x = timbr, .f = qtl2tb::find_top_pairs))
+)
+```
+
+```{r}
+afn <-  file.path(PATH_TO_DDATA, "cc-timbr-clinical-M1-with-reduced-peaks.rds")
+if (!file.exists(afn)){
+  t3 <- t2 %>%
+  dplyr::mutate(peaks_reduced_s1out = furrr::future_map2(.x = most_probable_series, 
+                                                         .y = second_most_probable_series,
+                                                        .f = function(x, y){
+    if (x != "0,0,0,0,0,0,0,0"){
+      as <- qtl2tb::convert_character_series_to_binary_series(x)
+          } else {
+      as <- qtl2tb::convert_character_series_to_binary_series(y)
+          }
+      pr <- reducedscan::reduce_probs(probs, allelic_series = as)
+      out <- qtl2::scan1(genoprobs = pr, 
+                       pheno = pheno_rz, 
+                       kinship = K, 
+                       addcovar = covar, 
+                       reml = TRUE
+                       )
+    
+    return(out)
+  })
+  
+                  )
+
+saveRDS(t3, afn)
+}
+t3 <- tibble::as_tibble(readRDS(afn))
+```
+
+
+
+# Mtb-related QTL in CC
+
+- 52 CC lines
+- Measured 11 "clinical" traits
+  - spleen CFU, lung CFU, spleen CEQ
+  - 8 cytokines
+
+
+???
+
+Broad peaks and limited detection power
+
+---
+
+# Mtb-related QTL in CC
+
+```{r}
+cc_peaks %>%
+  dplyr::mutate(pvalue = purrr::map2_dbl(.x = lodcolumn, .y = lod, .f = function(x, y){
+    maxlods <- s1perm_out[, colnames(s1perm_out) == x]
+    mean(maxlods >= y)
+  })) %>%
+  dplyr::filter(pvalue < 0.37) %>%
+  dplyr::select(- lodindex, - cc_peak_bayes_lower, - cc_peak_bayes_upper) %>%
+  dplyr::rename(cc_trait = lodcolumn) %>%
+  gt::gt() %>%
+    gt::fmt_number(
+    columns = dplyr::vars(lod, pos),
+    decimals = 1
+  ) %>%
+  gt::tab_style(style = list(
+      gt::cell_fill(color = "lightcyan"),
+      gt::cell_text(weight = "bold")
+      ),
+    locations = gt::cells_body(
+      columns = dplyr::vars(cc_trait, chr, pos, lod, pvalue),
+      rows = (cc_trait == "VEGF" & chr == 4))) %>%
+  gt::tab_style(style = list(
+      gt::cell_fill(color = "pink"),
+      gt::cell_text(weight = "bold")
+      ),
+    locations = gt::cells_body(
+      columns = dplyr::vars(cc_trait, chr, pos, lod, pvalue),
+      rows = (pvalue < 0.05)))
+  
+
+```
+
+
+---
+
+# Mtb-related QTL in DO
+
+- 763 mice 
+- 5 traits: lung CFU, spleen CFU, percent normal lung, peak body weight, euthanization body weight
+
+---
+
+# Mtb-related QTL in DO
+
+```{r, scan1}
+s1out <- qtl2::scan1(genoprobs = probs, 
+                     pheno = pheno_rz, 
+                     kinship = K, 
+                     addcovar = covar, 
+                     reml = TRUE, cores = 3
+                     )
+do_peaks <- qtl2::find_peaks(s1out, map = map, threshold = 5)
+do_s1perm_out <- readRDS(file = file.path(PATH_TO_DDATA, "do_s1perm_out.rds"))
+```
+
+```{r}
+do_peaks %>%
+  dplyr::mutate(pvalue = purrr::map2_dbl(.x = lodcolumn, .y = lod, .f = function(x, y){
+    maxlods <- do_s1perm_out[, colnames(s1perm_out) == x]
+    mean(maxlods >= y)
+  })) %>%
+  dplyr::filter(pvalue < 0.37)
+  dplyr::select(- lodindex, - cc_peak_bayes_lower, - cc_peak_bayes_upper) %>%
+  dplyr::rename(cc_trait = lodcolumn) %>%
+  gt::gt() %>%
+    gt::fmt_number(
+    columns = dplyr::vars(lod, pos),
+    decimals = 1
+  ) %>%
+  gt::tab_style(style = list(
+      gt::cell_fill(color = "lightcyan"),
+      gt::cell_text(weight = "bold")
+      ),
+    locations = gt::cells_body(
+      columns = dplyr::vars(cc_trait, chr, pos, lod, pvalue),
+      rows = (cc_trait == "VEGF" & chr == 4))) %>%
+  gt::tab_style(style = list(
+      gt::cell_fill(color = "pink"),
+      gt::cell_text(weight = "bold")
+      ),
+    locations = gt::cells_body(
+      columns = dplyr::vars(cc_trait, chr, pos, lod, pvalue),
+      rows = (pvalue < 0.05)))
+  
+```
+
+
+
+
+
+---
+
+# What are allele effects? 
+
+- In CC and DO, we work with 8 founder allele probabilities
+
+
+$${Trait} = p_{A}b_A +  
+p_{B}b_B +
+p_{C}b_C +
+p_{D}b_D +
+p_{E}b_E +
+p_{F}b_F +
+p_{G}b_G +
+p_{H}b_H + 
+\epsilon$$
+
+---
+
+# What are allele effects?
+
+
+
+???
+
+- Standard QTL mapping methods allow for every founder to have its own allele
+- However, founders often share (functional) alleles
+- Thus, in DO and CC, some QTL have fewer than 8 distinct alleles
+- QTL exhibit contrasts in allele effects
+  - "Contrast" is a pairwise difference in mean value
+- How many alleles are present here? 
+
+
+---
+
+# What are allele effects?
+
+
+
+
+---
+
+# TIMBR Methods for inferring allelic series in QTL studies [@crouse2020inferring]
+
+
+
+
+---
+
+# Cis DO peaks
+
+
+```{r}
+bfn <-  file.path(PATH_TO_DDATA, "cc-timbr-clinical-M1-with-reduced-peaks-cis.rds")
+if (!file.exists(bfn)){
+  t4 <- t3 %>%
+  dplyr::mutate(peaks_reduced = purrr::map(.x = peaks_reduced_s1out, 
+                                           .f = function(x) {
+                                             if (!is.null(dim(x))){
+                                               out <- qtl2::find_peaks(x, 
+                                                                       map = map,
+                                                                       threshold = 1, 
+                                                                       prob = 0.95) # might change threshold value
+                                               } else {out <- NA}
+                                             return(out)
+                                           })) %>%
+  dplyr::mutate(cis_peaks = purrr::pmap(.l = list(peaks_reduced, chr, cc_peak_bayes_lower, cc_peak_bayes_upper), 
+                                        .f = function(x, y, z, w){
+                                              if (!is.null(dim(x))){
+                                                out <- x %>%
+                                                  dplyr::filter(chr == y, 
+                                                                pos < w, 
+                                                                pos > z
+                                                                )
+                                                } else {NA -> out}
+                                              return(out)
+                                              }
+                                        )
+                )
+saveRDS(t4, bfn)
+
+} else {
+  t4 <- readRDS(bfn)
+}
+```
+
+```{r}
+t4 %>%
+  dplyr::mutate(cis2 = purrr::pmap(.l = list(cis_peaks, lodcolumn, pos), .f = function(x, y, z){
+    x %>%
+      dplyr::mutate(cc_trait = y, cc_trait_pos = z)
+  })) %>%
+  dplyr::select(cis2) %>%
+  purrr::map_df(dplyr::bind_rows) %>%
+  dplyr::select(- ci_lo, - ci_hi, - lodindex) %>%
+  dplyr::filter(lod > 3
+                ) %>%
+  dplyr::rename(do_trait = lodcolumn) %>%
+  gt::gt() %>%
+   gt::fmt_number(
+    columns = dplyr::vars(pos, lod, cc_trait_pos),
+    decimals = 1
+  ) %>%
+  gt::tab_style(style = list(
+      gt::cell_fill(color = "lightcyan"),
+      gt::cell_text(weight = "bold")
+      ),
+    locations = gt::cells_body(
+      columns = dplyr::vars(do_trait, chr, pos, lod, cc_trait, cc_trait_pos),
+      rows = (do_trait == "spleen_mtb")))
+```
+
+
+---
+
+# xxx
+
+
+---
+class: inverse, center, middle
+
+# References
+
