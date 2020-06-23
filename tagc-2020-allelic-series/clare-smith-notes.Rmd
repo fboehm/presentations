@@ -1,0 +1,26 @@
+---
+title: "Notes from Skyping Clare"
+author: "Frederick J. Boehm"
+date: "4/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+- Add TIMBR / Valdar ref in Intro section
+- Fix wording of title / takehome message
+- Add graphical depiction of study design
+    - 2 cohorts
+    - infect with Mtb
+    - see Clare's mbio paper, for example? 
+- Add pictures for allelic series inferences 
+    - maybe use the VEGF QTL that i examine
+- Maybe use a smaller pvalue threshold
+- Maybe add a Vitruvian mouse image?? Eleni's drawing?
+
+- Make a list of DO v CC differences in the two study designs... for my Q&A session
+
+
+
+

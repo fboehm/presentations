@@ -9,11 +9,13 @@ output:
     lib_dir: libs
     nature:
       highlightStyle: github
-      highlightLines: true
+      highlightLines: true  
       countIncrementalSlides: false
 ---
 
-
+```{r, echo = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
 
 
 # What are allele effects? 
@@ -51,44 +53,64 @@ p_{H}b_H +
 # setup Recla analysis
 library(magrittr)
 library(qtl2)
-file <- paste0("https://raw.githubusercontent.com/rqtl/",
-               "qtl2data/master/DO_Recla/recla.zip")
-recla <- read_cross2(file)
-# make sex a covariate for use in qtl2pleio::scan_pvl
-recla[[6]][ , 1, drop = FALSE] -> sex
-# insert pseudomarkers
-insert_pseudomarkers(recla, step = 0.10) -> pseudomap
-gm <- pseudomap$`8`
-probs <- calc_genoprob(recla, map = pseudomap, cores = 0)
-aprobs <- genoprob_to_alleleprob(probs)
-kinship <- calc_kinship(aprobs, "loco")
-recla$pheno -> ph
-log(ph) -> lph
-apply(FUN = broman::winsorize, X = lph, MARGIN = 2) -> wlph
-tibble::as_tibble(wlph) -> wlph_tib
-sex2 <- matrix(as.numeric(sex == "female"), ncol = 1)
-colnames(sex2) <- "female"
-rownames(sex2) <- rownames(aprobs[[1]])
-out <- scan1(genoprobs = aprobs, 
-             pheno = wlph, 
-             kinship = kinship, 
-             addcovar = sex2, 
-             reml = TRUE,
-             cores = 0
-             )
-scan1coef(aprobs[ , 8], pheno = wlph[ , 10], kinship = kinship$`8`, 
-          reml = TRUE,
-          addcovar = sex2,
-          cores = 0) -> s1c_10
-scan1coef(aprobs[ , 8], pheno = wlph[ , 22], kinship = kinship$`8`, 
-          reml = TRUE,
-          addcovar = sex2,
-          cores = 0) -> s1c_22
+afn <- "../data/aprobs_recla.rds"
+if (!file.exists(afn)){
+  file <- paste0("https://raw.githubusercontent.com/rqtl/",
+                 "qtl2data/master/DO_Recla/recla.zip")
+  recla <- read_cross2(file)
+  # make sex a covariate for use in qtl2pleio::scan_pvl
+  recla[[6]][ , 1, drop = FALSE] -> sex
+  # insert pseudomarkers
+  insert_pseudomarkers(recla, step = 0.10) -> pseudomap
+  gm <- pseudomap$`8`
+  probs <- calc_genoprob(recla, map = pseudomap, cores = 0)
+  aprobs <- genoprob_to_alleleprob(probs)
+  
+  kinship <- calc_kinship(aprobs, "loco")
+  recla$pheno -> ph
+  log(ph) -> lph
+  apply(FUN = broman::winsorize, X = lph, MARGIN = 2) -> wlph
+  tibble::as_tibble(wlph) -> wlph_tib
+  sex2 <- matrix(as.numeric(sex == "female"), ncol = 1)
+  colnames(sex2) <- "female"
+  rownames(sex2) <- rownames(aprobs[[1]])
+  saveRDS(wlph, "../data/recla_wlph.rds")
+  saveRDS(sex2, "../data/recla_sex2.rds")
+  saveRDS(kinship, "../data/recla_kinship.rds")
+  saveRDS(aprobs, afn)
+  saveRDS(pseudomap, "../data/recla_map.rds")
+} else {
+  aprobs <- readRDS(afn)
+  wlph <- readRDS("../data/recla_wlph.rds")
+  sex2 <- readRDS("../data/recla_sex2.rds")
+  kinship <- readRDS("../data/recla_kinship.rds")
+  pseudomap <- readRDS("../data/recla_map.rds")
+}
+if (!file.exists("../data/recla_s1out.rds")){
+  out <- scan1(genoprobs = aprobs, 
+               pheno = wlph, 
+               kinship = kinship, 
+               addcovar = sex2, 
+               reml = TRUE               )
+  scan1coef(aprobs[ , 8], pheno = wlph[ , 10], kinship = kinship$`8`, 
+            reml = TRUE,
+            addcovar = sex2) -> s1c_10
+  scan1coef(aprobs[ , 8], pheno = wlph[ , 22], kinship = kinship$`8`, 
+            reml = TRUE,
+            addcovar = sex2) -> s1c_22
+  saveRDS(out, "../data/recla_s1out.rds")
+  saveRDS(s1c_10, "../data/recla_s1c_10.rds")
+  saveRDS(s1c_22, "../data/recla_s1c_22.rds")
+} else {
+  out <- readRDS("../data/recla_s1out.rds")
+  s1c_10 <- readRDS("../data/recla_s1c_10.rds")
+  s1c_22 <- readRDS("../data/recla_s1c_22.rds")
+}  
 # subset scan1output objects
 s1c_10s <- s1c_10[650:999, ] 
 # 650:999 is the same as the interval for the two-dimensional scan.
 s1c_22s <- s1c_22[650:999, ]
-plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, main = "percent time in light", xlab = "Chr 8 position (cM)")
+plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, main = "percent time in light", xlab = "Chr 8 position (cM)", legend = "topright")
 ```
 
 ---
@@ -112,7 +134,7 @@ plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, m
 
 - Details of methods aren't yet reported
 - Sensitivity to prior specification
-- Default input is 36-state genotype probabilities
+- Input is 36-state genotype probabilities
 
 
 
@@ -125,18 +147,32 @@ plot_coefCC(s1c_10s, scan1_output = out[ , 10, drop = FALSE], map = pseudomap, m
 
 ---
 
-# TIMBR examples
+# TIMBR methods
+
+- Thousands of samples to empirically approximate "posterior" distribution 
+- Outputs all needed information from every sample  
+  - allelic series  
+  - allelic effects 
+- Analyst then chooses how to summarize samples  
+
+
+
+
+
+---
+
+# TIMBR examples (Spleen CFU on Chr 2)
 
 ```{r loadpkgs}
 library(magrittr)
 library(TIMBR)
-PATH_TO_DATA <- "/home/fred/work/research/qtl2effects/data"
+PATH_TO_DATA <- "~/work/research/qtl2effects/analysis/data"
 ```
 
-```{r read-csv}
-(peaks <- readr::read_csv(file.path(PATH_TO_DATA, "clinical_suggestive_peak_info.csv")))
+```{r read-csv, results='hide', message = FALSE}
+peaks <- readr::read_csv(file.path(PATH_TO_DATA, "clinical_suggestive_peak_info.csv"))
 traits <- readr::read_csv(file.path(PATH_TO_DATA, "pheno_all_clinical_v4_suggestive.csv")) %>%
-  rename(mouse_id = X1)
+  dplyr::rename(mouse_id = X1)
 ```
 
 ```{r load-genotypes}
@@ -183,14 +219,14 @@ if (!file.exists(res_fn)){
   # get genotypes
   foo <- peaks %>%
     dplyr::select(probe) %>%
-    filter(probe == probe[peak_num]) %>%
+    dplyr::filter(probe == probe[peak_num]) %>%
     purrr::map(.f = function(probe) {
       lapply(X = geno, 
              FUN = function(gg) gg[rownames(gg) %in% probe, drop = FALSE]
              )
       }
              ) %>%
-    bind_cols() %>%
+    dplyr::bind_cols() %>%
     as.matrix() %>%
     t() %>%
     as.data.frame() %>%
@@ -233,23 +269,28 @@ if (!file.exists(res_fn)){
 ```
 
 ```{r}
-TIMBR::TIMBR.plot.haplotypes(results[[1]])
+TIMBR::TIMBR.plot.haplotypes(results[[3]])
 ```
 
-```{r}
-results[1] %>% purrr::map(.f = function(x)head(x$p.M.given.y))
+```{r, results='markup', echo = TRUE}
+results[3] %>% purrr::map(.f = function(x)head(x$p.M.given.y))
 ```
+
 
 ---
 
-# Importance of inferring allelic series
+# Why infer allelic series?
 
 - Knowing allelic series in one cohort, like CC, may inform QTL mapping in a second cohort, like DO (and vice versa)
 
 - Use allelic series to "collapse" $n$ by $8$ founder allele probabilities matrices to $n$ by $l$ allele probabilities matrices
     - Enhance statistical power to detect QTL
 
+$$Y = p_1b_1 + p_2b_2 + \epsilon$$
 
+$$p_1 = p_A + p_B + p_C + p_D + p_E + p_G + p_H$$
+
+$$p_2 = p_F$$
 
 
 
@@ -258,9 +299,16 @@ results[1] %>% purrr::map(.f = function(x)head(x$p.M.given.y))
 $l< 8$
 
 
+
+
 ---
 
-# Our goals for applying TIMBR
+# Our goals for using allelic series inferences 
+
+1. Map QTL in DO after identifying allelic series in CC
+1. Map QTL in CC after identifying allelic series in DO
+
+
 
 
 ---
@@ -273,6 +321,20 @@ $l< 8$
 PATH_TO_FDA_DATA <- "~/work/research/qtl2tb/data"
 load(file.path(PATH_TO_FDA_DATA, "fda_qtl_input_wo73.Rdata"))
 ```
+- Kurtz and Elkins (FDA):
+  - 344 DO mice (initially)
+  - GigaMUGA-derived genotypes
+  - 9 traits: 
+      - Survival days
+      - Pct. weight loss
+      - Mtb burden lung average
+      - Mtb burden spleen average
+      - Pct. normal lung average
+      - Peak body weight 
+      - Body weight at euthanasia
+      - Pct. peak body weight at euthanasia
+      - Weight loss
+
 
 
 ???
@@ -283,9 +345,113 @@ load(file.path(PATH_TO_FDA_DATA, "fda_qtl_input_wo73.Rdata"))
 
 ---
 
-# Early results
+# Example with DO and CC
+
+- Per CC TIMBR results, collapse probabilities per F:ABCDEGH allelic series  
+- QTL scan with collapsed probabilities  
+- DO have a survival days QTL on Chr 5
+    - 8-allele scan: $LOD = 6.9$, $p < $
+    - 2-allele scan: $LOD = 6.1$, $p < 0.001$
 
 
+```{r}
+PATH_TO_FDA_DATA <- "~/work/research/qtl2tb/data"
+load(file.path(PATH_TO_FDA_DATA, "fda_qtl_input_wo73.Rdata"))
+fn <- file.path(PATH_TO_FDA_DATA, "fda-scan1out.rds")
+if (!file.exists(fn)){
+  s1out <- qtl2::scan1(probs, pheno_rz, kinship = K, addcovar = covar, cores = parallel::detectCores() - 1)
+  saveRDS(s1out, fn)
+} else {
+  s1out <- readRDS(fn)
+}
+```
+
+```{r,results="hide"}
+s1out %>%
+  qtl2::find_peaks(map = map, threshold = 6)
+s1cout <- qtl2::scan1coef(list(probs$chr5), pheno_rz[, 1, drop = FALSE], kinship = K$chr5, addcovar = covar, cores = parallel::detectCores() - 1, zerosum = FALSE)
+```
+
+```{r, fig.height= 5}
+qtl2::plot_coefCC(s1cout[1000:2300, ], scan1_output = s1out, map = map, legend = "bottomright")
+```
+
+
+
+
+```{r}
+# allelic series for CAST v NOT CAST
+as <- matrix(data = c(1, 0, 
+                      1, 0, 
+                      1, 0, 
+                      1, 0, 
+                      1, 0, 
+                      0, 1, 
+                      1, 0, 
+                      1, 0
+                      ), nrow = 8, byrow = TRUE
+             )
+rprobs <- reducedscan::reduce_probs(probs, allelic_series = as)
+```
+
+```{r}
+fn <- file.path(PATH_TO_FDA_DATA, "fda-rscan1out.rds")
+if (!file.exists(fn)){
+  rs1out <- qtl2::scan1(rprobs, pheno_rz, kinship = K, addcovar = covar, cores = parallel::detectCores() - 1)
+} else {
+  rs1out <- readRDS(fn)
+}
+```
+
+```{r, results = "hide"}
+rs1out %>%
+  qtl2::find_peaks(map = map)
+```
+
+
+
+---
+
+# Next steps
+
+1. Power study  
+  a. Allelic series inferences and QTL mapping with simulated traits  
+1. Inferences in DO, CC, and both  
+  a. Detect new QTL 
+1. Other applications of allelic series inferences:  
+  a. Hotspot refinement  
+  a. Multivariate mapping and pleiotropy testing  
+  a. Mediation analysis  
+
+
+
+  
+  
+  
+---
+
+# Power study
+
+1. Simulate traits in both cohorts (CC and DO)  
+  a. Vary allelic series  
+  b. Vary allelic effects (relative to error variance)  
+  c. Vary QTL position  
+  d. Don't vary prior hyperparameters  
+1. Use TIMBR to infer most likely allelic series for every trait  
+1. Collapse genotypes of other cohort and QTL scan  
+
+
+---
+
+# Translating between CC and DO
+
+- Identify in CC more nuanced molecular traits affected by QTL in DO
+- Identify in DO narrow intervals for QTL peaks first discovered in CC
+
+
+???
+
+Goes in both directions
 
 
 ---
