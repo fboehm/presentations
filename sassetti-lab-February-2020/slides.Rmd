@@ -269,7 +269,10 @@ $l< 8$
 
 - Kurtz and Elkins have shared their genotypes and phenotypes for DO mice
 
-
+```{r}
+PATH_TO_FDA_DATA <- "~/work/research/qtl2tb/data"
+load(file.path(PATH_TO_FDA_DATA, "fda_qtl_input_wo73.Rdata"))
+```
 
 
 ???
