@@ -122,7 +122,7 @@ if (!file.exists(fn)){
 ```
 
 ```{r}
-(t2 <- t_out %>%
+t2 <- t_out %>%
   dplyr::mutate(most_probable_series = purrr::map_chr(.x = timbr, 
                                                       .f = function(x)names(x$p.M.given.y[1])), 
                 most_probable_series_prob = purrr::map_dbl(.x = timbr, 
@@ -132,7 +132,6 @@ if (!file.exists(fn)){
                 second_most_probable_series_prob = purrr::map_dbl(.x = timbr, 
                                                            .f = function(x)x$p.M.given.y[2])) %>%
   dplyr::mutate(top_pairs = purrr::map(.x = timbr, .f = qtl2tb::find_top_pairs))
-)
 ```
 
 ```{r}
@@ -184,14 +183,15 @@ Broad peaks and limited detection power
 # Mtb-related QTL in CC
 
 ```{r}
-cc_peaks %>%
+ccp2 <- cc_peaks %>%
   dplyr::mutate(pvalue = purrr::map2_dbl(.x = lodcolumn, .y = lod, .f = function(x, y){
     maxlods <- s1perm_out[, colnames(s1perm_out) == x]
     mean(maxlods >= y)
   })) %>%
   dplyr::filter(pvalue < 0.37) %>%
   dplyr::select(- lodindex, - cc_peak_bayes_lower, - cc_peak_bayes_upper) %>%
-  dplyr::rename(cc_trait = lodcolumn) %>%
+  dplyr::rename(cc_trait = lodcolumn) 
+ccp2 %>%
   gt::gt() %>%
     gt::fmt_number(
     columns = dplyr::vars(lod, pos),
@@ -211,9 +211,14 @@ cc_peaks %>%
     locations = gt::cells_body(
       columns = dplyr::vars(cc_trait, chr, pos, lod, pvalue),
       rows = (pvalue < 0.05)))
-  
-
 ```
+
+
+???
+
+- Red rows denote p < 0.05
+- Blue row is of interest later
+
 
 
 ---
@@ -221,32 +226,42 @@ cc_peaks %>%
 # Mtb-related QTL in DO
 
 - 763 mice 
-- 5 traits: lung CFU, spleen CFU, percent normal lung, peak body weight, euthanization body weight
+- 5 traits: lung CFU, spleen CFU, percent normal lung, peak body weight, euthanized body weight
+- Primary focus is on BCG vaccination response
+
 
 ---
 
 # Mtb-related QTL in DO
 
 ```{r, scan1}
-s1out <- qtl2::scan1(genoprobs = probs, 
+s1fn <- file.path(PATH_TO_DDATA, "do_s1out.rds")
+if (!file.exists(s1fn)){
+  s1out <- qtl2::scan1(genoprobs = probs, 
                      pheno = pheno_rz, 
                      kinship = K, 
                      addcovar = covar, 
-                     reml = TRUE, cores = 3
+                     reml = TRUE, cores = 1
                      )
+  saveRDS(s1out, s1fn)
+} else {
+  s1out <- readRDS(s1fn)
+}
 do_peaks <- qtl2::find_peaks(s1out, map = map, threshold = 5)
 do_s1perm_out <- readRDS(file = file.path(PATH_TO_DDATA, "do_s1perm_out.rds"))
 ```
 
 ```{r}
-do_peaks %>%
+dop2 <- do_peaks %>%
   dplyr::mutate(pvalue = purrr::map2_dbl(.x = lodcolumn, .y = lod, .f = function(x, y){
-    maxlods <- do_s1perm_out[, colnames(s1perm_out) == x]
+    maxlods <- do_s1perm_out[, colnames(do_s1perm_out) == x]
     mean(maxlods >= y)
   })) %>%
-  dplyr::filter(pvalue < 0.37)
-  dplyr::select(- lodindex, - cc_peak_bayes_lower, - cc_peak_bayes_upper) %>%
-  dplyr::rename(cc_trait = lodcolumn) %>%
+  dplyr::filter(pvalue < 0.37) %>%
+  dplyr::select(- lodindex) %>%
+  dplyr::rename(cc_trait = lodcolumn)
+dop2 %>%
+  dplyr::rename(trait = cc_trait) %>%
   gt::gt() %>%
     gt::fmt_number(
     columns = dplyr::vars(lod, pos),
@@ -257,20 +272,57 @@ do_peaks %>%
       gt::cell_text(weight = "bold")
       ),
     locations = gt::cells_body(
-      columns = dplyr::vars(cc_trait, chr, pos, lod, pvalue),
-      rows = (cc_trait == "VEGF" & chr == 4))) %>%
+      columns = dplyr::vars(trait, chr, pos, lod, pvalue),
+      rows = (trait == "VEGF" & chr == 4))) %>%
   gt::tab_style(style = list(
       gt::cell_fill(color = "pink"),
       gt::cell_text(weight = "bold")
       ),
     locations = gt::cells_body(
-      columns = dplyr::vars(cc_trait, chr, pos, lod, pvalue),
+      columns = dplyr::vars(trait, chr, pos, lod, pvalue),
       rows = (pvalue < 0.05)))
   
 ```
 
 
 
+
+
+
+---
+
+# Nearby peaks in CC and DO
+
+```{r}
+dop2 %>%
+  dplyr::rename(trait = cc_trait) %>%
+  dplyr::mutate(study = "do") %>%
+  dplyr::bind_rows(ccp2 %>% dplyr::rename(trait = cc_trait) %>% dplyr::mutate(study = "cc")) %>%
+  dplyr::arrange(chr, pos) %>%
+  dplyr::filter(chr %in% c(15, 17)) %>%
+  gt::gt() %>%
+   gt::fmt_number(
+    columns = dplyr::vars(pos, lod, pos),
+    decimals = 1
+  ) %>%
+  gt::tab_style(style = list(
+      gt::cell_fill(color = "orange"),
+      gt::cell_text(weight = "bold")
+      ),
+    locations = gt::cells_body(
+      columns = dplyr::vars(trait, chr, pos, lod, pvalue, study),
+      rows = (chr == 15)))
+
+
+```
+
+
+
+???
+
+- CC and DO both show peaks on two chromosomes: 15 and 17  
+- Lung CFU in CC and spleen CFU in DO map near each other on Chr 15
+- Chr 17: IL-1B in CC maps near spleen CFU peak on Chr 17
 
 
 ---
@@ -290,11 +342,6 @@ p_{G}b_G +
 p_{H}b_H + 
 \epsilon$$
 
----
-
-# What are allele effects?
-
-
 
 ???
 
@@ -308,22 +355,27 @@ p_{H}b_H +
 
 ---
 
-# What are allele effects?
+# TIMBR for allelic series inferences
+
+- Infers allele effects and configuration
+- Bayesian strategy
+  - One "sample" from the "posterior distribution" consists of a collection of allele effects values and a single configuration of alleles
+  - Draw thousands of samples to summarize distribution
+
+---
+
+# TIMBR for allelic series inferences
+
+- Inferences are sensitive to prior distribution specification
+- We may need to consider multiple prior distributions
+
 
 
 
 
 ---
 
-# TIMBR Methods for inferring allelic series in QTL studies [@crouse2020inferring]
-
-
-
-
----
-
-# Cis DO peaks
-
+# Allele effects for lung CFU in CC on Chr 15
 
 ```{r}
 bfn <-  file.path(PATH_TO_DDATA, "cc-timbr-clinical-M1-with-reduced-peaks-cis.rds")
@@ -359,6 +411,104 @@ saveRDS(t4, bfn)
 }
 ```
 
+
+```{r, fig.height = 4}
+t4_chr15lung <- t4 %>%
+  dplyr::filter(chr == 15, lodcolumn == "lungCFU")
+TIMBR::TIMBR.plot.haplotypes(t4_chr15lung$timbr[[1]])
+```
+
+---
+
+# Allele effects for spleen CFU in DO on Chr 15
+
+- Two distinct priors yielded highly similar results - little apparent difference among the 8 histograms
+
+```{r, fig.height = 4}
+# read timbr results for fda traits
+timbr_fda <- readRDS(file.path(PATH_TO_DDATA, "fda-Chr15-spleen-M1-M2.rds")) %>%
+  tibble::as_tibble()
+
+TIMBR::TIMBR.plot.haplotypes(timbr_fda$timbrM1[[1]])
+```
+
+Posterior mean number of alleles: `r as.numeric(timbr_fda$timbrM1[[1]]$p.K.given.y %*% 1:6)`
+
+Most probable allelic series: `r timbr_fda$timbrM1[[1]]$p.M.given.y[1]` (`r names(timbr_fda$timbrM1[[1]]$p.M.given.y[1])`)
+
+
+---
+
+# Allele effects for IL-1B in CC on Chr 17 
+
+```{r, fig.height = 4}
+t4_chr17IL1B <- t4 %>%
+  dplyr::filter(chr == 17, lodcolumn == "IL1B")
+TIMBR::TIMBR.plot.haplotypes(t4_chr17IL1B$timbr[[1]])
+```
+
+Posterior mean number of alleles: `r as.numeric(t4_chr17IL1B$timbr[[1]]$p.K.given.y %*% 1:length(t4_chr17IL1B$timbr[[1]]$p.K.given.y))`  
+
+Most probable allelic series: `r t4_chr17IL1B$timbr[[1]]$p.M.given.y[1]` (`r names(t4_chr17IL1B$timbr[[1]]$p.M.given.y[1])`)
+
+
+
+---
+
+# Allele effects for spleen CFU in DO on Chr 17
+
+```{r, fig.height = 4}
+# read timbr results for fda traits
+timbr_fda <- readRDS(file.path(PATH_TO_DDATA, "fda-timbr-clinical.rds")) %>%
+  tibble::as_tibble() %>%
+  dplyr::filter(chr == 17)
+
+TIMBR::TIMBR.plot.haplotypes(timbr_fda$t_out[[2]])
+```
+
+Posterior mean number of alleles: `r timbr_fda$t_out[[2]]$p.K.given.y %*% 1:length(timbr_fda$t_out[[2]]$p.K.given.y)`
+
+Most probable allelic series: `r timbr_fda$t_out[[2]]$p.M.given.y[1]` (`r names(timbr_fda$t_out[[2]]$p.M.given.y[1])`)
+
+
+
+---
+
+# Reducing models with allelic series
+
+$${Trait} = p_{A}b_A +  
+p_{B}b_B +
+p_{C}b_C +
+p_{D}b_D +
+p_{E}b_E +
+p_{F}b_F +
+p_{G}b_G +
+p_{H}b_H + 
+\epsilon$$
+
+$${Trait} = p_{1}b_1 +  
+p_{2}b_2 +
+p_{3}b_3 +
+\gamma$$
+
+For example, for series (0,0,0,1,1,2,2,2)
+
+$$p_1 = p_A + p_B + p_C$$
+
+$$p_2 = p_D + p_E$$
+
+and 
+
+$$p_3 = p_F + p_G + p_H$$
+
+
+
+---
+
+# DO peaks with reduced models
+
+
+
 ```{r}
 t4 %>%
   dplyr::mutate(cis2 = purrr::pmap(.l = list(cis_peaks, lodcolumn, pos), .f = function(x, y, z){
@@ -385,10 +535,29 @@ t4 %>%
       rows = (do_trait == "spleen_mtb")))
 ```
 
+- Still waiting for permutation p-values
 
 ---
 
-# xxx
+# Spleen Mtb (reduced model) on Chr 4
+
+```{r}
+t4Chr4 <- t4 %>%
+  dplyr::filter(chr == 4, lodcolumn == "VEGF")
+qtl2::plot_scan1(t4Chr4$peaks_reduced_s1out[[1]], lodcolumn = 2, map = map, chr = 4)
+```
+
+---
+
+# Goals
+
+1. Map CC TnSeq traits for peaks near DO peaks
+1. Continue analyzing DO RNASeq data with gbrs
+1. Map RNASeq-derived traits in DO
+
+
+
+
 
 
 ---
