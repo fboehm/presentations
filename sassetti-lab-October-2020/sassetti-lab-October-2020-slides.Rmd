@@ -104,6 +104,7 @@ if (!file.exists(bfn)){
 
 
 ```{r}
+dim(qtl)
 qtl2::plot_coefCC(s1b, map, scan1_output = qtl[, 2, drop = FALSE])
 ```
 
