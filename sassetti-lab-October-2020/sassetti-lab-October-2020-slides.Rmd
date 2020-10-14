@@ -18,7 +18,8 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
 ```{r}
-PATH_TO_DDATA <- "~/work/research/qtl2tb/analysis/data/derived_data"
+#PATH_TO_DDATA <- "~/work/research/qtl2tb/analysis/data/derived_data"
+PATH_TO_DDATA <- "~/qtl2tb/analysis/data/derived_data" #for use on ghpcc
 library(magrittr)
 nc <- 16
 ```
