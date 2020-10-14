@@ -6,6 +6,7 @@ date: "October 14, 2020 (updated: `r Sys.Date()`)"
 bibliography: ../research.bib
 output:
   xaringan::moon_reader:
+    css: xaringan-themer.css
     lib_dir: libs
     nature:
       highlightStyle: github
@@ -17,15 +18,23 @@ output:
 knitr::opts_chunk$set(dev="CairoPNG")
 ```
 
-
+```{r xaringan-themer, include = FALSE}
+library(xaringanthemer)
+style_mono_light(
+  base_color = "#1c5253",
+  header_font_google = google_font("Josefin Sans"),
+  text_font_google   = google_font("Montserrat", "300", "300i"),
+  code_font_google   = google_font("Droid Mono")
+)
+```
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
 ```{r}
-#PATH_TO_DDATA <- "~/work/research/qtl2tb/analysis/data/derived_data"
-PATH_TO_DDATA <- "~/qtl2tb/analysis/data/derived_data" #for use on ghpcc
+PATH_TO_DDATA <- "~/work/research/qtl2tb/analysis/data/derived_data"
+#PATH_TO_DDATA <- "~/qtl2tb/analysis/data/derived_data" #for use on ghpcc
 library(magrittr)
 nc <- 16
 ```
@@ -68,7 +77,7 @@ peaks %>%
 
 # Lung CFU on Chr 17
 
-```{r}
+```{r, eval = FALSE}
 afn <- file.path(PATH_TO_DDATA, "do_scan1blup_lung_Chr17.rds")
 if (!file.exists(afn)){
   s1b <- qtl2::scan1blup(probs[, 17], 
@@ -80,9 +89,22 @@ if (!file.exists(afn)){
 } else {s1b <- readRDS(afn)}
 ```
 
+```{r}
+s1c <- qtl2::scan1coef(probs[, 17], 
+                       pheno_rz[ , 1, drop = FALSE], 
+                       kinship = K$`17`, 
+                       addcovar = covar, 
+                       cores = 1)
+```
+
 
 ```{r}
-qtl2::plot_coefCC(s1b, map, scan1_output = qtl[, 1, drop = FALSE])
+left <- names(map[[17]])[min(which(map[[17]] > 30))]
+right <- names(map[[17]])[min(which(map[[17]] > 50))] 
+s1 <- qtl[which(rownames(qtl) == left):which(rownames(qtl) == right), 1, drop = FALSE]
+b1 <- s1c[which(rownames(s1c) == left):which(rownames(s1c) == right), ]
+
+qtl2::plot_coefCC(b1, map, scan1_output = s1)
 ```
 
 
@@ -90,7 +112,7 @@ qtl2::plot_coefCC(s1b, map, scan1_output = qtl[, 1, drop = FALSE])
 
 # Spleen CFU on Chr 17
 
-```{r}
+```{r, eval = FALSE}
 bfn <- file.path(PATH_TO_DDATA, "do_scan1blup_spleen_Chr17.rds")
 if (!file.exists(bfn)){
   s1b <- qtl2::scan1blup(probs[, 17], 
@@ -102,17 +124,26 @@ if (!file.exists(bfn)){
 } else {s1b <- readRDS(bfn)}
 ```
 
+```{r}
+s1c <- qtl2::scan1coef(probs[, 17], 
+                       pheno_rz[ , 2, drop = FALSE], 
+                       kinship = K$`17`, 
+                       addcovar = covar, 
+                       cores = 1)
+```
 
 ```{r}
-dim(qtl)
-qtl2::plot_coefCC(s1b, map, scan1_output = qtl[, 2, drop = FALSE])
+s1 <- qtl[which(rownames(qtl) == left):which(rownames(qtl) == right), 2, drop = FALSE]
+b1 <- s1c[which(rownames(s1c) == left):which(rownames(s1c) == right), ]
+
+qtl2::plot_coefCC(b1, map, scan1_output = s1)
 ```
 
 ---
 
 # Spleen CFU on Chr 1
 
-```{r}
+```{r, eval = FALSE}
 cfn <- file.path(PATH_TO_DDATA, "do_scan1blup_spleen_Chr1.rds")
 if (!file.exists(cfn)){
   s1b <- qtl2::scan1blup(probs[, 1], 
@@ -124,9 +155,21 @@ if (!file.exists(cfn)){
 } else {s1b <- readRDS(cfn)}
 ```
 
+```{r}
+s1c <- qtl2::scan1coef(probs[, 1], 
+                       pheno_rz[ , 2, drop = FALSE], 
+                       kinship = K$`1`, 
+                       addcovar = covar, 
+                       cores = nc)
+```  
 
 ```{r}
-qtl2::plot_coefCC(s1b, map, scan1_output = qtl[, 2, drop = FALSE])
+left <- names(map[[1]])[min(which(map[[1]] > 120))]
+right <- names(map[[1]])[min(which(map[[1]] > 140))] 
+s1 <- qtl[which(rownames(qtl) == left):which(rownames(qtl) == right), 2, drop = FALSE]
+b1 <- s1c[which(rownames(s1c) == left):which(rownames(s1c) == right), ]
+
+qtl2::plot_coefCC(b1, map, scan1_output = s1)
 ```
 
 
@@ -135,7 +178,7 @@ qtl2::plot_coefCC(s1b, map, scan1_output = qtl[, 2, drop = FALSE])
 
 # Spleen CFU on Chr 11
 
-```{r}
+```{r, eval = FALSE}
 bfn <- file.path(PATH_TO_DDATA, "do_scan1blup_spleen_Chr11.rds")
 if (!file.exists(bfn)){
   s1b <- qtl2::scan1blup(probs[, 11], 
@@ -147,9 +190,22 @@ if (!file.exists(bfn)){
 } else {s1b <- readRDS(bfn)}
 ```
 
+```{r, eval = TRUE}
+s1c <- qtl2::scan1coef(probs[, 11], 
+                       pheno_rz[ , 2, drop = FALSE], 
+                       kinship = K$`11`, 
+                       addcovar = covar, 
+                       cores = 1)
+  
+```
 
 ```{r}
-qtl2::plot_coefCC(s1b, map, scan1_output = qtl[, 2, drop = FALSE])
+left <- names(map[[11]])[min(which(map[[11]] > 112))]
+right <- names(map[[11]])[length(map[[11]])] 
+s1 <- qtl[which(rownames(qtl) == left):which(rownames(qtl) == right), 2, drop = FALSE]
+b1 <- s1c[which(rownames(s1c) == left):which(rownames(s1c) == right), ]
+
+qtl2::plot_coefCC(b1, map, scan1_output = s1)
 ```
 
 
@@ -157,7 +213,7 @@ qtl2::plot_coefCC(s1b, map, scan1_output = qtl[, 2, drop = FALSE])
 
 # Spleen CFU on Chr 15
 
-```{r}
+```{r, eval = FALSE}
 bfn <- file.path(PATH_TO_DDATA, "do_scan1blup_spleen_Chr15.rds")
 if (!file.exists(bfn)){
   s1b <- qtl2::scan1blup(probs[, 15], 
@@ -169,15 +225,32 @@ if (!file.exists(bfn)){
 } else {s1b <- readRDS(bfn)}
 ```
 
+```{r}
+s1c <- qtl2::scan1coef(probs[, 15], 
+                       pheno_rz[ , 2, drop = FALSE], 
+                       kinship = K$`15`, 
+                       addcovar = covar, 
+                       cores = 1)
+```
 
 ```{r}
-qtl2::plot_coefCC(s1b, map, scan1_output = qtl[, 2, drop = FALSE])
+left <- names(map[[15]])[min(which(map[[15]] > 70))]
+right <- names(map[[15]])[min(which(map[[15]] > 85))] 
+s1 <- qtl[which(rownames(qtl) == left):which(rownames(qtl) == right), 2, drop = FALSE]
+b1 <- s1c[which(rownames(s1c) == left):which(rownames(s1c) == right), ]
+
+qtl2::plot_coefCC(b1, map, scan1_output = s1)
 ```
 
 
 
 ---
 
+# Reduced models in CC mice
+
+---
+
+# CC clinical QTL
 
 ```{r, scan1-cc}
 load(file.path(PATH_TO_DDATA, "reduced_map_qtl2_mapping_objects.Rdata"))
@@ -194,9 +267,6 @@ cc_s1 <- qtl2::scan1(genoprobs = genoprobs.1,
 ```
 
 
-
-# Clinical QTL in CC (Clare & colleagues)
-
 ```{r tnseq-timbr}
 t_out <- readRDS(file.path(PATH_TO_DDATA, "cc-timbr-clinical-M1-with-tnseq-reduced-peaks-cis-perms-pvalues.rds")) 
 t_out %>%
@@ -207,6 +277,51 @@ t_out %>%
     columns = dplyr::vars(lod, pos, lower, upper),
     decimals = 1
   )
+```
+
+---
+
+# Reduced models
+
+### Full model
+
+$$\text{trait} = p_A (\text{effect}_A) + ... + p_H (\text{effect}_H) + \text{error}$$
+
+### Reduced model
+
+$$\text{trait} = p_1(\text{effect}_1) + p_2(\text{effect}_2) + \text{error}$$
+
+where, perhaps, $p_1 = p_A + p_B + p_C + p_D + p_E$ and $p_2 = p_F + p_G + p_H$
+with 
+
+$\text{effect}_A = ... = \text{effect}_E$ and $\text{effect}_F = \text{effect}_G = \text{effect}_H$
+
+---
+
+# TIMBR for inferring allelic series
+
+- Use peak marker
+- Samples from posterior distribution 
+  - Each sample has an allelic series (with up to 8 alleles)
+  - Each sample has effects for its allelic series
+- I choose the most frequently occurring allelic series when using reduced models
+
+---
+
+# TIMBR results for lung CFU on Chr 7
+
+```{r}
+t_out$timbr...25[[1]]$post.hap.effects %>%
+  qtl2tb::kde_plot()
+```
+---
+
+# Chr 7 lung CFU
+
+```{r, gp}
+qtl2tb::gp_scatter(geno = genoprobs.1[[7]][ , , t_out$marker_index[1]], 
+                   pheno = cc_pheno[stringr::str_starts(rownames(cc_pheno), "CC"), 1, drop = TRUE]) %>%
+plotly::ggplotly()
 ```
 
 ---
@@ -235,10 +350,11 @@ qtl2::plot_coefCC(b1, map = map.1, scan1_output = s1)
 1. Reduced scans of CC Tnseq traits over Bayes credible interval of the CC clinical QTL
 1. Identify peaks for Tnseq traits
 1. Permutation test to get p-values
+1. (Not yet implemented) Multiple trait testing adjustment
 
 ---
 
-# Reduced scans of Tnseq traits (lung CFU, Chr 17)
+# Reduced scans of Tnseq traits (lung CFU, Chr 7)
 
 ```{r}
 t_out$cis_peaks[[1]] %>%
@@ -254,10 +370,84 @@ t_out$cis_peaks[[1]] %>%
   )
 ```
 
+How to summarize results?
+
+How to reach biological conclusions?
 
 ???
 
 Each CC clinical QTL has a table like this
+
+Showing only annotated genes
+
+---
+
+# TIMBR results for lung CFU on Chr 15
+
+```{r}
+t_out$timbr...25[[2]]$post.hap.effects %>%
+  qtl2tb::kde_plot()
+```
+---
+
+# Chr 15 lung CFU
+
+```{r, gp2}
+qtl2tb::gp_scatter(geno = genoprobs.1[[15]][ , , t_out$marker_index[2]], 
+                   pheno = cc_pheno[stringr::str_starts(rownames(cc_pheno), "CC"), 1, drop = TRUE]) %>%
+plotly::ggplotly()
+```
+
+---
+
+# Allele effects at Chr 15 lung CFU CC QTL
+
+```{r}
+left <- names(map.1[[15]])[min(which(map.1[[15]] > 20))]
+right <- names(map.1[[15]])[min(which(map.1[[15]] > 40))] 
+s1b_lungcfu_chr15 <- qtl2::scan1blup(genoprobs = genoprobs.1[, 15], 
+                pheno = cc_pheno[, 1, drop = FALSE], 
+                kinship = cc_kinship[[15]], 
+                addcovar = addcovar, 
+                se = TRUE
+                )
+s1 <- cc_s1[which(rownames(cc_s1) == left):which(rownames(cc_s1) == right), 1, drop = FALSE]
+b1 <- s1b_lungcfu_chr15[which(rownames(s1b_lungcfu_chr15) == left):which(rownames(s1b_lungcfu_chr15) == right), ]
+qtl2::plot_coefCC(b1, map = map.1, scan1_output = s1)
+```
+
+
+---
+
+# Reduced scans of Tnseq traits (lung CFU, Chr 15)
+
+
+
+```{r}
+t_out$cis_peaks[[2]] %>%
+  dplyr::select(-c(ci_lo, ci_hi, lodindex)) %>%
+  dplyr::rename(trait = lodcolumn) %>%
+  dplyr::arrange(pvalue) %>%
+  dplyr::filter(!stringr::str_starts(trait, "rv")) %>%
+  dplyr::filter(pvalue < 0.05) %>%
+  gt::gt() %>%
+    gt::fmt_number(
+    columns = dplyr::vars(lod, pos),
+    decimals = 1
+  )
+```
+
+
+---
+
+# Next steps
+
+1. Drill down into CC Tnseq peaks near CC clinical trait peaks  
+1. Incorporate DO clinical trait results
+1. Process DO RNASeq data into mappable traits
+
+
+
 
 ---
 class: inverse, center, middle
