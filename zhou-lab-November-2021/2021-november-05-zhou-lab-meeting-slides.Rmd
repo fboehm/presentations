@@ -50,13 +50,21 @@ style_duo_accent(
 
 ## Overview of @sun2021translating
 
+```{r, echo = FALSE, out.height=500, out.width = 800}
+knitr::include_graphics("figures/41467_2021_25014_Fig1_HTML.png")
+```
 
 
+
+---
+
+## Conformal prediction
 
 
 
 
 ---
+
 ## Typography
 
 Text can be **bold**, _italic_, ~~strikethrough~~, or `inline code`.
