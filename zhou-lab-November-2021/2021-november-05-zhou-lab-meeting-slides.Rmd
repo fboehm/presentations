@@ -48,7 +48,7 @@ style_duo_accent(
 
 ---
 
-## Overview of @sun2021translating
+## Overview
 
 ```{r, echo = FALSE, out.height=500, out.width = 800}
 knitr::include_graphics("figures/sun-et-al/41467_2021_25014_Fig1_HTML.png")
