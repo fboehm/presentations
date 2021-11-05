@@ -51,336 +51,179 @@ style_duo_accent(
 ## Overview of @sun2021translating
 
 ```{r, echo = FALSE, out.height=500, out.width = 800}
-knitr::include_graphics("figures/41467_2021_25014_Fig1_HTML.png")
+knitr::include_graphics("figures/sun-et-al/41467_2021_25014_Fig1_HTML.png")
 ```
 
-
-
 ---
 
-## Conformal prediction
-
-
-
-
----
-
-## Typography
-
-Text can be **bold**, _italic_, ~~strikethrough~~, or `inline code`.
-
-[Link to another slide](#colors).
-
-### Lorem Ipsum
-
-Dolor imperdiet nostra sapien scelerisque praesent curae metus facilisis dignissim tortor. 
-Lacinia neque mollis nascetur neque urna velit bibendum. 
-Himenaeos suspendisse leo varius mus risus sagittis aliquet venenatis duis nec.
-
-- Dolor cubilia nostra nunc sodales
-
-- Consectetur aliquet mauris blandit
-
-- Ipsum dis nec porttitor urna sed
-
----
-name: colors
-
-## Colors
-
-.left-column[
-Text color
-
-[Link Color](#3)
-
-**Bold Color**
-
-_Italic Color_
-
-`Inline Code`
-]
-
-.right-column[
-Lorem ipsum dolor sit amet, [consectetur adipiscing elit (link)](#3), 
-sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-Erat nam at lectus urna.
-Pellentesque elit ullamcorper **dignissim cras tincidunt (bold)** lobortis feugiat. 
-_Eros donec ac odio tempor_ orci dapibus ultrices. 
-Id porta nibh venenatis cras sed felis eget velit aliquet.
-Aliquam id diam maecenas ultricies mi.
-Enim sit amet 
-`code_color("inline")`
-venenatis urna cursus eget nunc scelerisque viverra.
-]
-
----
-
-# Big Topic or Inverse Slides `#`
-
-## Slide Headings `##`
-
-### Sub-slide Headings `###`
-
-#### Bold Call-Out `####`
-
-This is a normal paragraph text. Only use header levels 1-4.
-
-##### Possible, but not recommended `#####`
-
-###### Definitely don't use h6 `######`
-
----
-
-# Left-Column Headings
-
-.left-column[
-## First
-
-## Second
-
-## Third
-]
-
-.right-column[
-Dolor quis aptent mus a dictum ultricies egestas.
-
-Amet egestas neque tempor fermentum proin massa!
-
-Dolor elementum fermentum pharetra lectus arcu pulvinar.
-]
-
----
 class: inverse center middle
 
-# Topic Changing Interstitial
+# Methods
 
---
 
-```
+---
+
+## Mondrian Cross-Conformal Prediction (MCCP)
+
+- implementation of conformal prediction in classification  
+- guarantees validity of the predictor for both cases and controls  
+- used to estimate confidence levels of risk prediction in a sample where disease status is known
+
+
+---
+
+## Procedure
+
+1. Compute PRS for each subject    
+1. Divided subjects into training and test sets  
+1. Partition training set into $n$ equal subsets  
+1. Retain one of the $n$ subsets as the "calibration set" to calculate the MCCP probability values (Eq 1) 
+1. Remaining $n-1$ subsets are the "proper training set"  
+1. Fit logistic regression models on the proper training set  
+
+$$ p_y^i = \frac{| \lbrace j: y_i = y, NCM_j \ge NCM_i\rbrace |}{ N\_cal_y + 1: y_i = y}$$
+- $i$ denotes subject index and $y$ denotes class - case or control  
+- $N\_cal_y$ denotes number of cases (or controls) in calibration set  
+- Thus, every test subject is assigned a probability of being a case and a probability of being a control  
+
+
+---
+
+## Procedure 
+
+1. Predict on both the calibration and testing sets  
+1. Calculate a nonconformity measure on every subject in the calibration and testing sets  
+1. Use NCMs in calibration set assign probability values for case and control to subjects in testing set  
+1. Repeat procedure $n$ times, using each of the $n$ subsets exactly once as calibration set  
+1. Average the $n$ probability values for each test subject  
+
+---
+
+## Simulations: Design
+
+- 10,000 subjects from iPSYCH study  
+- used real genotypes on Chr 2  
+- simulated case and control phenotype values 
+- varied polygenicity: 0.001, 0.01, 0.1, 0.2  
+- varied heritability: 0.3, 0.5, 0.8  
+- varied case prevalence: 0.01, 0.05, 0.1, 0.2  
+- discovery set proportion varied: 0.2, 0.5, and 0.7  
+- PRS calculated with thresholding (p < 0.05) and pruning (LD $r^2 < 0.1$)  
+
+---
+
+## Simulations: PRS construction  
+
+- weighted sum of effects for pruned SNPs with MAF $\ge 0.01$
+- effect sizes taken from discovery GWAS or reference GWAS  
+
+---
+
+## Prediction outcomes 
+
+- MCCP produces a prediction set - containing 0, 1, or 2 labels - for every test subject  
+- Differs from classification approaches that produce exactly one label for every test subject  
+
+---
+
+## Calibration assessment  
+
+- Reliability curves to assess calibrations by MCCP and LR  
+- Divide data into five folds  
+- Build MCCP and LR on four folds and make predictions on fifth fold  
+- Observed error is proportion of incorrect predictions against true case-control status
+
+$$Observed_{err}(LR) = \sum \lbrace p^i > 1 - \alpha: y = 0 || p^i < \alpha: y = 1\rbrace$$
+
+$$Observed_{err}(MCCP) = \sum \lbrace p_y^i \le \alpha : y \rbrace$$ 
+
+---
+
+## Evaluation metrics 
+
+MCCP performance measured by *validity* and *coverage*
+
+- A prediction is valid if error frequency is less than or equal to chosen error rate $\alpha$. 
+
+- Coverage is defined as percentage predicted as case or control  
+
+---
+
 class: inverse center middle
-```
 
----
-layout: true
-
-## Blocks
-
----
-
-### Blockquote
-
-> This is a blockquote following a header.
->
-> When something is important enough, you do it even if the odds are not in your favor.
-
----
-
-### Code Blocks
-
-#### R Code
-
-```{r eval=FALSE}
-ggplot(gapminder) +
-  aes(x = gdpPercap, y = lifeExp, size = pop, color = country) +
-  geom_point() +
-  facet_wrap(~year)
-```
-
-#### JavaScript
-
-```js
-var fun = function lang(l) {
-  dateformat.i18n = require('./lang/' + l)
-  return true;
-}
-```
-
----
-
-### More R Code
-
-```{r eval=FALSE}
-dplyr::starwars %>% dplyr::slice_sample(n = 4)
-```
-
----
-
-```{r message=TRUE, eval=requireNamespace("cli", quietly = TRUE)}
-cli::cli_alert_success("It worked!")
-```
-
---
-
-```{r message=TRUE}
-message("Just a friendly message")
-```
-
---
-
-```{r warning=TRUE}
-warning("This could be bad...")
-```
-
---
-
-```{r error=TRUE}
-stop("I hope you're sitting down for this")
-```
+# Results 
 
 
 ---
-layout: true
 
-## Tables
+## Figure 2, Simulations & Calibration plots 
 
----
-exclude: `r if (requireNamespace("tibble", quietly=TRUE)) "false" else "true"`
-
-```{r eval=requireNamespace("tibble", quietly=TRUE)}
-tibble::as_tibble(mtcars)
+```{r, echo = FALSE, out.height=500, out.width = 300}
+knitr::include_graphics("figures/sun-et-al/41467_2021_25014_Fig2_HTML.png")
 ```
-
----
-
-```{r}
-knitr::kable(head(mtcars), format = 'html')
-```
-
----
-exclude: `r if (requireNamespace("DT", quietly=TRUE)) "false" else "true"`
-
-```{r eval=requireNamespace("DT", quietly=TRUE)}
-DT::datatable(head(mtcars), fillContainer = FALSE, options = list(pageLength = 4))
-```
-
----
-layout: true
-
-## Lists
-
----
-
-.pull-left[
-#### Here is an unordered list:
-
-*   Item foo
-*   Item bar
-*   Item baz
-*   Item zip
-]
 
 .pull-right[
-
-#### And an ordered list:
-
-1.  Item one
-1.  Item two
-1.  Item three
-1.  Item four
+1.  Logistic regression underestimates error rate for small error rates & overestimates error rate for large error rates  
+1. MCCP has perfectly calibrated error rates across all considered scenarios  
 ]
 
----
-
-### And a nested list:
-
-- level 1 item
-  - level 2 item
-  - level 2 item
-    - level 3 item
-    - level 3 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-- level 1 item
 
 ---
 
-### Nesting an ol in ul in an ol
+## MCCP vs. Empirical method in real data analysis
 
-- level 1 item (ul)
-  1. level 2 item (ol)
-  1. level 2 item (ol)
-    - level 3 item (ul)
-    - level 3 item (ul)
-- level 1 item (ul)
-  1. level 2 item (ol)
-  1. level 2 item (ol)
-    - level 3 item (ul)
-    - level 3 item (ul)
-  1. level 4 item (ol)
-  1. level 4 item (ol)
-    - level 3 item (ul)
-    - level 3 item (ul)
-- level 1 item (ul)
-
----
-layout: true
-
-## Plots
+- Empirical method:  
+    - Top $x$ proportion ( $x < 0.5$ ) are one class  
+    - Bottom $x$ proportion ( $x < 0.5$ ) are second class  
+- Coverage for "empirical method" $= 2x$  
+- Empirical method doesn't offer individual-level prediction intervals  
 
 ---
 
-```{r plot-example, eval=requireNamespace("ggplot2", quietly=TRUE)}
-library(ggplot2)
-(g <- ggplot(mpg) + aes(hwy, cty, color = class) + geom_point())
+## Figure 3, Performance with real data (PRS only)  
+
+```{r, echo = FALSE, out.height=500, out.width = 800}
+knitr::include_graphics("figures/sun-et-al/41467_2021_25014_Fig3_HTML.png")
 ```
 
 ---
 
-```{r plot-example-themed, eval=requireNamespace("ggplot2", quietly=TRUE)}
-g + xaringanthemer::theme_xaringan(text_font_size = 16, title_font_size = 18) +
-  ggtitle("A Plot About Cars")
+## Figure 4, Performance with real data (PRS and covariates)
+
+```{r, echo = FALSE, out.height=400, out.width = 800}
+knitr::include_graphics("figures/sun-et-al/41467_2021_25014_Fig4_HTML.png")
 ```
 
 ---
-layout: false
 
-## Square image
+class: inverse center middle
 
-<center><img src="https://octodex.github.com/images/labtocat.png" height="400px" /></center>
 
-.footnote[GitHub Octocat]
+# Discussion 
 
----
-
-### Wide image
-
-![](https://guides.github.com/activities/hello-world/branching.png)
-
-.footnote[Wide images scale to 100% slide width]
 
 ---
 
-## Two images
+## Discussion Highlights  
 
-.pull-left[
-![](https://octodex.github.com/images/motherhubbertocat.png)
-]
+- MCCP risk estimates have the "validity" property: 
+    - in the long run, prediction errors fall below a preset error rate  
+- MCCP may aid clinicians by providing individual-level predictions  
+- Future work may apply MCCP to settings where genetic and other subject-level data are available: 
+    - lifestyle, SES, environmental exposures  
+- Other machine learning approaches - knn, random forest, svm, deep nn - may be combined with MCCP in risk prediction  
 
-.pull-right[
-![](https://octodex.github.com/images/dinotocat.png)
-]
+---
+
+## Implications for our PRS methods research  
+
+- DBSLMM and MCCP to get prediction intervals for quantitative traits    
+    - Extend MCCP from binary classification to regression setting  
+
+
 
 ---
 
-### Definition lists can be used with HTML syntax.
-
-<dl>
-<dt>Name</dt>
-<dd>Godzilla</dd>
-<dt>Born</dt>
-<dd>1952</dd>
-<dt>Birthplace</dt>
-<dd>Japan</dd>
-<dt>Color</dt>
-<dd>Green</dd>
-</dl>
-
----
 class: center, middle
 
 # Thanks!
