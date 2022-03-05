@@ -1,0 +1,72 @@
+---
+title: "Prediction intervals and polygenic scores"
+subtitle: ""  
+author: 
+  - "Fred Boehm"
+date: 'March 11, 2022'
+bibliography: polygenic.bib
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      ratio: 16:9
+      countIncrementalSlides: true
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, fig.height=3.5, fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = TRUE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_duo_accent(
+  primary_color = "#1381B0",
+  secondary_color = "#FF961C",
+  inverse_header_color = "#FFFFFF"
+)
+```
+
+## Outline
+
+1. Polygenic scores 
+1. Existing methods for prediction intervals for PRS 
+1. DBSLMM 
+1. Calculating $Var(\hat y)$ 
+1. C++ Implementation 
+
+
+
+
+--- 
+
+class: inverse center middle
+
+# Polygenic scores
+
+---
+
+## Polygenic scores
+
+
+
+
+---
+
+## Popular methods
+
+1. DBSLMM 
+
+
+
