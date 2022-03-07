@@ -41,7 +41,7 @@ style_duo_accent(
 ## Outline
 
 1. Polygenic scores 
-1. Existing methods for prediction intervals for PRS 
+1. Existing methods for prediction intervals for PGS 
 1. DBSLMM 
 1. Calculating $Var(\hat y)$ 
 1. C++ Implementation 
@@ -65,7 +65,7 @@ class: center middle
 
 ---
 
-## Popular methods
+## Popular PGS methods
 
 1. DBSLMM 
 
