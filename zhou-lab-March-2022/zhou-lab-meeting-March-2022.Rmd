@@ -218,6 +218,9 @@ $$
   - Each block produces a n by n matrix 
   - Sum n by n matrices to get $Var(\hat{\tilde y})$
 
+- In practice, I store diagonal elements of $Var(\hat{\tilde y})$ as a plain text file, one per chromosome
+- Chromosome-specific vectors are then added to get the diagonal of $Var(\hat{\tilde y})$
+
 
 
 
