@@ -190,6 +190,35 @@ $$\hat \beta_s = \hat\sigma_s^2\left( I_{m_s} - \Sigma_{ss}(\hat\sigma_s^{-2}n^{
 
 
 
+---
+
+class: center middle
+
+
+# Calculating $Var(\hat{\tilde y})$
+
+
+---
+
+## Calculating $Var(\hat{\tilde y})$
+
+$$
+\begin{aligned}
+Var(\hat{\tilde y}) &= Var(\tilde X_l\hat\beta_l + \tilde X_s \hat\beta_s)\\
+&= Var(\tilde X_l\hat\beta_l)  + Var(\tilde X_s \hat\beta_s) \\
+&= \tilde X_l Var(\hat\beta_l) \tilde X_l^T + \tilde X_s Var(\hat\beta_s) \tilde X_s^T
+\end{aligned}
+$$
+
+---
+
+# C++ implementation
+
+- Blockwise calculations of $Var(\hat{\tilde y})$
+  - Each block produces a n by n matrix 
+  - Sum n by n matrices to get $Var(\hat{\tilde y})$
+
+
 
 
 
