@@ -23,10 +23,16 @@ class: center, middle, inverse, title-slide
 
 
 
+
+
+
+
+
+
 ## Outline
 
 1. Polygenic scores 
-1. Existing methods for prediction intervals for PGS 
+1. Prediction intervals for PGS 
 1. DBSLMM 
 1. Calculating `\(Var(\hat {\tilde y})\)` 
 1. C++ Implementation 
@@ -41,11 +47,6 @@ class: center middle
 
 # Polygenic scores
 
----
-
-## Polygenic scores
-
-
 
 
 ---
@@ -53,6 +54,25 @@ class: center middle
 ## Popular PGS methods
 
 1. DBSLMM 
+
+---
+
+class: center middle
+
+
+# Prediction intervals for PGS
+
+
+---
+
+## Existing approaches to prediction intervals in PRS
+
+1. Mondrian cross-conformal prediction intervals for PRS [Sun+21]
+  - One approach to conformal prediction 
+1. Bayesian credible intervals for PRS [Din+21]
+  - ldpred2 used to obtain posterior samples
+  - Observe large variances in PRS
+
 
 
 ---
@@ -214,6 +234,24 @@ $$
 ---
 
 ## References
+
+Ding, Y., K. Hou, K. S. Burch, et al. (2021). "Large uncertainty in
+individual polygenic risk score estimation impacts PRS-based risk
+stratification". In: _Nature Genetics_. ISSN: 1061-4036, 1546-1718.
+DOI:
+[10.1038/s41588-021-00961-5](https://doi.org/10.1038%2Fs41588-021-00961-5).
+URL:
+[https://www.nature.com/articles/s41588-021-00961-5](https://www.nature.com/articles/s41588-021-00961-5)
+(visited on Dec. 25, 2021).
+
+Sun, J., Y. Wang, L. Folkersen, et al. (2021). "Translating polygenic
+risk scores for clinical use by estimating the confidence bounds of
+risk prediction". In: _Nature Communications_ 12.1, p. 5276. ISSN:
+2041-1723. DOI:
+[10.1038/s41467-021-25014-7](https://doi.org/10.1038%2Fs41467-021-25014-7).
+URL:
+[https://www.nature.com/articles/s41467-021-25014-7](https://www.nature.com/articles/s41467-021-25014-7)
+(visited on Oct. 10, 2021).
 
 
     </textarea>

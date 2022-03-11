@@ -38,10 +38,25 @@ style_duo_accent(
 )
 ```
 
+```{r, load_refs, include=FALSE, cache=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "alphabetic",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("./polygenic.bib", check = FALSE)
+```
+
+
+
+
+
 ## Outline
 
 1. Polygenic scores 
-1. Existing methods for prediction intervals for PGS 
+1. Prediction intervals for PGS 
 1. DBSLMM 
 1. Calculating $Var(\hat {\tilde y})$ 
 1. C++ Implementation 
@@ -56,18 +71,38 @@ class: center middle
 
 # Polygenic scores
 
----
-
-## Polygenic scores
-
-
 
 
 ---
 
-## Popular PGS methods
+## Popular PGS methods with GWAS summary statistics
 
 1. DBSLMM 
+1. ldpred2 
+1. lassosum2 
+
+
+---
+
+class: center middle
+
+
+# Prediction intervals for PGS
+
+
+
+
+
+---
+
+## Existing approaches to prediction intervals in PRS
+
+1. Mondrian cross-conformal prediction intervals for PRS `r Citep(myBib, "sun_translating_2021")`
+  - One approach to conformal prediction 
+1. Bayesian credible intervals for PRS `r Citep(myBib, "ding_large_2021")`
+  - ldpred2 used to obtain posterior samples
+  - Observe large variances in PRS
+
 
 
 ---
@@ -212,7 +247,7 @@ $$
 
 ---
 
-# C++ implementation
+## C++ implementation
 
 - Blockwise calculations of $Var(\hat{\tilde y})$
   - Each block produces a n by n matrix 
@@ -222,12 +257,23 @@ $$
 - Chromosome-specific vectors are then added to get the diagonal of $Var(\hat{\tilde y})$
 
 
+---
 
+## Jackknife-plus for prediction intervals 
+
+- Uses ideas and results from conformal prediction theory 
+- Comes with probabilistic coverage guarantees 
+- Assumes exchangeability of observations 
+- Uses leave-one-out residuals 
 
 
 
 ---
 
 ## References
+
+```{r refs, echo=FALSE, results="asis"}
+PrintBibliography(myBib)
+```
 
 
