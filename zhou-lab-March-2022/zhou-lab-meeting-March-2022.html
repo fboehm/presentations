@@ -35,7 +35,7 @@ class: center, middle, inverse, title-slide
 1. Prediction intervals for PGS 
 1. DBSLMM 
 1. Calculating `\(Var(\hat {\tilde y})\)` 
-1. C++ Implementation 
+1. Jackknife-plus for prediction intervals 
 
 
 
@@ -51,9 +51,12 @@ class: center middle
 
 ---
 
-## Popular PGS methods
+## Popular PGS methods with GWAS summary statistics
 
 1. DBSLMM 
+1. ldpred2 
+1. lassosum2 
+
 
 ---
 
@@ -61,6 +64,9 @@ class: center middle
 
 
 # Prediction intervals for PGS
+
+
+
 
 
 ---
@@ -72,6 +78,16 @@ class: center middle
 1. Bayesian credible intervals for PRS [Din+21]
   - ldpred2 used to obtain posterior samples
   - Observe large variances in PRS
+
+---
+
+## Importance of prediction intervals for PGS
+
+- Clinical utility of an interval estimate in addition to point estimate
+- Large variability in PRS with ldpred2 
+
+
+
 
 
 
@@ -182,7 +198,7 @@ class: center middle
 
 `$$\hat \beta_l = \frac{1}{\sqrt n}\left( \Sigma_{ll} - \Sigma_{ls}(\hat \sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}\Sigma_{sl}\right)^{-1}\left( z_l - \Sigma_{ls}(\hat \sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}z_s\right)$$`
 
-`$$\hat \beta_s = \hat\sigma_s^2\left( I_{m_s} - \Sigma_{ss}(\hat\sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_ss)^{-1}\right)(\sqrt n z_s - n \Sigma_{sl}\hat \beta_l)$$`
+`$$\hat \beta_s = \hat\sigma_s^2\left( I_{m_s} - \Sigma_{ss}(\hat\sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}\right)(\sqrt n z_s - n \Sigma_{sl}\hat \beta_l)$$`
 
 ---
 
@@ -217,7 +233,7 @@ $$
 
 ---
 
-# C++ implementation
+## C++ implementation
 
 - Blockwise calculations of `\(Var(\hat{\tilde y})\)`
   - Each block produces a n by n matrix 
@@ -227,13 +243,32 @@ $$
 - Chromosome-specific vectors are then added to get the diagonal of `\(Var(\hat{\tilde y})\)`
 
 
+---
 
+## Jackknife-plus for prediction intervals [Bar+20]
 
+- Uses ideas and results from conformal prediction theory 
+- Comes with probabilistic coverage guarantees 
+- Assumes exchangeability of observations 
+- Uses leave-one-out residuals 
+- Can we adapt this to "leave out one LD block"? 
+- ~2000 LD blocks for European ancestry subjects 
 
+---
+
+class: center middle
+
+# Thank you!
 
 ---
 
 ## References
+
+Barber, R. F., E. J. Candes, A. Ramdas, et al. (2020). "Predictive
+inference with the jackknife+". In: _arXiv:1905.02928 [stat]_. arXiv:
+[1905.02928](https://arxiv.org/abs/1905.02928). URL:
+[http://arxiv.org/abs/1905.02928](http://arxiv.org/abs/1905.02928)
+(visited on Sep. 12, 2021).
 
 Ding, Y., K. Hou, K. S. Burch, et al. (2021). "Large uncertainty in
 individual polygenic risk score estimation impacts PRS-based risk

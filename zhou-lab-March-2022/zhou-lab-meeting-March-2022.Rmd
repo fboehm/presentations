@@ -59,7 +59,7 @@ myBib <- ReadBib("./polygenic.bib", check = FALSE)
 1. Prediction intervals for PGS 
 1. DBSLMM 
 1. Calculating $Var(\hat {\tilde y})$ 
-1. C++ Implementation 
+1. Jackknife-plus for prediction intervals 
 
 
 
@@ -102,6 +102,16 @@ class: center middle
 1. Bayesian credible intervals for PRS `r Citep(myBib, "ding_large_2021")`
   - ldpred2 used to obtain posterior samples
   - Observe large variances in PRS
+
+---
+
+## Importance of prediction intervals for PGS
+
+- Clinical utility of an interval estimate in addition to point estimate
+- Large variability in PRS with ldpred2 
+
+
+
 
 
 
@@ -212,7 +222,7 @@ $$z_j = \frac{X_j^Ty}{\sqrt n}$$
 
 $$\hat \beta_l = \frac{1}{\sqrt n}\left( \Sigma_{ll} - \Sigma_{ls}(\hat \sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}\Sigma_{sl}\right)^{-1}\left( z_l - \Sigma_{ls}(\hat \sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}z_s\right)$$
 
-$$\hat \beta_s = \hat\sigma_s^2\left( I_{m_s} - \Sigma_{ss}(\hat\sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_ss)^{-1}\right)(\sqrt n z_s - n \Sigma_{sl}\hat \beta_l)$$
+$$\hat \beta_s = \hat\sigma_s^2\left( I_{m_s} - \Sigma_{ss}(\hat\sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}\right)(\sqrt n z_s - n \Sigma_{sl}\hat \beta_l)$$
 
 ---
 
@@ -259,14 +269,20 @@ $$
 
 ---
 
-## Jackknife-plus for prediction intervals 
+## Jackknife-plus for prediction intervals `r Citep(myBib, "barber_predictive_2020")`
 
 - Uses ideas and results from conformal prediction theory 
 - Comes with probabilistic coverage guarantees 
 - Assumes exchangeability of observations 
 - Uses leave-one-out residuals 
+- Can we adapt this to "leave out one LD block"? 
+- ~2000 LD blocks for European ancestry subjects 
 
+---
 
+class: center middle
+
+# Thank you!
 
 ---
 
