@@ -56,6 +56,8 @@ class: center middle
 1. DBSLMM 
 1. ldpred2 
 1. lassosum2 
+1. SBLUP 
+1. C + T
 
 
 ---
@@ -73,9 +75,9 @@ class: center middle
 
 ## Existing approaches to prediction intervals in PRS
 
-1. Mondrian cross-conformal prediction intervals for PRS [Sun+21]
+1. Mondrian cross-conformal prediction intervals for PRS 
   - One approach to conformal prediction 
-1. Bayesian credible intervals for PRS [Din+21]
+1. Bayesian credible intervals for PRS 
   - ldpred2 used to obtain posterior samples
   - Observe large variances in PRS
 
@@ -210,6 +212,26 @@ class: center middle
 - Block diagonal SNP correlation matrix enables blockwise calculations of `\(\hat\beta_l\)` and `\(\hat\beta_s\)`
 
 
+---
+
+## DBSLMM Accuracy in different scenarios 
+
+&lt;img src="1-s2.0-S0002929720301099-gr2_lrg.jpg" width="500" height="400" /&gt;
+
+- DBSLMM is stable across genetic architectures  
+
+
+---
+
+## DBSLMM Computing time and memory requirements 
+
+&lt;img src="1-s2.0-S0002929720301099-gr3_lrg.jpg" width="600" height="400" /&gt;
+
+- DBSLMM is fast with low or modest memory requirements 
+
+
+
+
 
 ---
 
@@ -245,7 +267,7 @@ $$
 
 ---
 
-## Jackknife-plus for prediction intervals [Bar+20]
+## Jackknife-plus for prediction intervals 
 
 - Uses ideas and results from conformal prediction theory 
 - Comes with probabilistic coverage guarantees 
@@ -264,29 +286,7 @@ class: center middle
 
 ## References
 
-Barber, R. F., E. J. Candes, A. Ramdas, et al. (2020). "Predictive
-inference with the jackknife+". In: _arXiv:1905.02928 [stat]_. arXiv:
-[1905.02928](https://arxiv.org/abs/1905.02928). URL:
-[http://arxiv.org/abs/1905.02928](http://arxiv.org/abs/1905.02928)
-(visited on Sep. 12, 2021).
-
-Ding, Y., K. Hou, K. S. Burch, et al. (2021). "Large uncertainty in
-individual polygenic risk score estimation impacts PRS-based risk
-stratification". In: _Nature Genetics_. ISSN: 1061-4036, 1546-1718.
-DOI:
-[10.1038/s41588-021-00961-5](https://doi.org/10.1038%2Fs41588-021-00961-5).
-URL:
-[https://www.nature.com/articles/s41588-021-00961-5](https://www.nature.com/articles/s41588-021-00961-5)
-(visited on Dec. 25, 2021).
-
-Sun, J., Y. Wang, L. Folkersen, et al. (2021). "Translating polygenic
-risk scores for clinical use by estimating the confidence bounds of
-risk prediction". In: _Nature Communications_ 12.1, p. 5276. ISSN:
-2041-1723. DOI:
-[10.1038/s41467-021-25014-7](https://doi.org/10.1038%2Fs41467-021-25014-7).
-URL:
-[https://www.nature.com/articles/s41467-021-25014-7](https://www.nature.com/articles/s41467-021-25014-7)
-(visited on Oct. 10, 2021).
+NULL
 
 
     </textarea>
