@@ -80,6 +80,8 @@ class: center middle
 1. DBSLMM 
 1. ldpred2 
 1. lassosum2 
+1. SBLUP 
+1. C + T
 
 
 ---
@@ -232,6 +234,30 @@ $$\hat \beta_s = \hat\sigma_s^2\left( I_{m_s} - \Sigma_{ss}(\hat\sigma_s^{-2}n^{
 - Approximate the SNP correlation matrix with a block diagonal matrix
 - Blocks defined by LD patterns
 - Block diagonal SNP correlation matrix enables blockwise calculations of $\hat\beta_l$ and $\hat\beta_s$
+
+
+---
+
+## DBSLMM Accuracy in different scenarios 
+
+```{r, echo = FALSE, out.height=400, out.width = 500}
+knitr::include_graphics("1-s2.0-S0002929720301099-gr2_lrg.jpg")
+```
+
+- DBSLMM is stable across genetic architectures  
+
+
+---
+
+## DBSLMM Computing time and memory requirements 
+
+```{r, echo = FALSE, out.height=400, out.width = 600}
+knitr::include_graphics("1-s2.0-S0002929720301099-gr3_lrg.jpg")
+```
+
+- DBSLMM is fast with low or modest memory requirements 
+
+
 
 
 
