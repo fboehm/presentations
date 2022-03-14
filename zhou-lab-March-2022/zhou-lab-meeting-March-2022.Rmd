@@ -239,7 +239,6 @@ $$\hat \beta_s = \hat\sigma_s^2\left( I_{m_s} - \Sigma_{ss}(\hat\sigma_s^{-2}n^{
 
 class: center middle
 
-
 # Calculating $Var(\hat{\tilde y})$
 
 
