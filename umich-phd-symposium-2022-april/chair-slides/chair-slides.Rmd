@@ -39,8 +39,9 @@ style_duo_accent(
 
 1. Jiaqiang Zhu: *Statistical Analysis of Spatial Expression Pattern in Spatial Transcriptomics* 
 1. Emily Roberts: *Causal inference methods to validate surrogate endpoints with time-to-event data*
-1. Jung Yeon Won: * 
-1. Jingyi Zhai 
+1. Jung Yeon Won: *Bias reduction method for estimating the effect of latent time-varying count exposures using multiple lists* 
+1. Jingyi Zhai: *Statistical methods for gene differential expression detection and cell trajectory reconstruction from single-cell RNA sequencing data* 
+
 
 
 
