@@ -265,7 +265,6 @@ knitr::include_graphics("1-s2.0-S0002929720301099-gr3_lrg.jpg")
 
 class: center middle
 
-
 # Calculating $Var(\hat{\tilde y})$
 
 
