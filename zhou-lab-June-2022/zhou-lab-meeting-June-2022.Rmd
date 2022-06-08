@@ -1,8 +1,8 @@
 ---
-title: "Prediction intervals and polygenic scores"
-subtitle: ""  
+title: "Large uncertainty in individual polygenic risk score estimation impacts PRS-based risk stratification"
+subtitle: "Ding, et al. (2022)"  
 author: 
-  - "Fred Boehm"
+  - "Presented by Fred Boehm"
 date: 'June 10, 2022'
 bibliography: ../zhou-lab-March-2022/polygenic.bib
 output:
@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
   fig.width=9, fig.height=3.5, fig.retina=3,
   out.width = "100%",
   cache = FALSE,
-  echo = TRUE,
+  echo = FALSE,
   message = FALSE, 
   warning = FALSE,
   hiline = TRUE
@@ -46,38 +46,15 @@ BibOptions(check.entries = FALSE,
            style = "markdown",
            hyperlink = FALSE,
            dashed = FALSE)
-myBib <- ReadBib("./polygenic.bib", check = FALSE)
+myBib <- ReadBib("../zhou-lab-March-2022/polygenic.bib", check = FALSE)
 ```
 
 
 
 
 
-## Outline
 
 
-
----
-
-class: center middle
-
-
-# Polygenic scores
-
-
-
----
-
-## Popular PGS methods with GWAS summary statistics
-
-1. DBSLMM 
-1. ldpred2 
-1. lassosum2 
-1. SBLUP 
-1. C + T
-
-
----
 
 class: center middle
 
@@ -105,135 +82,130 @@ class: center middle
 - Clinical utility of an interval estimate in addition to point estimate
 - Large variability in PRS with ldpred2 
 
-```{r}
+
+
+---
+
+## LD and finite GWAS sample size introduce uncertainty into PRS estimation
+
+
+```{r, out.height=400, out.width=600}
 knitr::include_graphics("ding_figures/41588_2021_961_Fig1_HTML.png")
+```
+
+---
+
+## GWAS sample size and causal effect size impact the relative ordering of marginal GWAS effects at tag versus true causal SNPs
+
+```{r, out.height=400, out.width=600}
+knitr::include_graphics("ding_figures/41588_2021_961_Fig7_ESM.jpg")
+```
+
+
+
+
+
+
+
+
+
+
+---
+
+## Extracting uncertainty from Bayesian methods for probabilistic PRS-based stratification
+
+```{r, out.height=400, out.width=600}
+knitr::include_graphics("ding_figures/41588_2021_961_Fig2_HTML.png")
 ```
 
 
 ---
 
-class: center middle
+## Expected sd is highly correlated with average sd across testing subjects
+
+```{r, out.height=400, out.width=600}
+knitr::include_graphics("ding_figures/41588_2021_961_Fig3_HTML.png")
+```
+
+---
+
+## Analytical estimator of sd provides an approximately unbiased estimates of average sd of testing individuals
+
+```{r, out.height=400, out.width=1100}
+knitr::include_graphics("ding_figures/41588_2021_961_Fig8_ESM.jpg")
+```
 
 
-# DBSLMM Model & Methods
+
+
+
 
 
 ---
 
-## DBSLMM Model
+## Genetic architecture and sample size impact uncertainty in PRS estimates in simulations
 
-$$y = X\beta + \epsilon$$
+```{r, out.height=400, out.width=600}
+knitr::include_graphics("ding_figures/41588_2021_961_Fig4_HTML.png")
+```
 
-- trait $y$, n vector
-- $X$ n by m matrix of standardized SNP genotypes 
-- $\beta$ m vector of SNP effects 
-- $\epsilon$ n vector of random errors with precision $\tau$
+---
+
+## Calibration of $\rho$-level genetic value credible interval with respect to proportion of causal effects and SNP-heritability in testing individuals
+
+```{r, out.height=400, out.width=600}
+knitr::include_graphics("ding_figures/41588_2021_961_Fig9_ESM.jpg")
+```
 
 
 ---
 
-## DBSLMM Model
+## Distribution of individual PRS absolute standard deviation with respect to polygenicity under different heritability
 
-$$y = X\beta + \epsilon$$
-
-$$\beta_j \sim \pi N(0, \sigma^2_l\tau^{-1}) + (1 - \pi) N(0, \sigma^2_s \tau^{-1})$$
-- $\pi$ proportion of SNPs in the large variance component
-
----
-
-## DBSLMM Model Fitting
-
-$$y = X\beta + \epsilon$$
-- BSLMM: MCMC for model fitting is slow with large memory requirements 
-- Large effect SNPs should be easy to identify from GWAS analysis 
-- Small effect SNPs can't be inferred accurately 
-- But polygenic effects may be inferred with accuracy 
+```{r, out.height=400, out.width=900}
+knitr::include_graphics("ding_figures/41588_2021_961_Fig10_ESM.jpg")
+```
 
 ---
 
-## DBSLMM Model
+## Distribution of individual PRS absolute standard deviation with respect to heritability under different polygenicity
 
-$$y = X_l\beta_l + X_s \beta_s + \epsilon$$
+```{r, out.height=400, out.width=900}
+knitr::include_graphics("ding_figures/41588_2021_961_Fig11_ESM.jpg")
+```
 
-- $X_l$: n by $m_l$ SNP genotypes matrix for large effect SNPs 
-- $\beta_l$: $m_l$ effects vector for large effect SNPs 
-- $X_s$: n by $m_s$ SNP genotypes matrix for small effect SNPs 
-- $\beta_s$: $m_s$ effects vector for small effect SNPs 
 
-$$\beta_{lj} \sim N(0, \sigma_l^2\tau^{-1})$$
 
-$$\beta_{sj} \sim N(0, \sigma_s^2\tau^{-1})$$
-- Set $\sigma^2_l \to \infty$ & treat $\beta_l$ as fixed effects 
 
 
 ---
 
-## DBSLMM Model: Parameter estimation
+## Uncertainty in real data and its influence on PRS-based stratification
 
-- Clumping and Thresholding (C + T) procedure in PLINK to select large effect SNPs
-  - One chromosome at a time
-  - p-value threshold: $10^{-6}$ 
-  - region size: 1 MB 
-  - LD threshold: $r^2 = 0.1$ 
-- Combine large effect SNPs across genome to get $m_l$ SNPs
-
----
-
-## DBSLMM Model: Parameter estimation
-
-$$\hat \beta_l = (X_l^TH^{-1}X_l)^{-1}X_l^TH^{-1}y$$
-
-$$\hat \beta_s = \hat\sigma^2_s X_s^TH^{-1}( y - X_l\hat\beta_l)$$
-
-$$Var(y) = H = \hat\sigma^2_s X_sX_s^T + I_n$$
-
----
-
-## DBSLMM Model: Parameter estimation
-
-- Set $\hat\sigma^2_s$ to predetermined value instead of estimating it  
-  - LD score regression to get SNP heritability, $\hat h^2$
-  - Set $\hat \sigma^2_s = \frac{\hat h^2}{m}$
-  
-  
----
-
-## DBSLMM Model: Parameter estimation
-
-- Use Woodbury matrix identity to calculate $H^{-1}$
-
-$$H^{-1} = I_n - X_s(\sigma_s^{-2}I_{m_s} + X_s^TX_s)^{-1}X_s^T$$
-
----
-
-## DBSLMM: Using GWAS summary statistics 
-
-$$z_j = \frac{X_j^Ty}{\sqrt n}$$
-- $X_j$ is the $j^{th}$ column of $X$, *i.e.*, the $n$ genotypes for the $j^{th}$ SNP 
-
-- $\Sigma_{ss} = \frac{X_s^T X_s}{n}$ 
-- $\Sigma_{ll} = \frac{X_l^T X_l}{n}$ 
-- $\Sigma_{sl} = \frac{X_s^T X_l}{n}$
-
-$$\hat \beta_l = \frac{1}{\sqrt n}\left( \Sigma_{ll} - \Sigma_{ls}(\hat \sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}\Sigma_{sl}\right)^{-1}\left( z_l - \Sigma_{ls}(\hat \sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}z_s\right)$$
-
-$$\hat \beta_s = \hat\sigma_s^2\left( I_{m_s} - \Sigma_{ss}(\hat\sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}\right)(\sqrt n z_s - n \Sigma_{sl}\hat \beta_l)$$
-
----
-
-## DBSLMM Model: SNP correlation matrices
-
-- Use a small set of individuals that differ from the test and training sets 
-- Approximate the SNP correlation matrix with a block diagonal matrix
-- Blocks defined by LD patterns
-- Block diagonal SNP correlation matrix enables blockwise calculations of $\hat\beta_l$ and $\hat\beta_s$
+```{r, out.height=400, out.width=600}
+knitr::include_graphics("ding_figures/41588_2021_961_Fig5_HTML.png")
+```
 
 
 ---
 
-class: center middle
+## Stratification uncertainty at different thresholds and credible set levels
 
-# Thank you!
+```{r, out.height=400, out.width=600}
+knitr::include_graphics("ding_figures/41588_2021_961_Fig6_HTML.png")
+```
+
+
+---
+
+## Individual ranking is consistent when ranking by PRS estimates versus probability of genetic value above threshold
+
+```{r, out.height=400, out.width=600}
+knitr::include_graphics("ding_figures/41588_2021_961_Fig16_ESM.jpg")
+```
+
+
+
 
 ---
 
