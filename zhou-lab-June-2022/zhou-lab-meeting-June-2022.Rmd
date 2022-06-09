@@ -110,13 +110,11 @@ $$\widehat{PRS}_i = x_i^T\hat \beta$$
 
 - LDpred2 assumes:
 
-$$
-\beta_j \sim 
+$$\beta_j \sim 
 \begin{cases}
     N(0, \frac{h^2_g}{Mp_{causal}}),& \text{with probability } p_{causal}\\
     0,              & \text{with probability } 1 - p_{causal}
-\end{cases}
-$$
+\end{cases}$$
 
 - $\hat\beta_{GWAS}$: marginal effects from GWAS samples
 - $\hat R$: LD matrix from GWAS samples
@@ -151,7 +149,24 @@ $$\mathbb{E}\left(var(x_i^T\beta | x_i, X, y, h^2_g) \right) \approx \left(\frac
 - After SNP filtering, 459,792 SNPs remained  
 - 291,273 white British individuals after filtering
 
+$$\beta_j \sim 
+\begin{cases}
+    N(0, \frac{h^2_g}{Mp_{causal}}),& \text{with probability } p_{causal}\\
+    0,              & \text{with probability } 1 - p_{causal}
+\end{cases}$$
 
+$$(y_1, \ldots, y_N) \sim N(X\beta, (1-h_g^2)I_N)$$
+
+---
+
+## 20 Parameter settings for simulations
+
+- $h_g^2$: 0.05, 0.1, 0.25, 0.5, 0.8  
+- $p_{causal}$: 0.001, 0.01, 0.1, 1  
+- 10 traits per setting  
+- training set: 250,000  
+- validation set: 20,000  
+- test set: 21,273  
 
 
 
@@ -204,13 +219,23 @@ knitr::include_graphics("ding_figures/41588_2021_961_Fig2_HTML.png")
 
 ## Expected sd is highly correlated with average sd across testing subjects
 
+.pull-left[
+
 ```{r, out.height=400, out.width=600}
 knitr::include_graphics("ding_figures/41588_2021_961_Fig3_HTML.png")
 ```
 
+]
+
+.pull-right[
+$$\mathbb{E}\left(var(x_i^T\beta | D, h^2_g)\right) \approx \left(\frac{1}{h_g^2} + \frac{N}{M}\right)^{-1}$$
+
+]
+
+
 ---
 
-## Analytical estimator of sd provides an approximately unbiased estimates of average sd of testing individuals
+## Analytical estimator of sd provides approximately unbiased estimates of average sd of testing individuals
 
 ```{r, out.height=400, out.width=1100}
 knitr::include_graphics("ding_figures/41588_2021_961_Fig8_ESM.jpg")
@@ -226,9 +251,19 @@ knitr::include_graphics("ding_figures/41588_2021_961_Fig8_ESM.jpg")
 
 ## Genetic architecture and sample size impact uncertainty in PRS estimates in simulations
 
+.pull-left[
+
 ```{r, out.height=400, out.width=600}
 knitr::include_graphics("ding_figures/41588_2021_961_Fig4_HTML.png")
 ```
+]
+
+
+
+.pull-right[
+$$\text{Scaled sd} = \frac{\text{sd}}{\text{sd of point estimates in the testing group}}$$
+]
+
 
 ---
 

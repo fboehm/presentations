@@ -68,6 +68,102 @@ class: center middle
 - Large variability in PRS with ldpred2 
 
 
+---
+
+class: center middle
+
+
+# Methods
+
+---
+
+## Individual PRS uncertainty
+
+
+`$$y_i = x_i^T\beta + \epsilon$$`
+
+`$$\epsilon_i \sim N(0, \sigma^2_e)$$`
+
+`$$GV_i = x_i^T\beta$$`
+
+`$$\widehat{PRS}_i = x_i^T\hat \beta$$`
+
+
+---
+
+## Estimating individual uncertainty in Bayesian PRS models
+
+- LDpred2 assumes:
+
+`$$\beta_j \sim 
+\begin{cases}
+    N(0, \frac{h^2_g}{Mp_{causal}}),&amp; \text{with probability } p_{causal}\\
+    0,              &amp; \text{with probability } 1 - p_{causal}
+\end{cases}$$`
+
+- `\(\hat\beta_{GWAS}\)`: marginal effects from GWAS samples
+- `\(\hat R\)`: LD matrix from GWAS samples
+
+- LDpred2 uses MCMC to sample from the posterior distribution:
+
+`$$p(\beta | \hat\beta_{GWAS}, \hat R, h_g^2, p_{causal})$$`
+
+---
+
+## Estimating individual uncertainty in Bayesian PRS models
+
+- Use posterior samples to construct a level `\(\rho\)` credible interval for `\(GV_i\)` for each subject
+- For `\(B\)` posterior samples, choose the `\(\frac{1 - \rho}{2}\)` and `\(\frac{1 + \rho}{2}\)` quantiles of `\(x_i^T\tilde \beta\)` as the credible interval
+
+---
+
+## PRS uncertainty analytical form under infinitesimal model
+
+- Assuming all `\(M\)` SNPs are independent &amp; causal, and effect sizes are iid draws from `\(N(0, \frac{h_g^2}{M})\)`:
+
+`$$\hat\beta_{GWAS, j} \sim N\left(\beta_j, \frac{1}{N}\left(1 - \frac{h_g^2}{M}\right)\right)$$`
+and 
+
+`$$\mathbb{E}\left(var(x_i^T\beta | x_i, X, y, h^2_g) \right) \approx \left(\frac{1}{h_g^2} + \frac{N}{M} \right)^{-1}$$`
+
+---
+
+## Simulations
+
+- Start with UKB genotypes  
+- After SNP filtering, 459,792 SNPs remained  
+- 291,273 white British individuals after filtering
+
+`$$\beta_j \sim 
+\begin{cases}
+    N(0, \frac{h^2_g}{Mp_{causal}}),&amp; \text{with probability } p_{causal}\\
+    0,              &amp; \text{with probability } 1 - p_{causal}
+\end{cases}$$`
+
+`$$(y_1, \ldots, y_N) \sim N(X\beta, (1-h_g^2)I_N)$$`
+
+---
+
+## 20 Parameter settings for simulations
+
+- `\(h_g^2\)`: 0.05, 0.1, 0.25, 0.5, 0.8  
+- `\(p_{causal}\)`: 0.001, 0.01, 0.1, 1  
+- 10 traits per setting  
+- training set: 250,000  
+- validation set: 20,000  
+- test set: 21,273  
+
+
+
+
+
+
+---
+
+class: center middle
+
+# Results
+
 
 ---
 
@@ -102,11 +198,21 @@ class: center middle
 
 ## Expected sd is highly correlated with average sd across testing subjects
 
+.pull-left[
+
 &lt;img src="ding_figures/41588_2021_961_Fig3_HTML.png" width="600" height="400" /&gt;
+
+]
+
+.pull-right[
+`$$\mathbb{E}\left(var(x_i^T\beta | D, h^2_g)\right) \approx \left(\frac{1}{h_g^2} + \frac{N}{M}\right)^{-1}$$`
+
+]
+
 
 ---
 
-## Analytical estimator of sd provides an approximately unbiased estimates of average sd of testing individuals
+## Analytical estimator of sd provides approximately unbiased estimates of average sd of testing individuals
 
 &lt;img src="ding_figures/41588_2021_961_Fig8_ESM.jpg" width="1100" height="400" /&gt;
 
@@ -120,7 +226,17 @@ class: center middle
 
 ## Genetic architecture and sample size impact uncertainty in PRS estimates in simulations
 
+.pull-left[
+
 &lt;img src="ding_figures/41588_2021_961_Fig4_HTML.png" width="600" height="400" /&gt;
+]
+
+
+
+.pull-right[
+`$$\text{Scaled sd} = \frac{\text{sd}}{\text{sd of point estimates in the testing group}}$$`
+]
+
 
 ---
 
@@ -172,21 +288,17 @@ class: center middle
 
 ## References
 
-Ding, Y., K. Hou, K. S. Burch, et al. (2021). "Large uncertainty in
-individual polygenic risk score estimation impacts PRS-based risk
-stratification". In: _Nature Genetics_. ISSN: 1061-4036, 1546-1718.
-DOI:
-[10.1038/s41588-021-00961-5](https://doi.org/10.1038%2Fs41588-021-00961-5).
-URL:
+Ding, Y., K. Hou, K. S. Burch, et al. (2021). "Large uncertainty in individual polygenic
+risk score estimation impacts PRS-based risk stratification". In: _Nature Genetics_. ISSN:
+1061-4036, 1546-1718. DOI:
+[10.1038/s41588-021-00961-5](https://doi.org/10.1038%2Fs41588-021-00961-5). URL:
 [https://www.nature.com/articles/s41588-021-00961-5](https://www.nature.com/articles/s41588-021-00961-5)
 (visited on Dec. 25, 2021).
 
-Sun, J., Y. Wang, L. Folkersen, et al. (2021). "Translating polygenic
-risk scores for clinical use by estimating the confidence bounds of
-risk prediction". In: _Nature Communications_ 12.1, p. 5276. ISSN:
-2041-1723. DOI:
-[10.1038/s41467-021-25014-7](https://doi.org/10.1038%2Fs41467-021-25014-7).
-URL:
+Sun, J., Y. Wang, L. Folkersen, et al. (2021). "Translating polygenic risk scores for
+clinical use by estimating the confidence bounds of risk prediction". In: _Nature
+Communications_ 12.1, p. 5276. ISSN: 2041-1723. DOI:
+[10.1038/s41467-021-25014-7](https://doi.org/10.1038%2Fs41467-021-25014-7). URL:
 [https://www.nature.com/articles/s41467-021-25014-7](https://www.nature.com/articles/s41467-021-25014-7)
 (visited on Oct. 10, 2021).
 
