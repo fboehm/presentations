@@ -83,6 +83,87 @@ class: center middle
 - Large variability in PRS with ldpred2 
 
 
+---
+
+class: center middle
+
+
+# Methods
+
+---
+
+## Individual PRS uncertainty
+
+
+$$y_i = x_i^T\beta + \epsilon$$
+
+$$\epsilon_i \sim N(0, \sigma^2_e)$$
+
+$$GV_i = x_i^T\beta$$
+
+$$\widehat{PRS}_i = x_i^T\hat \beta$$
+
+
+---
+
+## Estimating individual uncertainty in Bayesian PRS models
+
+- LDpred2 assumes:
+
+$$
+\beta_j \sim 
+\begin{cases}
+    N(0, \frac{h^2_g}{Mp_{causal}}),& \text{with probability } p_{causal}\\
+    0,              & \text{with probability } 1 - p_{causal}
+\end{cases}
+$$
+
+- $\hat\beta_{GWAS}$: marginal effects from GWAS samples
+- $\hat R$: LD matrix from GWAS samples
+
+- LDpred2 uses MCMC to sample from the posterior distribution:
+
+$$p(\beta | \hat\beta_{GWAS}, \hat R, h_g^2, p_{causal})$$
+
+---
+
+## Estimating individual uncertainty in Bayesian PRS models
+
+- Use posterior samples to construct a level $\rho$ credible interval for $GV_i$ for each subject
+- For $B$ posterior samples, choose the $\frac{1 - \rho}{2}$ and $\frac{1 + \rho}{2}$ quantiles of $x_i^T\tilde \beta$ as the credible interval
+
+---
+
+## PRS uncertainty analytical form under infinitesimal model
+
+- Assuming all $M$ SNPs are independent & causal, and effect sizes are iid draws from $N(0, \frac{h_g^2}{M})$:
+
+$$\hat\beta_{GWAS, j} \sim N\left(\beta_j, \frac{1}{N}\left(1 - \frac{h_g^2}{M}\right)\right)$$
+and 
+
+$$\mathbb{E}\left(var(x_i^T\beta | x_i, X, y, h^2_g) \right) \approx \left(\frac{1}{h_g^2} + \frac{N}{M} \right)^{-1}$$
+
+---
+
+## Simulations
+
+- Start with UKB genotypes  
+- After SNP filtering, 459,792 SNPs remained  
+- 291,273 white British individuals after filtering
+
+
+
+
+
+
+
+
+---
+
+class: center middle
+
+# Results
+
 
 ---
 
