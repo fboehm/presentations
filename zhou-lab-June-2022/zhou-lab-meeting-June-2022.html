@@ -219,7 +219,9 @@ We simulated a GWAS of N individuals ($X_{N×3}$) for 3 SNPs with LD structure R
 &lt;img src="ding_figures/41588_2021_961_Fig8_ESM.jpg" width="1100" height="400" /&gt;
 
 
+???
 
+The x-axis is the average sd(PRSˆi) in testing individuals within each simulation replicate. The y-axis is the expected sd(PRSˆi) computed with equation (1), replacing M and ℎ2𝑔 with estimates of the number of causal variants and SNP-heritability, respectively, from LDpred2. Each dot is an average of 10 simulation replicates for each pcausal∈{0.001,0.01,0.1,1}. The horizontal whiskers represent ±1.96 standard deviations of average sd(PRSˆi). The vertical whiskers represent ±1.96 standard deviations of expected sd(PRSˆi). Note that when pcausal = 1, the independent LD assumption is violated but the analytical form still provides approximately unbiased estimates. When 𝑝causal≠1, the infinitesimal assumption is violated, leading to downward bias in the analytical estimator. In these scenarios, since we simply replace M with 𝑀×𝑝causal, the uncertainty identifying the causal variants is ignored by equation (1).
 
 
 
@@ -242,9 +244,15 @@ We simulated a GWAS of N individuals ($X_{N×3}$) for 3 SNPs with LD structure R
 
 ---
 
-## Calibration of `\(\rho\)`-level genetic value credible interval with respect to proportion of causal effects and SNP-heritability in testing individuals
+## Calibration of rho-level genetic value credible interval with respect to proportion of causal effects and SNP-heritability in testing individuals
 
 &lt;img src="ding_figures/41588_2021_961_Fig9_ESM.jpg" width="600" height="400" /&gt;
+
+???
+
+Each row of panels corresponds to one heritability parameter ℎ2𝑔∈{0.05,0.1,0.25,0.5,0.8} and each column of panels corresponds to one polygenicity parameter 𝑝𝑐𝑎𝑢𝑠𝑎𝑙∈{0.001,0.01,0.11}. The x-axis is the expected coverage of ρ-GV CI (ρ). The y-axis is the empirical coverage calculated as the proportion of ρ-GV CIs that contain the true genetic value for one simulation repeat. The dots and error bars are mean ±1.96 s.e.m of the empirical coverage calculated from 10 simulation repeats.
+
+
 
 
 ---
@@ -253,13 +261,21 @@ We simulated a GWAS of N individuals ($X_{N×3}$) for 3 SNPs with LD structure R
 
 &lt;img src="ding_figures/41588_2021_961_Fig10_ESM.jpg" width="900" height="400" /&gt;
 
+???
+
+Each panel represents simulation with one ℎ2𝑔 from {0.05,0.1,0.25,0.5,0.8}. The x-axis is four polygenicity parameters (𝑝𝑐𝑎𝑢𝑠𝑎𝑙∈{0.0001,0.01,0.1,1}). The y-axis is standard deviation in PRS estimation of an individual. Each violin plot represents 21,273 testing individuals across 10 simulations (212,730 values).
+
+
+
 ---
 
 ## Distribution of individual PRS absolute standard deviation with respect to heritability under different polygenicity
 
 &lt;img src="ding_figures/41588_2021_961_Fig11_ESM.jpg" width="900" height="400" /&gt;
 
+???
 
+Each panel represents simulation with one polygenicity from {0.001,0.01,0.1,1}. The x-axis is five heritability parameters (ℎ2𝑔∈{0.05,0.1,0.25,0.5,0.8}). The y-axis is scaled standard deviation in PRS estimation of an individual. Each violin plot represents 21,273 testing individuals across 10 simulations (212,730 values).
 
 
 
@@ -269,12 +285,22 @@ We simulated a GWAS of N individuals ($X_{N×3}$) for 3 SNPs with LD structure R
 
 &lt;img src="ding_figures/41588_2021_961_Fig5_HTML.png" width="600" height="400" /&gt;
 
+???
+
+a, Example of posterior PRS distributions for individuals with certain below-threshold (dark blue), uncertain below-threshold (light blue), uncertain above-threshold (light yellow) and certain above-threshold (dark yellow) classifications for HDL. Each density plot is a smoothed posterior PRS distribution of an individual randomly chosen from that category. The solid vertical lines are posterior means. The shaded areas are 95% CIs. The red dotted line is the classification threshold. b, Distribution of classification categories across 13 traits (𝑡 = 90%, ρ = 95%). Each bar plot represents the frequency of testing individuals who fall into each of the four classification categories for one trait. The frequency is averaged across five random partitions of the whole dataset. c, Correlation of PRS rankings of test individuals obtained from two MCMC samplings from the posterior of the causal effects. For each trait, we drew two samples from the posterior of the causal effects, ranked all individuals in the test data twice based on their PRS from each sample, and computed the correlation between the two rankings across individuals. Each violin plot contains 5,000 points (1,000 pairs of MCMC samples and five random partitions).
+
+
 
 ---
 
 ## Stratification uncertainty at different thresholds and credible set levels
 
 &lt;img src="ding_figures/41588_2021_961_Fig6_HTML.png" width="600" height="400" /&gt;
+
+???
+
+a, Proportion of above-threshold classifications that are ‘certain’ for four representative traits. The x axis shows ρ varying from 0 to 1 in increments of 0.05. The stratification threshold 𝑡 is fixed at 90%. b, Proportion of above-threshold classifications that are ‘certain’ for two representative traits and two stratification thresholds (t = 90th and t = 99th percentiles). c, Flexible cost optimization with probabilistic individual stratification under various cost functions. Each color corresponds to one cost function: equal cost for each FP and FN diagnosis (CFP = CFN = 1, green); 3× higher cost for FP diagnoses (CFP = 3, CFN = 1, blue); and 3× higher cost for FN diagnoses (CFP = 1, CFN = 3, orange). The probability threshold for classification varies along the x axis. Solid lines represent cost calculated using true genetic risk and dotted lines represent cost estimated from the probability of an individual being above-threshold. Diamond symbols represent the optimal classification threshold for each curve (the minima). Simulation parameters are fixed to ℎ2𝑔=0.25,𝑝causal=1%.
+
 
 
 ---
@@ -283,7 +309,9 @@ We simulated a GWAS of N individuals ($X_{N×3}$) for 3 SNPs with LD structure R
 
 &lt;img src="ding_figures/41588_2021_961_Fig16_ESM.jpg" width="600" height="400" /&gt;
 
+???
 
+The x-axis is the PRS estimates of testing individuals and the y-axis is the probability that GV is above threshold t, where t is (arbitrarily) set to the 90th percentile in the testing individuals. For the individuals whose PRS estimates are far away from threshold, the probability is 0 and 1 respectively. For individuals close to the stratification threshold, the probability of larger than the threshold increases as PRS estimates increase. The histogram on the x-axis is the distribution of PRS estimates in testing individuals and the histogram on the y-axis is its distribution in testing individuals.
 
 
 ---
