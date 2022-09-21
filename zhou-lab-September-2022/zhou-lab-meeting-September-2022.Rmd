@@ -304,6 +304,10 @@ Due to overfitting, $n$ training residuals tend to be smaller than that of the $
 
 
 
+
+
+
+
 ---
 
 # Simulations
