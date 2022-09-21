@@ -3,7 +3,7 @@ title: "Prediction intervals for polygenic scores"
 subtitle: ""  
 author: 
   - "Fred Boehm"
-date: 'September 16, 2022'
+date: 'September 23, 2022'
 bibliography: polygenic.bib
 output:
   xaringan::moon_reader:
@@ -296,11 +296,7 @@ Due to overfitting, $n$ training residuals tend to be smaller than that of the $
 
 ## Jackknife-plus for prediction intervals `r Citep(myBib, "barber_predictive_2020")`
 
-
-```{r, echo = FALSE, out.height=400, out.width = 500}
-knitr::include_graphics("../figs/jackknife+Fig1.png")
-```
-
+![](F1.png)
 
 ---
 
