@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Prediction intervals for polygenic scores</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fred Boehm" />
+    <meta name="date" content="2022-09-16" />
+    <script src="zhou-lab-meeting-September-2022_files/header-attrs/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Prediction intervals for polygenic scores
+]
+.author[
+### Fred Boehm
+]
+.date[
+### September 16, 2022
+]
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+## Outline
+
+1. Polygenic scores 
+1. Prediction intervals for PGS 
+1. DBSLMM 
+1. Jackknife-plus for prediction intervals 
+
+
+
+
+---
+
+class: center middle
+
+
+# Polygenic scores
+
+
+---
+
+## Polygenic scores
+
+- Polygenic scores aim to summarize genetic contributions to complex traits: `$$\sum_{SNPs}(\text{SNP genotype})*(\text{SNP effect})$$`
+- Our goal is to develop a strategy for constructing prediction intervals for PGS (quantitative or binary traits)
+
+
+---
+
+## Popular PGS methods with GWAS summary statistics
+
+1. DBSLMM 
+1. ldpred2 
+1. lassosum2 
+1. SBLUP 
+1. C + T
+
+
+---
+
+class: center middle
+
+
+# Prediction intervals for PGS
+
+
+
+
+
+---
+
+## Existing approaches to prediction intervals in PRS
+
+1. Mondrian cross-conformal prediction intervals for PRS 
+  - One approach to conformal prediction 
+1. Bayesian credible intervals for PRS 
+  - ldpred2 used to obtain posterior samples
+  - Observe large variances in PRS
+
+---
+
+## Importance of prediction intervals for PGS
+
+- Clinical utility of an interval estimate in addition to point estimate
+- Large variability in PRS with ldpred2 
+  - Method applies only to ldpred2
+
+
+
+
+
+
+---
+
+class: center middle
+
+
+# DBSLMM Model &amp; Methods
+
+---
+
+## DBSLMM
+
+- All SNPs have nonzero effects on the trait  
+- Each SNP effect arises from one of two normal distributions  
+  - Large variance or small variance
+- Treat the large variance SNP effects as fixed effects &amp; small variance SNP effects as random effects (omnigenic hypothesis)
+
+
+---
+
+## DBSLMM Model
+
+`$$y = X\beta + \epsilon$$`
+
+- trait `\(y\)`, n vector
+- `\(X\)` n by m matrix of standardized SNP genotypes 
+- `\(\beta\)` m vector of SNP effects 
+- `\(\epsilon\)` n vector of random errors with precision `\(\tau\)`
+
+
+---
+
+## DBSLMM Model
+
+`$$y = X\beta + \epsilon$$`
+
+`$$\beta_j \sim \pi N(0, \sigma^2_l\tau^{-1}) + (1 - \pi) N(0, \sigma^2_s \tau^{-1})$$`
+- `\(\pi\)` proportion of SNPs in the large variance component
+
+---
+
+## DBSLMM Model Fitting
+
+`$$y = X\beta + \epsilon$$`
+- BSLMM: MCMC for model fitting is slow with large memory requirements 
+- Large effect SNPs should be easy to identify from GWAS analysis 
+- Small effect SNPs can't be inferred accurately 
+- But polygenic effects may be inferred with accuracy 
+
+---
+
+## DBSLMM Model
+
+`$$y = X_l\beta_l + X_s \beta_s + \epsilon$$`
+
+- `\(X_l\)`: n by `\(m_l\)` SNP genotypes matrix for large effect SNPs 
+- `\(\beta_l\)`: `\(m_l\)` effects vector for large effect SNPs 
+- `\(X_s\)`: n by `\(m_s\)` SNP genotypes matrix for small effect SNPs 
+- `\(\beta_s\)`: `\(m_s\)` effects vector for small effect SNPs 
+
+`$$\beta_{lj} \sim N(0, \sigma_l^2\tau^{-1})$$`
+
+`$$\beta_{sj} \sim N(0, \sigma_s^2\tau^{-1})$$`
+- Set `\(\sigma^2_l \to \infty\)` &amp; treat `\(\beta_l\)` as fixed effects 
+
+
+---
+
+## DBSLMM Model: Parameter estimation
+
+- Clumping and Thresholding (C + T) procedure in PLINK to select large effect SNPs
+  - One chromosome at a time
+  - p-value threshold: `\(10^{-6}\)` 
+  - region size: 1 MB 
+  - LD threshold: `\(r^2 = 0.1\)` 
+- Combine large effect SNPs across genome to get `\(m_l\)` SNPs
+
+---
+
+## DBSLMM Model: Parameter estimation
+
+`$$\hat \beta_l = (X_l^TH^{-1}X_l)^{-1}X_l^TH^{-1}y$$`
+
+`$$\hat \beta_s = \hat\sigma^2_s X_s^TH^{-1}( y - X_l\hat\beta_l)$$`
+
+`$$Var(y) = H = \hat\sigma^2_s X_sX_s^T + I_n$$`
+
+---
+
+## DBSLMM Model: Parameter estimation
+
+- Set `\(\hat\sigma^2_s\)` to predetermined value instead of estimating it  
+  - LD score regression to get SNP heritability, `\(\hat h^2\)`
+  - Set `\(\hat \sigma^2_s = \frac{\hat h^2}{m}\)`
+  
+  
+---
+
+## DBSLMM Model: Parameter estimation
+
+- Use Woodbury matrix identity to calculate `\(H^{-1}\)`
+
+`$$H^{-1} = I_n - X_s(\sigma_s^{-2}I_{m_s} + X_s^TX_s)^{-1}X_s^T$$`
+
+---
+
+## DBSLMM: Using GWAS summary statistics 
+
+`$$z_j = \frac{X_j^Ty}{\sqrt n}$$`
+- `\(X_j\)` is the `\(j^{th}\)` column of `\(X\)`, *i.e.*, the `\(n\)` genotypes for the `\(j^{th}\)` SNP 
+
+- `\(\Sigma_{ss} = \frac{X_s^T X_s}{n}\)` 
+- `\(\Sigma_{ll} = \frac{X_l^T X_l}{n}\)` 
+- `\(\Sigma_{sl} = \frac{X_s^T X_l}{n}\)`
+
+`$$\hat \beta_l = \frac{1}{\sqrt n}\left( \Sigma_{ll} - \Sigma_{ls}(\hat \sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}\Sigma_{sl}\right)^{-1}\left( z_l - \Sigma_{ls}(\hat \sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}z_s\right)$$`
+
+`$$\hat \beta_s = \hat\sigma_s^2\left( I_{m_s} - \Sigma_{ss}(\hat\sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}\right)(\sqrt n z_s - n \Sigma_{sl}\hat \beta_l)$$`
+
+---
+
+## DBSLMM Model: SNP correlation matrices
+
+- Use a small set of individuals that differ from the test and training sets 
+- Approximate the SNP correlation matrix with a block diagonal matrix
+- Blocks defined by LD patterns
+- Block diagonal SNP correlation matrix enables blockwise calculations of `\(\hat\beta_l\)` and `\(\hat\beta_s\)`
+
+
+---
+
+## DBSLMM Accuracy in different scenarios 
+
+&lt;img src="../zhou-lab-March-2022/1-s2.0-S0002929720301099-gr2_lrg.jpg" width="500" height="400" /&gt;
+
+- DBSLMM is stable across genetic architectures  
+
+
+---
+
+## DBSLMM Computing time and memory requirements 
+
+&lt;img src="../zhou-lab-March-2022/1-s2.0-S0002929720301099-gr3_lrg.jpg" width="600" height="400" /&gt;
+
+- DBSLMM is fast with low or modest memory requirements 
+
+
+
+
+
+---
+
+class: center middle
+
+# Prediction intervals for PGS
+
+---
+
+## Jackknife-plus for prediction intervals 
+
+- Uses ideas and results from conformal prediction theory 
+- Comes with probabilistic coverage guarantees 
+- Assumes exchangeability of observations 
+- Uses leave-one-out residuals 
+
+---
+
+## Jackknife-plus for prediction intervals 
+
+
+
+- JK+ constructs prediction interval for `\(Y_{n+1}\)` as a function of `\(n\)` training points `\((X_i, Y_i)\)` &amp; `\(X_{n+1}\)`
+Naively, we might want to use residuals from the training data to construct the interval:
+`$$(X_{n+1}) \pm (\text{the }(1- \alpha)\text{ quantile of the }n\text{ absolute residuals})$$`
+Residuals are `\(|Y_1 - \hat\mu(X_1)|, …, |Y_n - \hat\mu(X_n)|\)` 
+Due to overfitting, `\(n\)` training residuals tend to be smaller than that of the `\((n+1)^{th}\)` point
+
+---
+
+## Jackknife-plus for prediction intervals 
+
+- JK computes leave-one-out residuals:
+  - `\(R_i = |Y_i - \hat\mu_{-i}(X_i)|\)`  
+- And computes the regression function `\(\hat\mu\)` with all `\(n\)` training points  
+- And outputs the interval:  
+  - `\(\hat\mu(X_{n + 1}) \pm (\text{the } (1 - \alpha) \text{ quantile of } R_1, \ldots, R_n)\)`  
+-  point out that JK has no universal theoretical guarantees &amp; may lose predictive coverage in some settings  
+  
+---
+
+## Jackknife-plus for prediction intervals 
+
+- JK+ is a modification of JK  
+  - Replace `\(\hat\mu\)` with `\(\hat\mu_{-i}\)` 
+
+
+---
+
+## Jackknife-plus for prediction intervals 
+
+- Notation  
+  - `\(\hat q_{n, \alpha}^+\lbrace v_i\rbrace = \text{the }\lceil(1-\alpha)(n + 1)\rceil\text{-th smallest value of }v_1, \ldots v_n\)` 
+  - `\(\hat q_{n, \alpha}^-\lbrace v_i\rbrace = \text{the }\lfloor\alpha(n + 1)\rfloor\text{-th smallest value of }v_1, \ldots v_n\)`  
+
+---
+
+## Jackknife-plus for prediction intervals 
+
+- `\(\hat C_{n, \alpha}^{\text{naive}}(X_{n + 1}) = \hat\mu(X_{n + 1}) \pm \hat q_{n, \alpha}^+\lbrace |Y_1 - \hat\mu(X_1)|, \ldots, |Y_n - \hat\mu(X_n)|\rbrace\)`  
+- `\(\hat C_{n, \alpha}^{\text{JK}}(X_{n + 1}) =  \left(\hat q_{n, \alpha}^-\lbrace \hat\mu(X_{n + 1}) - R_i^{LOO}\rbrace, \hat q_{n, \alpha}^+\lbrace \hat\mu(X_{n + 1}) + R_i^{LOO}\rbrace\right)\)`  
+- `\(\hat C_{n, \alpha}^{\text{JK+}}(X_{n + 1}) =  \left(\hat q_{n, \alpha}^-\lbrace \hat\mu_{- i}(X_{n + 1}) - R_i^{LOO}\rbrace, \hat q_{n, \alpha}^+\lbrace \hat\mu_{-i}(X_{n + 1}) + R_i^{LOO}\rbrace\right)\)`  
+
+
+
+---
+
+## Jackknife-plus for prediction intervals 
+
+
+&lt;img src="../figs/jackknife+Fig1.png" width="500" height="400" /&gt;
+
+
+---
+
+## Cross-validation+
+
+
+
+
+
+
+---
+
+class: center middle
+
+# Thank you!
+
+---
+
+## References
+
+NULL
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9",
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

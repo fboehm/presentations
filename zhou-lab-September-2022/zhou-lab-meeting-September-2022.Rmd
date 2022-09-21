@@ -58,7 +58,6 @@ myBib <- ReadBib("./polygenic.bib", check = FALSE)
 1. Polygenic scores 
 1. Prediction intervals for PGS 
 1. DBSLMM 
-1. Calculating $Var(\hat {\tilde y})$ 
 1. Jackknife-plus for prediction intervals 
 
 
@@ -72,12 +71,19 @@ class: center middle
 # Polygenic scores
 
 
+---
+
+## Polygenic scores
+
+- Polygenic scores aim to summarize genetic contributions to complex traits: $$\sum_{SNPs}(\text{SNP genotype})*(\text{SNP effect})$$
+- Our goal is to develop a strategy for constructing prediction intervals for PGS (quantitative or binary traits)
+
 
 ---
 
 ## Popular PGS methods with GWAS summary statistics
 
-1. DBSLMM 
+1. DBSLMM `r Citep(myBib, "yang_accurate_2020")`
 1. ldpred2 
 1. lassosum2 
 1. SBLUP 
@@ -111,6 +117,7 @@ class: center middle
 
 - Clinical utility of an interval estimate in addition to point estimate
 - Large variability in PRS with ldpred2 
+  - Method applies only to ldpred2
 
 
 
@@ -123,6 +130,15 @@ class: center middle
 
 
 # DBSLMM Model & Methods
+
+---
+
+## DBSLMM
+
+- All SNPs have nonzero effects on the trait  
+- Each SNP effect arises from one of two normal distributions  
+  - Large variance or small variance
+- Treat the large variance SNP effects as fixed effects & small variance SNP effects as random effects (omnigenic hypothesis)
 
 
 ---
@@ -211,55 +227,6 @@ $$Var(y) = H = \hat\sigma^2_s X_sX_s^T + I_n$$
 
 $$H^{-1} = I_n - X_s(\sigma_s^{-2}I_{m_s} + X_s^TX_s)^{-1}X_s^T$$
 
----
-
-## DBSLMM: Using GWAS summary statistics 
-
-$$z_j = \frac{X_j^Ty}{\sqrt n}$$
-- $X_j$ is the $j^{th}$ column of $X$, *i.e.*, the $n$ genotypes for the $j^{th}$ SNP 
-
-- $\Sigma_{ss} = \frac{X_s^T X_s}{n}$ 
-- $\Sigma_{ll} = \frac{X_l^T X_l}{n}$ 
-- $\Sigma_{sl} = \frac{X_s^T X_l}{n}$
-
-$$\hat \beta_l = \frac{1}{\sqrt n}\left( \Sigma_{ll} - \Sigma_{ls}(\hat \sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}\Sigma_{sl}\right)^{-1}\left( z_l - \Sigma_{ls}(\hat \sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}z_s\right)$$
-
-$$\hat \beta_s = \hat\sigma_s^2\left( I_{m_s} - \Sigma_{ss}(\hat\sigma_s^{-2}n^{-1}I_{m_s} + \Sigma_{ss})^{-1}\right)(\sqrt n z_s - n \Sigma_{sl}\hat \beta_l)$$
-
----
-
-## DBSLMM Model: SNP correlation matrices
-
-- Use a small set of individuals that differ from the test and training sets 
-- Approximate the SNP correlation matrix with a block diagonal matrix
-- Blocks defined by LD patterns
-- Block diagonal SNP correlation matrix enables blockwise calculations of $\hat\beta_l$ and $\hat\beta_s$
-
-
----
-
-## DBSLMM Accuracy in different scenarios 
-
-```{r, echo = FALSE, out.height=400, out.width = 500}
-knitr::include_graphics("1-s2.0-S0002929720301099-gr2_lrg.jpg")
-```
-
-- DBSLMM is stable across genetic architectures  
-
-
----
-
-## DBSLMM Computing time and memory requirements 
-
-```{r, echo = FALSE, out.height=400, out.width = 600}
-knitr::include_graphics("1-s2.0-S0002929720301099-gr3_lrg.jpg")
-```
-
-- DBSLMM is fast with low or modest memory requirements 
-
-
-
-
 
 ---
 
@@ -275,6 +242,65 @@ class: center middle
 - Comes with probabilistic coverage guarantees 
 - Assumes exchangeability of observations 
 - Uses leave-one-out residuals 
+
+---
+
+## Jackknife-plus for prediction intervals `r Citep(myBib, "barber_predictive_2020")`
+
+
+
+- JK+ constructs prediction interval for $Y_{n+1}$ as a function of $n$ training points $(X_i, Y_i)$ & $X_{n+1}$
+Naively, we might want to use residuals from the training data to construct the interval:
+$$(X_{n+1}) \pm (\text{the }(1- \alpha)\text{ quantile of the }n\text{ absolute residuals})$$
+Residuals are $|Y_1 - \hat\mu(X_1)|, …, |Y_n - \hat\mu(X_n)|$ 
+Due to overfitting, $n$ training residuals tend to be smaller than that of the $(n+1)^{th}$ point
+
+---
+
+## Jackknife-plus for prediction intervals `r Citep(myBib, "barber_predictive_2020")`
+
+- JK computes leave-one-out residuals:
+  - $R_i = |Y_i - \hat\mu_{-i}(X_i)|$  
+- And computes the regression function $\hat\mu$ with all $n$ training points  
+- And outputs the interval:  
+  - $\hat\mu(X_{n + 1}) \pm (\text{the } (1 - \alpha) \text{ quantile of } R_1, \ldots, R_n)$  
+- `r Cite(myBib, "barber_predictive_2020")` point out that JK has no universal theoretical guarantees & may lose predictive coverage in some settings  
+  
+---
+
+## Jackknife-plus for prediction intervals `r Citep(myBib, "barber_predictive_2020")`
+
+- JK+ is a modification of JK  
+  - Replace $\hat\mu$ with $\hat\mu_{-i}$ 
+
+
+---
+
+## Jackknife-plus for prediction intervals `r Citep(myBib, "barber_predictive_2020")`
+
+- Notation  
+  - $\hat q_{n, \alpha}^+\lbrace v_i\rbrace = \text{the }\lceil(1-\alpha)(n + 1)\rceil\text{-th smallest value of }v_1, \ldots v_n$ 
+  - $\hat q_{n, \alpha}^-\lbrace v_i\rbrace = \text{the }\lfloor\alpha(n + 1)\rfloor\text{-th smallest value of }v_1, \ldots v_n$  
+
+---
+
+## Jackknife-plus for prediction intervals `r Citep(myBib, "barber_predictive_2020")`
+
+- $\hat C_{n, \alpha}^{\text{naive}}(X_{n + 1}) = \hat\mu(X_{n + 1}) \pm \hat q_{n, \alpha}^+\lbrace |Y_1 - \hat\mu(X_1)|, \ldots, |Y_n - \hat\mu(X_n)|\rbrace$  
+- $\hat C_{n, \alpha}^{\text{JK}}(X_{n + 1}) =  \left(\hat q_{n, \alpha}^-\lbrace \hat\mu(X_{n + 1}) - R_i^{LOO}\rbrace, \hat q_{n, \alpha}^+\lbrace \hat\mu(X_{n + 1}) + R_i^{LOO}\rbrace\right)$  
+- $\hat C_{n, \alpha}^{\text{JK+}}(X_{n + 1}) =  \left(\hat q_{n, \alpha}^-\lbrace \hat\mu_{- i}(X_{n + 1}) - R_i^{LOO}\rbrace, \hat q_{n, \alpha}^+\lbrace \hat\mu_{-i}(X_{n + 1}) + R_i^{LOO}\rbrace\right)$  
+
+
+
+---
+
+## Jackknife-plus for prediction intervals `r Citep(myBib, "barber_predictive_2020")`
+
+
+```{r, echo = FALSE, out.height=400, out.width = 500}
+knitr::include_graphics("../figs/jackknife+Fig1.png")
+```
+
 
 ---
 
