@@ -289,6 +289,77 @@ Due to overfitting, `\(n\)` training residuals tend to be smaller than that of t
 
 
 
+
+---
+
+# Simulations
+
+---
+
+## Simulations study design
+
+- 14,500 subjects randomly chosen from 337129 UKB subjects  
+  - 12500 randomly assigned to training set  
+  - 1000 randomly assigned to validation set  
+    - 500 validation subjects also randomly assigned to reference set  
+  - 1000 remaining subjects assigned to "verification" set  
+- 5-fold cross-validation used with the 12,500 training set  
+- Chose all ~95,000 Chr1 SNPs for simulations
+
+  
+---
+
+## Simulations study design
+
+
+
+- Quantitative traits simulated - with GCTA - according to four scenarios:  
+  - Scenario I: Polygenic (all SNPs are causal)  
+  - Scenario II: Sparse (0.1% of SNPs are causal)  
+  - Scenario III: Hybrid (all SNPs are causal, and 0.1% of SNPs have large effects, PGE = 0.2)  
+  - Scenario IV: Hybrid (all SNPs are causal, and 0.1% of SNPs have large effects, PGE = 0.5)  
+  - 3 distributions: Laplace, normal, scaled t  
+  - 3 heritabilities: 0.1, 0.2, 0.5  
+  - 10 replicates per setting
+
+
+---
+
+## Simulations results
+
+![](quant_scenarioI.jpg)
+---
+
+## Simulations results
+
+![](quant_scenarioII.jpg)
+
+---
+
+## Simulations results
+
+![](quant_scenarioIII.jpg)
+
+---
+
+## Simulations results
+
+![](quant_scenarioIV.jpg)
+
+---
+
+# UKB quantitative traits
+
+---
+
+## UKB quantitative traits
+
+
+
+
+
+
+
 ---
 
 class: center middle
