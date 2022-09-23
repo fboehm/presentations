@@ -46,7 +46,7 @@ BibOptions(check.entries = FALSE,
            style = "markdown",
            hyperlink = FALSE,
            dashed = FALSE)
-myBib <- ReadBib("./polygenic.bib", check = FALSE)
+myBib <- ReadBib("polygenic.bib", check = FALSE)
 ```
 
 
@@ -148,10 +148,10 @@ class: center middle
 
 $$y = X\beta + \epsilon$$
 
-- trait $y$, n vector
-- $X$ n by m matrix of standardized SNP genotypes 
-- $\beta$ m vector of SNP effects 
-- $\epsilon$ n vector of random errors with precision $\tau$
+- trait $y$: n vector
+- $X$: n by m matrix of standardized SNP genotypes 
+- $\beta$: m vector of SNP effects 
+- $\epsilon$: n vector of random errors with precision $\tau$
 
 
 ---
@@ -179,10 +179,10 @@ $$y = X\beta + \epsilon$$
 
 $$y = X_l\beta_l + X_s \beta_s + \epsilon$$
 
-- $X_l$: n by $m_l$ SNP genotypes matrix for large effect SNPs 
-- $\beta_l$: $m_l$ effects vector for large effect SNPs 
-- $X_s$: n by $m_s$ SNP genotypes matrix for small effect SNPs 
-- $\beta_s$: $m_s$ effects vector for small effect SNPs 
+- $X_l$ : n by $m_l$ SNP genotypes matrix for large effect SNPs 
+- $\beta_l$ : $m_l$ effects vector for large effect SNPs 
+- $X_s$ : n by $m_s$ SNP genotypes matrix for small effect SNPs 
+- $\beta_s$ : $m_s$ effects vector for small effect SNPs 
 
 $$\beta_{lj} \sim N(0, \sigma_l^2\tau^{-1})$$
 
@@ -282,6 +282,7 @@ $$(X_{n+1}) \pm (\text{the }(1- \alpha)\text{ quantile of the }n\text{ absolute 
 
 - Notation  
   - $\hat q_{n, \alpha}^+\lbrace v_i\rbrace = \text{the }\lceil(1-\alpha)(n + 1)\rceil\text{-th smallest value of }v_1, \ldots v_n$  
+  
   - $\hat q_{n, \alpha}^-\lbrace v_i\rbrace = \text{the }\lfloor\alpha(n + 1)\rfloor\text{-th smallest value of }v_1, \ldots v_n$   
 
 ---
@@ -289,7 +290,9 @@ $$(X_{n+1}) \pm (\text{the }(1- \alpha)\text{ quantile of the }n\text{ absolute 
 ## Jackknife-plus for prediction intervals `r Citep(myBib, "barber_predictive_2020")`
 
 - $\hat C_{n, \alpha}^{\text{naive}}(X_{n + 1}) = \hat\mu(X_{n + 1}) \pm \hat q_{n, \alpha}^+\lbrace |Y_1 - \hat\mu(X_1)|, \ldots, |Y_n - \hat\mu(X_n)|\rbrace$  
+
 - $\hat C_{n, \alpha}^{\text{JK}}(X_{n + 1}) =  \left(\hat q_{n, \alpha}^-\lbrace \hat\mu(X_{n + 1}) - R_i^{LOO}\rbrace, \hat q_{n, \alpha}^+\lbrace \hat\mu(X_{n + 1}) + R_i^{LOO}\rbrace\right)$  
+
 - $\hat C_{n, \alpha}^{\text{JK+}}(X_{n + 1}) =  \left(\hat q_{n, \alpha}^-\lbrace \hat\mu_{- i}(X_{n + 1}) - R_i^{LOO}\rbrace, \hat q_{n, \alpha}^+\lbrace \hat\mu_{-i}(X_{n + 1}) + R_i^{LOO}\rbrace\right)$  
 
 
@@ -314,6 +317,8 @@ $$(X_{n+1}) \pm (\text{the }(1- \alpha)\text{ quantile of the }n\text{ absolute 
 
 
 ---
+
+class: center middle
 
 # Simulations
 
@@ -350,28 +355,35 @@ $$(X_{n+1}) \pm (\text{the }(1- \alpha)\text{ quantile of the }n\text{ absolute 
 
 ## Simulations results
 
-![](quant_scenarioI.jpg)
----
 
-## Simulations results
 
-![](quant_scenarioII.jpg)
+<img src="quant_scenarioI.jpg" alt="sims" width="500"/>
 
 ---
 
 ## Simulations results
 
-![](quant_scenarioIII.jpg)
+<img src="quant_scenarioII.jpg" alt="sims" width="600"/>
+
+
 
 ---
 
 ## Simulations results
 
-![](quant_scenarioIV.jpg)
+<img src="quant_scenarioIII.jpg" alt="sims" width="600"/>
+
 
 ---
 
-# UKB quantitative traits
+## Simulations results
+
+<img src="quant_scenarioIV.jpg" alt="sims" width="600"/>
+
+
+---
+
+## UKB quantitative traits
 
 - Sheng Yang processed & analyzed 25 quantitative traits from UKB   
 - I've constructed CV+ prediction intervals for the 25 traits    
@@ -380,12 +392,12 @@ $$(X_{n+1}) \pm (\text{the }(1- \alpha)\text{ quantile of the }n\text{ absolute 
 
 ---
 
-# Next Steps
+## Next Steps
 
 - Troubleshoot simulations  
   - Is there a bug in my CV+ R code?  
 - Analyze binary traits from UKB    
-  - Sheng Yang already created the needed summary statistics files  
+  - Sheng Yang already created the needed summary statistics files (gemma outputs) 
 
 
 

@@ -66,7 +66,7 @@ class: center middle
 
 ## Popular PGS methods with GWAS summary statistics
 
-1. DBSLMM 
+1. DBSLMM [YZ20]
 1. ldpred2 
 1. lassosum2 
 1. SBLUP 
@@ -88,9 +88,9 @@ class: center middle
 
 ## Existing approaches to prediction intervals in PRS
 
-1. Mondrian cross-conformal prediction intervals for PRS 
+1. Mondrian cross-conformal prediction intervals for PRS [Sun+21]
   - One approach to conformal prediction 
-1. Bayesian credible intervals for PRS 
+1. Bayesian credible intervals for PRS [Din+21]
   - ldpred2 used to obtain posterior samples
   - Observe large variances in PRS
 
@@ -130,10 +130,10 @@ class: center middle
 
 `$$y = X\beta + \epsilon$$`
 
-- trait `\(y\)`, n vector
-- `\(X\)` n by m matrix of standardized SNP genotypes 
-- `\(\beta\)` m vector of SNP effects 
-- `\(\epsilon\)` n vector of random errors with precision `\(\tau\)`
+- trait `\(y\)`: n vector
+- `\(X\)`: n by m matrix of standardized SNP genotypes 
+- `\(\beta\)`: m vector of SNP effects 
+- `\(\epsilon\)`: n vector of random errors with precision `\(\tau\)`
 
 
 ---
@@ -161,10 +161,10 @@ class: center middle
 
 `$$y = X_l\beta_l + X_s \beta_s + \epsilon$$`
 
-- `\(X_l\)`: n by `\(m_l\)` SNP genotypes matrix for large effect SNPs 
-- `\(\beta_l\)`: `\(m_l\)` effects vector for large effect SNPs 
-- `\(X_s\)`: n by `\(m_s\)` SNP genotypes matrix for small effect SNPs 
-- `\(\beta_s\)`: `\(m_s\)` effects vector for small effect SNPs 
+- `\(X_l\)` : n by `\(m_l\)` SNP genotypes matrix for large effect SNPs 
+- `\(\beta_l\)` : `\(m_l\)` effects vector for large effect SNPs 
+- `\(X_s\)` : n by `\(m_s\)` SNP genotypes matrix for small effect SNPs 
+- `\(\beta_s\)` : `\(m_s\)` effects vector for small effect SNPs 
 
 `$$\beta_{lj} \sim N(0, \sigma_l^2\tau^{-1})$$`
 
@@ -219,7 +219,7 @@ class: center middle
 
 ---
 
-## Jackknife-plus for prediction intervals 
+## Jackknife-plus for prediction intervals [Bar+20]
 
 - Uses ideas and results from conformal prediction theory 
 - Comes with probabilistic coverage guarantees 
@@ -228,7 +228,7 @@ class: center middle
 
 ---
 
-## Jackknife-plus for prediction intervals 
+## Jackknife-plus for prediction intervals [Bar+20]
 
 
 
@@ -241,18 +241,18 @@ class: center middle
 
 ---
 
-## Jackknife-plus for prediction intervals 
+## Jackknife-plus for prediction intervals [Bar+20]
 
 - JK computes leave-one-out residuals:
   - `\(R_i = |Y_i - \hat\mu_{-i}(X_i)|\)`  
 - And computes the regression function `\(\hat\mu\)` with all `\(n\)` training points  
 - And outputs the interval:  
   - `\(\hat\mu(X_{n + 1}) \pm (\text{the } (1 - \alpha) \text{ quantile of } R_1, \ldots, R_n)\)`  
--  point out that JK has no universal theoretical guarantees &amp; may lose predictive coverage in some settings  
+- [Bar+20] point out that JK has no universal theoretical guarantees &amp; may lose predictive coverage in some settings  
   
 ---
 
-## Jackknife-plus for prediction intervals 
+## Jackknife-plus for prediction intervals [Bar+20]
 
 - JK+ is a modification of JK  
   - Replace `\(\hat\mu\)` with `\(\hat\mu_{-i}\)`  
@@ -260,25 +260,28 @@ class: center middle
 
 ---
 
-## Jackknife-plus for prediction intervals 
+## Jackknife-plus for prediction intervals [Bar+20]
 
 - Notation  
   - `\(\hat q_{n, \alpha}^+\lbrace v_i\rbrace = \text{the }\lceil(1-\alpha)(n + 1)\rceil\text{-th smallest value of }v_1, \ldots v_n\)`  
+  
   - `\(\hat q_{n, \alpha}^-\lbrace v_i\rbrace = \text{the }\lfloor\alpha(n + 1)\rfloor\text{-th smallest value of }v_1, \ldots v_n\)`   
 
 ---
 
-## Jackknife-plus for prediction intervals 
+## Jackknife-plus for prediction intervals [Bar+20]
 
 - `\(\hat C_{n, \alpha}^{\text{naive}}(X_{n + 1}) = \hat\mu(X_{n + 1}) \pm \hat q_{n, \alpha}^+\lbrace |Y_1 - \hat\mu(X_1)|, \ldots, |Y_n - \hat\mu(X_n)|\rbrace\)`  
+
 - `\(\hat C_{n, \alpha}^{\text{JK}}(X_{n + 1}) =  \left(\hat q_{n, \alpha}^-\lbrace \hat\mu(X_{n + 1}) - R_i^{LOO}\rbrace, \hat q_{n, \alpha}^+\lbrace \hat\mu(X_{n + 1}) + R_i^{LOO}\rbrace\right)\)`  
+
 - `\(\hat C_{n, \alpha}^{\text{JK+}}(X_{n + 1}) =  \left(\hat q_{n, \alpha}^-\lbrace \hat\mu_{- i}(X_{n + 1}) - R_i^{LOO}\rbrace, \hat q_{n, \alpha}^+\lbrace \hat\mu_{-i}(X_{n + 1}) + R_i^{LOO}\rbrace\right)\)`  
 
 
 
 ---
 
-## Jackknife-plus for prediction intervals 
+## Jackknife-plus for prediction intervals [Bar+20]
 
 ![](F1.png)
 
@@ -296,6 +299,8 @@ class: center middle
 
 
 ---
+
+class: center middle
 
 # Simulations
 
@@ -332,28 +337,35 @@ class: center middle
 
 ## Simulations results
 
-![](quant_scenarioI.jpg)
----
 
-## Simulations results
 
-![](quant_scenarioII.jpg)
+&lt;img src="quant_scenarioI.jpg" alt="sims" width="500"/&gt;
 
 ---
 
 ## Simulations results
 
-![](quant_scenarioIII.jpg)
+&lt;img src="quant_scenarioII.jpg" alt="sims" width="600"/&gt;
+
+
 
 ---
 
 ## Simulations results
 
-![](quant_scenarioIV.jpg)
+&lt;img src="quant_scenarioIII.jpg" alt="sims" width="600"/&gt;
+
 
 ---
 
-# UKB quantitative traits
+## Simulations results
+
+&lt;img src="quant_scenarioIV.jpg" alt="sims" width="600"/&gt;
+
+
+---
+
+## UKB quantitative traits
 
 - Sheng Yang processed &amp; analyzed 25 quantitative traits from UKB   
 - I've constructed CV+ prediction intervals for the 25 traits    
@@ -362,12 +374,12 @@ class: center middle
 
 ---
 
-# Next Steps
+## Next Steps
 
 - Troubleshoot simulations  
   - Is there a bug in my CV+ R code?  
 - Analyze binary traits from UKB    
-  - Sheng Yang already created the needed summary statistics files  
+  - Sheng Yang already created the needed summary statistics files (gemma outputs) 
 
 
 
@@ -384,7 +396,37 @@ class: center middle
 
 ## References
 
-NULL
+Barber, R. F., E. J. Candes, A. Ramdas, et al. (2020). "Predictive
+inference with the jackknife+". In: _arXiv:1905.02928 [stat]_. arXiv:
+[1905.02928](https://arxiv.org/abs/1905.02928). URL:
+[http://arxiv.org/abs/1905.02928](http://arxiv.org/abs/1905.02928)
+(visited on Sep. 12, 2021).
+
+Ding, Y., K. Hou, K. S. Burch, et al. (2021). "Large uncertainty in
+individual polygenic risk score estimation impacts PRS-based risk
+stratification". In: _Nature Genetics_. ISSN: 1061-4036, 1546-1718.
+DOI:
+[10.1038/s41588-021-00961-5](https://doi.org/10.1038%2Fs41588-021-00961-5).
+URL:
+[https://www.nature.com/articles/s41588-021-00961-5](https://www.nature.com/articles/s41588-021-00961-5)
+(visited on Dec. 25, 2021).
+
+Sun, J., Y. Wang, L. Folkersen, et al. (2021). "Translating polygenic
+risk scores for clinical use by estimating the confidence bounds of
+risk prediction". In: _Nature Communications_ 12.1, p. 5276. ISSN:
+2041-1723. DOI:
+[10.1038/s41467-021-25014-7](https://doi.org/10.1038%2Fs41467-021-25014-7).
+URL:
+[https://www.nature.com/articles/s41467-021-25014-7](https://www.nature.com/articles/s41467-021-25014-7)
+(visited on Oct. 10, 2021).
+
+Yang, S. and X. Zhou (2020). "Accurate and Scalable Construction of
+Polygenic Scores in Large Biobank Data Sets". In: _The American Journal
+of Human Genetics_ 106.5, pp. 679-693. ISSN: 00029297. DOI:
+[10.1016/j.ajhg.2020.03.013](https://doi.org/10.1016%2Fj.ajhg.2020.03.013).
+URL:
+[https://linkinghub.elsevier.com/retrieve/pii/S0002929720301099](https://linkinghub.elsevier.com/retrieve/pii/S0002929720301099)
+(visited on Jun. 01, 2021).
 
 
     </textarea>
