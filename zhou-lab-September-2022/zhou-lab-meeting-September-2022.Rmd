@@ -380,8 +380,12 @@ $$(X_{n+1}) \pm (\text{the }(1- \alpha)\text{ quantile of the }n\text{ absolute 
 
 ---
 
+# Next Steps
 
-
+- Troubleshoot simulations  
+  - Is there a bug in my CV+ R code?  
+- Analyze binary traits from UKB    
+  - Sheng Yang already created the needed summary statistics files  
 
 
 
