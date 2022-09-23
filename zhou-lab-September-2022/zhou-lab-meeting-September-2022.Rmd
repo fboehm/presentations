@@ -373,9 +373,14 @@ $$(X_{n+1}) \pm (\text{the }(1- \alpha)\text{ quantile of the }n\text{ absolute 
 
 # UKB quantitative traits
 
+- Sheng Yang processed & analyzed 25 quantitative traits from UKB   
+- I've constructed CV+ prediction intervals for the 25 traits    
+- Coverage ranges from 0.943 to 0.965 for nominally ~95% intervals  
+
+
 ---
 
-## UKB quantitative traits
+
 
 
 

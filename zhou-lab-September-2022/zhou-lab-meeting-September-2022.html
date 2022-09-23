@@ -38,9 +38,10 @@ class: center, middle, inverse, title-slide
 ## Outline
 
 1. Polygenic scores 
-1. Prediction intervals for PGS 
 1. DBSLMM 
-1. Jackknife-plus for prediction intervals 
+1. Prediction intervals for PGS 
+1. Jackknife+ for prediction intervals 
+1. Crossvalidation+ for prediction intervals
 
 
 
@@ -231,11 +232,12 @@ class: center middle
 
 
 
-- JK+ constructs prediction interval for `\(Y_{n+1}\)` as a function of `\(n\)` training points `\((X_i, Y_i)\)` &amp; `\(X_{n+1}\)`
-Naively, we might want to use residuals from the training data to construct the interval:
+- JK+ constructs prediction interval for `\(Y_{n+1}\)` as a function of `\(n\)` training points `\((X_i, Y_i)\)` &amp; `\(X_{n+1}\)`  
+
+- Naively, we might want to use residuals from the training data to construct the interval:
 `$$(X_{n+1}) \pm (\text{the }(1- \alpha)\text{ quantile of the }n\text{ absolute residuals})$$`
-Residuals are `\(|Y_1 - \hat\mu(X_1)|, …, |Y_n - \hat\mu(X_n)|\)` 
-Due to overfitting, `\(n\)` training residuals tend to be smaller than that of the `\((n+1)^{th}\)` point
+- Residuals are `\(|Y_1 - \hat\mu(X_1)|, …, |Y_n - \hat\mu(X_n)|\)`  
+- Due to overfitting, `\(n\)` training residuals tend to be smaller than that of the `\((n+1)^{th}\)` point  
 
 ---
 
@@ -253,7 +255,7 @@ Due to overfitting, `\(n\)` training residuals tend to be smaller than that of t
 ## Jackknife-plus for prediction intervals 
 
 - JK+ is a modification of JK  
-  - Replace `\(\hat\mu\)` with `\(\hat\mu_{-i}\)` 
+  - Replace `\(\hat\mu\)` with `\(\hat\mu_{-i}\)`  
 
 
 ---
@@ -261,8 +263,8 @@ Due to overfitting, `\(n\)` training residuals tend to be smaller than that of t
 ## Jackknife-plus for prediction intervals 
 
 - Notation  
-  - `\(\hat q_{n, \alpha}^+\lbrace v_i\rbrace = \text{the }\lceil(1-\alpha)(n + 1)\rceil\text{-th smallest value of }v_1, \ldots v_n\)` 
-  - `\(\hat q_{n, \alpha}^-\lbrace v_i\rbrace = \text{the }\lfloor\alpha(n + 1)\rfloor\text{-th smallest value of }v_1, \ldots v_n\)`  
+  - `\(\hat q_{n, \alpha}^+\lbrace v_i\rbrace = \text{the }\lceil(1-\alpha)(n + 1)\rceil\text{-th smallest value of }v_1, \ldots v_n\)`  
+  - `\(\hat q_{n, \alpha}^-\lbrace v_i\rbrace = \text{the }\lfloor\alpha(n + 1)\rfloor\text{-th smallest value of }v_1, \ldots v_n\)`   
 
 ---
 
@@ -282,11 +284,14 @@ Due to overfitting, `\(n\)` training residuals tend to be smaller than that of t
 
 ---
 
-## Cross-validation+
+## Cross-validation+ for `\(K\)`-fold crossvalidation
 
-
-
-
+- Split training set into `\(K\)` disjoint sets of equal size, `\(m = \frac{n}{K}\)`  
+- `\(\hat \mu_{-S_k} = \mathcal{A}\left((X_i, Y_i): i \in \lbrace 1, \ldots, n\rbrace \setminus S_k \right)\)`  
+- `\(R_i^{CV} = |Y_i - \hat \mu_{- S_{k(i)}}(X_i)|\)` with `\(i \in S_{k(i)}\)`  
+- `\(\hat C_{n, K, \alpha}^{CV+}(X_{n + 1}) = \left(\hat q^-_{n, \alpha}\lbrace \hat \mu_{- S_{k(i)}}(X_{n + 1}) - R_i^{CV}\rbrace, \hat q^+_{n, \alpha}\lbrace \hat \mu_{- S_{k(i)}}(X_{n + 1}) + R_i^{CV}\rbrace\right)\)`  
+- CV+ requires `\(K\)` model fits instead of `\(n\)` for JK+
+  - CV+ intervals may be wider due to smaller sample size
 
 
 
@@ -350,9 +355,14 @@ Due to overfitting, `\(n\)` training residuals tend to be smaller than that of t
 
 # UKB quantitative traits
 
+- Sheng Yang processed &amp; analyzed 25 quantitative traits from UKB   
+- I've constructed CV+ prediction intervals for the 25 traits    
+- Coverage ranges from 0.943 to 0.965 for nominally ~95% intervals  
+
+
 ---
 
-## UKB quantitative traits
+
 
 
 
