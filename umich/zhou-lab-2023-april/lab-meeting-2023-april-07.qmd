@@ -1,10 +1,73 @@
 ---
-title: "Habits"
-author: "John Doe"
-format: revealjs
+title: ""
+author: "Presented by Fred Boehm"
+format: 
+  revealjs:
+    incremental: true
+    smaller: true
+    scrollable: true
+    theme: blood
 ---
 
-## Getting up
+## Phenotype model for admixed individuals
 
-- Turn off alarm
-- Get out of bed
+For individual $i = 1, \ldots, N$, SNPs $s = 1, \ldots, S$, and ancestries $k = 1, 2$, we have
+
+$$g_{i,s,k} = x_{i,s,M}1_{y_{i,s,M} = k} + x_{i,s,P}1_{y_{i,s,P} = k}$$
+
+- $g_{i,s,k}$ encodes allele counts that are specific to the local ancestry
+
+## Phenotype model for admixed individuals
+
+- Denote the causal allelic effects by $\beta_k \in \mathbb{R}^S$ for $k = 1, 2$  
+- Each individual's phenotype is then modeled as:
+
+$$y_i = c_i^T\alpha + \sum_{s=1}^S \left(g_{i,s,1}\beta_{s,1} + g_{i,s,2}\beta_{s,2}\right) + \epsilon_i$$ 
+
+- $c_i\in \mathbb{R}^C$ is a vector of covariates, including an intercept
+- $\alpha\in \mathbb{R}^C$ is a vector of covariate effects
+- $\epsilon_i$ is a random error term
+
+## Phenotype model for admixed individuals
+
+- Aggregating $g_{i,s,k}$ over all SNPs $s$ and all subjects $i$ gives matrices $G_{k}\in \lbrace 0,1,2\rbrace^{N\times S}$
+
+$$y = C\alpha + G_1\beta_1 + G_2\beta_2 + \epsilon$$
+
+
+- $C\in \mathbb{R}^{N \times C}$ is a matrix of covariates
+
+## Phenotype model for admixed individuals
+
+- Model $\beta_1, \beta_2$ as:
+
+$$\begin{bmatrix} 
+\beta_{s,1} \\
+\beta_{s,2}
+\end{bmatrix}
+\sim N\left( 
+\begin{bmatrix}
+0 \\
+0
+\end{bmatrix}, 
+\tau_s^2
+\begin{bmatrix}
+\frac{\sigma_g^2}{S} & \frac{\rho_g}{S} \\
+\frac{\rho_g}{S} & \frac{\sigma_g^2}{S}
+\end{bmatrix}
+\right)
+$$
+
+- $\epsilon_i \sim N(0, \sigma_e^2)$
+
+- $\tau_s$ denotes SNP-specific parameters for effects distribution
+
+## Phenotype model for admixed individuals
+
+- Define correlation of genetic effects as 
+
+$$r_{admix} = \frac{\rho_g}{\sigma_g}$$
+
+- $r_{admix} = 1$ implies that $\beta_{s,1} = \beta_{s,2}$ for all SNPs $s$
+- $r_{admix} < 1$ indicates differences in causal effects between ancestries
+
