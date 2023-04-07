@@ -118,9 +118,42 @@ $L_p(r_{admix}) = max_{(\alpha, \sigma_g^2, \sigma_e^2)}L(\alpha, \sigma_g^2, r_
 
 $$y = C\alpha + g_{s,1}\beta_{s,1}^{(m)} + g_{s,2}\beta_{s,2}^{(m)} + \epsilon$$
 
-- Here, $\beta_{s,1}^{(m)}$ and $\beta_{s,2}^{(m)}$ are the marginal effects of the SNP
+- Here, $\beta_{s,1}^{(m)}$ and $\beta_{s,2}^{(m)}$ are the marginal effects of the SNP 
+- Marginal effects tag effects from nearby causal SNPs with taggability as a function of ancestry-specific LD with causal SNPs
+- Heterogeneity in marginal effects by local ancestry can be induced even if causal effects are the same
 
 
+## Evaluation of genetic effects consistency at individual variant with marginal effects
 
+- Jointly estimate $\beta_{s,1}^{(m)}$ and $\beta_{s,2}^{(m)}$ with least squares  
+- Hypothesis testing by comparing above model to:
+
+$$y = C\alpha + (g_{s,1} + g_{s,2})\beta_{s}^{(m)} + \epsilon$$
+
+
+## Marginal effects-based methods for estimating heterogeneity 
+
+- Inputs: estimated marginal effects $\widehat{\beta_{s,1}^{(m)}}$ and $\widehat{\beta_{s,2}^{(m)}}$ and their standard errors  
+- Calculations:  
+  - Pearson Correlation  
+  - OLS Regression Slope: $$\widehat{\beta_{s,1}^{(m)}} \sim \widehat{\beta_{s,2}^{(m)}}$$  
+    - Fails to model errors in independent variable  
+    - Assumes homogenous errors in dependent variable across SNPs  
+  - Deming Regression Slope: $$\widehat{\beta_{s,1}^{(m)}} \sim \widehat{\beta_{s,2}^{(m)}}$$ with SEs  
+    -  Deming regression models heterogeneous errors in both independent and dependent variables 
+    -  More robust than above methods  
+
+## Deming Regression
+
+- Inputs: $y_i$ and $x_i$, $\sigma_{x, i}$ and $\sigma_{y, i}$ for $i = 1, \ldots, n$  
+- Optimizes the following objective function:
+
+$$\min_{\beta, \alpha, \delta_1, \ldots, \delta_n, \epsilon_1, \ldots, \epsilon_n} \sum_{i=1}^n \left[ \frac{\epsilon_i^2}{\sigma^2_{y,i}} + \frac{\delta_i^2}{\sigma^2_{x, j}} \right]$$
+
+subject to: 
+
+$$y_i + \epsilon_i = \alpha + \beta (x_i + \delta_i)$$
+
+for $i = 1, \ldots, n$
 
 
