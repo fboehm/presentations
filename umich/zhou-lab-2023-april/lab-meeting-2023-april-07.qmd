@@ -1,7 +1,10 @@
 ---
-title: ""
+title: "Causal effects on complex traits are similar for common variants across segments of different continental ancestries within admixed individuals"
 author: "Presented by Fred Boehm"
-format: 
+date: "April 7, 2023"
+format:
+  beamer: default
+  pptx: default 
   revealjs:
     incremental: true
     smaller: true
@@ -9,13 +12,43 @@ format:
     theme: blood
 ---
 
+
+# Introduction
+
+
+## Motivation
+
+- Individuals of admixed ancestries inherit a mosaic of local ancestry segments   
+- Offers the opportunity to investigate the similarity of genetic effects on traits across ancestries in a single population   
+
+## Main conclusions
+
+- After analyzing 38 complex traits in 53,001 African-European individuals:  
+  - very high correlations of causal effects across local ancestries
+  - meta-analysis $r_{admix} = 0.95$
+
+
+## Figure 1
+
+```{r, echo = FALSE, fig.cap = "Concepts of estimating similarity in the causal effects across local ancestries"}
+fig_file <- here::here("umich", "zhou-lab-2023-april", "figures", "41588_2023_1338_Fig1_HTML.png")
+knitr::include_graphics(fig_file)
+```
+
+
+
+
+# Statistical models
+
+
 ## Phenotype model for admixed individuals
 
 For individual $i = 1, \ldots, N$, SNPs $s = 1, \ldots, S$, and ancestries $k = 1, 2$, we have
 
-$$g_{i,s,k} = x_{i,s,M}1_{y_{i,s,M} = k} + x_{i,s,P}1_{y_{i,s,P} = k}$$
+$$g_{i,s,k} = x_{i,s,M}1_{(\gamma_{i,s,M} = k)} + x_{i,s,P}1_{(\gamma_{i,s,P} = k)}$$
 
-- $g_{i,s,k}$ encodes allele counts that are specific to the local ancestry
+- $x_{i,s,M}$ and $x_{i,s,P}$ are the number of minor alleles in maternal and paternal haplotypes, respectively  
+- $g_{i,s,k}$ encodes allele counts that are specific to the local ancestry  
 
 ## Phenotype model for admixed individuals
 
@@ -99,9 +132,13 @@ $$y \sim N(C\alpha, \sigma_g^2 (K_1 + r_{admix} K_2) + \sigma_e^2 I)$$
 ## Evaluation of genome-wide genetic effects consistency
 
 - While MLE of $(\alpha, \sigma_g^2, r_{admix}, \sigma_e^2)$ can be found by maximizing $L(\alpha, \sigma_g^2, r_{admix}, \sigma_e^2)$, the constraint that $|r_{admix}| \leq 1$ is not easy to enforce
-- Authors use profile likelihood instead:
+- Authors use profile likelihood instead: 
 
-$L_p(r_{admix}) = max_{(\alpha, \sigma_g^2, \sigma_e^2)}L(\alpha, \sigma_g^2, r_{admix}, \sigma_e^2)$
+$L_p(r_{admix}) = \max_{(\alpha, \sigma_g^2, \sigma_e^2)}L(\alpha, \sigma_g^2, r_{admix}, \sigma_e^2)$
+
+
+## Evaluation of genome-wide genetic effects consistency
+
 - Perform grid search over $r_{admix}$ values to maxiximize $L_p(r_{admix})$
 - For each candidate $r_{admix}$, 
   - compute $K_1 + r_{admix}K_2$
@@ -123,6 +160,16 @@ $$y = C\alpha + g_{s,1}\beta_{s,1}^{(m)} + g_{s,2}\beta_{s,2}^{(m)} + \epsilon$$
 - Heterogeneity in marginal effects by local ancestry can be induced even if causal effects are the same
 
 
+## Figure 4: Induced heterogeneities in marginal effects across local ancestries
+
+```{r, echo = FALSE, fig.cap = "Induced heterogeneities in marginal effects across local ancestries", fig.align='center', out.width='100%'}
+
+fig_file <- here::here("umich", "zhou-lab-2023-april", "figures", "41588_2023_1338_Fig4_HTML.png")
+knitr::include_graphics(fig_file)
+```
+
+
+
 ## Evaluation of genetic effects consistency at individual variant with marginal effects
 
 - Jointly estimate $\beta_{s,1}^{(m)}$ and $\beta_{s,2}^{(m)}$ with least squares  
@@ -134,7 +181,7 @@ $$y = C\alpha + (g_{s,1} + g_{s,2})\beta_{s}^{(m)} + \epsilon$$
 ## Marginal effects-based methods for estimating heterogeneity 
 
 - Inputs: estimated marginal effects $\widehat{\beta_{s,1}^{(m)}}$ and $\widehat{\beta_{s,2}^{(m)}}$ and their standard errors  
-- Calculations:  
+- 3 approaches:  
   - Pearson Correlation  
   - OLS Regression Slope: $$\widehat{\beta_{s,1}^{(m)}} \sim \widehat{\beta_{s,2}^{(m)}}$$  
     - Fails to model errors in independent variable  
@@ -155,5 +202,113 @@ subject to:
 $$y_i + \epsilon_i = \alpha + \beta (x_i + \delta_i)$$
 
 for $i = 1, \ldots, n$
+
+## Deming Regression
+
+- Notably, Deming regression slope produces symmetric results for the two regression orders  
+- Can still produce biased errors if the standard errors are misspecified  
+- SEs of $\alpha$ and $\beta$ can be bootstrapped  
+
+
+# Simulation studies
+
+## Simulation studies
+
+- To include local ancestry in estimating effect heterogeneity:
+
+$$y = l_s \beta_{s,lanc}^{(m)} + g_{s,1}\beta_{s,1}^{(m)} + g_{s,2}\beta_{s,2}^{(m)} + c^T\alpha + \epsilon$$
+
+- $\beta_{s,lanc}^{(m)}$: local ancestry effect  
+
+## Simulation studies
+
+- For "local ancestry regressed":
+
+$$y = l_s \beta_{s,lanc}^{(m)} + g_{s,1}\beta_{s,1}^{(m)} + g_{s,2}\beta_{s,2}^{(m)} + \epsilon$$
+
+- First estimate $\beta_{s,lanc}^{(m)}$ by regressing $y$ on $l_s$  
+- Second, estimate $\beta_{s,1}^{(m)}, \beta_{s,2}^{(m)}$ by regressing 
+$y - \widehat{\beta_{s,lanc}^{(m)}}$ on $g_{s,1}$ and $g_{s,2}$
+
+
+## Simulations studies
+
+- To assess impact of including local ancestry term when applying HET test:
+  - Randomly select 1000 SNPs on Chr 1 from PAGE genotype data  
+  - Simulate traits with a single causal SNP, using each of the 1000 SNPs as the causal SNP  
+    - Simulate quantitative traits with different values of $\beta_{Eur}:\beta_{Afr}$: $(1.0, 1.05, 1.10, 1.15, 1.20)$  
+  - Scale effects such that the causal SNP explains the correct amount of heritability  
+  - For each causal SNP, repeat simulations of effects and random error 30 times  
+  - Apply the different strategies for including local ancestry to the simulated traits  
+  - Get p-values for HET testing $H_0: \beta_{eur} = \beta_{afr}$ 
+  - Included top PCs as covariates  
+
+
+## Simulations studies
+
+- Evaluate FPR or HET test power by subsampling without replacement:
+  - Draw 100 random samples, each with 500 SNPs chosen from the pool of 1000 SNPs and 30 simulations  
+  - This approach accounts for randomness from both random errors and SNP MAFs  
+  - Calculated FPR for each sample of 500 SNPs  
+    - Obtained empirical distributions of FPR   
+    - Calculated mean & SE from empirical distribution  
+
+## Figure 5
+
+```{r, echo = FALSE, fig.cap = "Pitfalls of including local ancestry in estimating heterogeneity", fig.align='center', out.width='100%'}
+fig_file <- here::here("umich", "zhou-lab-2023-april", "figures", "41588_2023_1338_Fig5_HTML.png")
+knitr::include_graphics(fig_file)
+```
+
+
+# Data Analysis
+
+## Data Analysis
+
+- Meta-analyzed 3 large studies: PAGE, UKB, and AoU
+
+
+
+## Figure 3
+
+```{r, echo = FALSE, fig.cap = "Similarity of causal effects and marginal effects across local ancestries from PAGE, UKB, and AoU", fig.align='center', out.width='100%'}
+
+fig_file <- here::here("umich", "zhou-lab-2023-april", "figures", "41588_2023_1338_Fig3_HTML.png")
+knitr::include_graphics(fig_file)
+```
+
+
+
+
+# Discussion
+
+
+## Discussion
+
+- Methods for heterogeneity by ancestry estimation from marginal GWAS SNP effects are susceptible to inflated heterogeneity estimates  
+- HET test may yield false positives when causal variants unknown     
+- Deming regression robust in low polygenicity settings; susceptible to inflated heterogeneity estimates in high polygenicity settings  
+- OLS Sl pe method biased due to failure to account for uncertainty in estimated effects  
+
+
+
+
+## Limitations
+
+- SNP MAF threshold of 0.005 for both ancestries  
+  - Simulations revealed that omission of rare variants could lead to downward bias in $r_{admix}$  
+  - Rare & population-specific causal variants can lead to upward bias in $r_{admix}$  
+- Limited consideration to two-way admixed individuals (African and European)    
+  - Extension to 3-way admixed individuals requires additional modeling due to error in local ancestry inference  
+- Extend methods to estimate correlations in causal effects stratified by functional annotations  
+- Deming regression not fully robust to high polygenicity settings  
+- Meta-analyzed 3 studies: PAGE, UKB, and AoU
+  - Large SEs for individual traits  
+
+
+
+
+
+
 
 
