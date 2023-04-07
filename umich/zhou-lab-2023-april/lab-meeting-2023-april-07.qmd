@@ -66,8 +66,61 @@ $$
 
 - Define correlation of genetic effects as 
 
-$$r_{admix} = \frac{\rho_g}{\sigma_g}$$
+$$r_{admix} = \frac{\rho_g}{\sigma_g^2}$$
 
 - $r_{admix} = 1$ implies that $\beta_{s,1} = \beta_{s,2}$ for all SNPs $s$
 - $r_{admix} < 1$ indicates differences in causal effects between ancestries
+
+## Specifying $\tau_s$ under different heritability models
+
+- $\tau_s$ parameters model the coupling of SNP effects variance with MAF, local LD or other functional annotations
+- Previous research has shown that genetic correlation estimation is robust to heritability model choice
+- Present work's authors mainly use frequency-dependent model for both simulations and real data analyses
+  - set $\tau^2_s \propto \left( f_s (1-f_s)\right)^{\alpha}$
+  - $f_s$ is MAF of SNP $s$
+  - $\alpha$ set to fixed value of $- 0.38$
+
+## Evaluation of genome-wide genetic effects consistency
+
+- Marginalize over random effects $\beta_1$ and $\beta_2$ to obtain
+
+$$y \sim N\left(C\alpha, \sigma_g^2 \frac{G_1 T G_1^T + G_2 T G_2^T}{S} + \rho_g \frac{G_1 T G_2^T + G_2 T G_1^T}{S} + \sigma_e^2 I\right)$$
+
+- $T$ is a diagonal matrix with $T_{ss} = \tau_s^2$ for all $s$
+
+## Evaluation of genome-wide genetic effects consistency    
+
+- Let $K_1 = \frac{G_1 T G_1^T + G_2 T G_2^T}{S}$ and $K_2 = \frac{G_1 T G_2^T + G_2 T G_1^T}{S}$
+- Write $\rho_g = \sigma_g^2 r_{admix}$ to get 
+
+$$y \sim N(C\alpha, \sigma_g^2 (K_1 + r_{admix} K_2) + \sigma_e^2 I)$$
+
+
+## Evaluation of genome-wide genetic effects consistency
+
+- While MLE of $(\alpha, \sigma_g^2, r_{admix}, \sigma_e^2)$ can be found by maximizing $L(\alpha, \sigma_g^2, r_{admix}, \sigma_e^2)$, the constraint that $|r_{admix}| \leq 1$ is not easy to enforce
+- Authors use profile likelihood instead:
+
+$L_p(r_{admix}) = max_{(\alpha, \sigma_g^2, \sigma_e^2)}L(\alpha, \sigma_g^2, r_{admix}, \sigma_e^2)$
+- Perform grid search over $r_{admix}$ values to maxiximize $L_p(r_{admix})$
+- For each candidate $r_{admix}$, 
+  - compute $K_1 + r_{admix}K_2$
+  - solve for $(\alpha, \sigma_g^2, \sigma_e^2)$ for a single variance component model with GCTA
+  - in practice, compute $L_p(r_{admix})$ for $r_{admix} \in \lbrace 0, 0.05, 0.1, \ldots, 1\rbrace$
+  - use natural cubic splines to interpolate pairs of $(r_{admix}, L_p(r_{admix}))$ to get a smooth curve
+  - set $\widehat{r_{admix}}$ to value that maximizes the likelihood curve
+  - set credible interval as highest posterior density interval (assuming prior $U(0,1)$ for $r_{admix}$) 
+
+
+## Evaluation of genetic effects consistency at individual variant with marginal effects
+
+- For an individual SNP $s$ and phenotype:
+
+$$y = C\alpha + g_{s,1}\beta_{s,1}^{(m)} + g_{s,2}\beta_{s,2}^{(m)} + \epsilon$$
+
+- Here, $\beta_{s,1}^{(m)}$ and $\beta_{s,2}^{(m)}$ are the marginal effects of the SNP
+
+
+
+
 
