@@ -489,6 +489,11 @@
 <li>grouped and analyzed LOF and predicted-deleterious missense variants per gene<br>
 </li>
 <li>included variants with MAC <span class="math inline">\(\le\)</span> 40, which also had MAF <span class="math inline">\(&lt;\)</span> 0.1% in each continental population in gnomAD v.2 exomes</li>
+</ul>
+</section>
+<section id="rare-variant-association-analyses-1" class="slide level2">
+<h2>Rare variant association analyses</h2>
+<ul>
 <li>GENESIS linear mixed effects models
 <ul>
 <li>adjusting for sex, age, age<span class="math inline">\(^2\)</span>, genotyping array, sequencing batch, ancestral principal components 1 through 20 and a sparse kinship matrix<br>
@@ -507,8 +512,13 @@
 <li>tested whether the addition of the PGS improved the significance of gene–phenotype associations
 <ul>
 <li>two-sided paired Wilcoxon signed-rank tests to assess the improvement in −log10(P) values between two models</li>
-<li>For a given comparison between two models, they included any gene–phenotype pair reaching the cutoff in either model</li>
 </ul></li>
+</ul>
+</section>
+<section id="assessment-of-rare-variant-discovery-yield-1" class="slide level2">
+<h2>Assessment of rare variant discovery yield</h2>
+<pre><code>- For a given comparison between two models, they included any gene–phenotype pair reaching the cutoff in either model</code></pre>
+<ul>
 <li>To quantify the difference, <span class="math inline">\(\bar{d}\)</span>, in −log10(P) values, we repeated this analysis using paired t-tests
 <ul>
 <li>For paired t-tests, we removed any gene–phenotype pair for which the difference between both models fell outside of 4 s.d. from the mean of differences.</li>
@@ -554,6 +564,11 @@
 </li>
 <li>assessed how addition of external PGS affected power in REGENIE</li>
 </ul></li>
+</ul>
+</section>
+<section id="secondary-analyses-of-discovery-power-1" class="slide level2">
+<h2>Secondary analyses of discovery power</h2>
+<ul>
 <li>assessed a LOCO PGS and compared it with the full PGSCS for two traits
 <ul>
 <li>height &amp; LDL cholesterol<br>
@@ -571,9 +586,13 @@
 </li>
 <li>using the total sample GWAS<br>
 </li>
-<li>using the baselineLD_2.2 file from the LDSC software as the linkage disequilibrium reference<br>
-</li>
+<li>using the baselineLD_2.2 file from the LDSC software as the linkage disequilibrium reference</li>
 </ul></li>
+</ul>
+</section>
+<section id="associations-between-trait-heritability-and-pgs-variance-explained-with-yield-improvement-1" class="slide level2">
+<h2>Associations between trait heritability and PGS variance explained with yield improvement</h2>
+<ul>
 <li>linear regression to regress the change in number of trait RVAT associations on the estimated <span class="math inline">\(h^2_{SNP}\)</span></li>
 <li>linear regression to regress the change in number of trait RVAT associations on the R2 of the PGS for its respective traits</li>
 </ul>
@@ -603,7 +622,7 @@
 <img data-src="figures/41588_2023_1342_Fig3_HTML.png" class="r-stretch"><aside class="notes">
 <p>a, Boxplots for per-trait association rate from synonymous RVATs at different α levels across the 65 traits. A median of 18,060 genes were analyzed per trait.</p>
 <p>b, Violin plots for genomic inflation factors for exome-wide RVATs of synonymous variants across the 65 traits.</p>
-<p>c, Violin plots for difference (<span class="math inline">\(\delta\)</span>) in significance of tests from synonymous variant RVATs, comparing models with PGSs versus models without PGSs. Here, the <span class="math inline">\(\delta\)</span> in P values (on the −log10 scale) is displayed for tests reaching P &lt; 0.05 (Methods), with the contributing n gene–trait pairs equaling 75,044, 77,524, 75,838, 89,792, 77,784 and 85,187 (from left to right). Boxplots: center line, median; box limits, upper and lower quartiles; whiskers, 1.5 × interquartile range; points, outliers</p>
+<p>c, Violin plots for difference (<span class="math inline">\(\delta\)</span>) in significance of tests from synonymous variant RVATs, comparing models with PGSs versus models without PGSs. Here, the <span class="math inline">\(\delta\)</span> in P values (on the −log10 scale) is displayed for tests reaching P &lt; 0.05 (Methods), with the contributing n gene–trait pairs equaling 75,044, 77,524, 75,838, 89,792, 77,784 and 85,187 (from left to right).</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -615,6 +634,16 @@
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
+</section>
+<section id="conclusions" class="slide level2">
+<h2>Conclusions</h2>
+<ul>
+<li>adjustment for common variant PGS can improve the yield in gene-based RVATs of quantitative traits<br>
+</li>
+<li>no big increase in FP or genomic inflation<br>
+</li>
+<li>analysis was focused on testing of rare variants (MAF &lt; 0.1<span class="math inline">\(\%\)</span>)</li>
+</ul>
 <div class="footer footer-default">
 
 </div>

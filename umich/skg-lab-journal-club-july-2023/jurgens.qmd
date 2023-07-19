@@ -99,6 +99,10 @@ PRS-CS-auto applies a Bayesian regression framework to identify posterior varian
 - gene-based rare variant collapsing tests across the exome for each trait  
 - grouped and analyzed LOF and predicted-deleterious missense variants per gene  
 - included variants with MAC $\le$ 40, which also had MAF $<$ 0.1% in each continental population in gnomAD v.2 exomes
+
+
+## Rare variant association analyses
+
 - GENESIS linear mixed effects models
     - adjusting for sex, age, age$^2$, genotyping array, sequencing batch, ancestral principal components 1 through 20 and a sparse kinship matrix  
     - With and without PRS as a fixed effect covariate  
@@ -111,6 +115,11 @@ PRS-CS-auto applies a Bayesian regression framework to identify posterior varian
 - Calculate number of gene associations for each model across all traits at various significance thresholds  
 - tested whether the addition of the PGS improved the significance of gene–phenotype associations  
     - two-sided paired Wilcoxon signed-rank tests to assess the improvement in −log10(P) values between two models
+
+## Assessment of rare variant discovery yield
+
+
+
     - For a given comparison between two models, they included any gene–phenotype pair reaching the cutoff in either model
 - To quantify the difference, $\bar{d}$, in −log10(P) values, we repeated this analysis using paired t-tests
     - For paired t-tests, we removed any gene–phenotype pair for which the difference between both models fell outside of 4 s.d. from the mean of differences.
@@ -145,6 +154,13 @@ c, Quantile–quantile plots for PGS-adjusted RVAT of the phenotype height. The 
     - collapsing tests in BOLT-LMM  
     - SKAT-O tests in speed-optimized SAIGE-GENE+  
     - assessed how addition of external PGS affected power in REGENIE
+
+
+
+## Secondary analyses of discovery power
+
+
+
 - assessed a LOCO PGS and compared it with the full PGSCS for two traits
     - height & LDL cholesterol  
     - whether the power improvement was due mainly to proximal or distal common variants  
@@ -156,6 +172,12 @@ c, Quantile–quantile plots for PGS-adjusted RVAT of the phenotype height. The 
     - estimate $h^2_{SNP}$ for each trait  
     - using the total sample GWAS  
     - using the baselineLD_2.2 file from the LDSC software as the linkage disequilibrium reference  
+
+
+
+## Associations between trait heritability and PGS variance explained with yield improvement
+
+
 - linear regression to regress the change in number of trait RVAT associations on the estimated $h^2_{SNP}$
 - linear regression to regress the change in number of trait RVAT associations on the R2 of the PGS for its respective traits
 
@@ -188,10 +210,15 @@ a, Boxplots for per-trait association rate from synonymous RVATs at different α
 
 b, Violin plots for genomic inflation factors for exome-wide RVATs of synonymous variants across the 65 traits. 
 
-c, Violin plots for difference ($\delta$) in significance of tests from synonymous variant RVATs, comparing models with PGSs versus models without PGSs. Here, the $\delta$ in P values (on the −log10 scale) is displayed for tests reaching P < 0.05 (Methods), with the contributing n gene–trait pairs equaling 75,044, 77,524, 75,838, 89,792, 77,784 and 85,187 (from left to right). Boxplots: center line, median; box limits, upper and lower quartiles; whiskers, 1.5 × interquartile range; points, outliers
+c, Violin plots for difference ($\delta$) in significance of tests from synonymous variant RVATs, comparing models with PGSs versus models without PGSs. Here, the $\delta$ in P values (on the −log10 scale) is displayed for tests reaching P < 0.05 (Methods), with the contributing n gene–trait pairs equaling 75,044, 77,524, 75,838, 89,792, 77,784 and 85,187 (from left to right). 
 
 :::
 
 
 
+## Conclusions
+
+- adjustment for common variant PGS can improve the yield in gene-based RVATs of quantitative traits  
+- no big increase in FP or genomic inflation  
+- analysis was focused on testing of rare variants (MAF < 0.1$\%$)
 
