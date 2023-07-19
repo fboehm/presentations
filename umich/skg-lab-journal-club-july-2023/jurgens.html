@@ -348,7 +348,7 @@
 </li>
 <li>2 PGS per GWAS
 <ul>
-<li>C + T (P &lt; 5 × 10−8 and r^2 &lt; 0.001)</li>
+<li>C + T (P &lt; 5 × 10−8 and <span class="math inline">\(r^2\)</span> &lt; 0.001)</li>
 <li>PRS-CS<br>
 </li>
 </ul></li>
@@ -431,6 +431,11 @@
 <li>all European individuals with imputed genotype data</li>
 </ul></li>
 </ul></li>
+</ul>
+</section>
+<section id="common-variant-association-analyses-1" class="slide level2">
+<h2>Common variant association analyses</h2>
+<ul>
 <li>linear whole-genome ridge regression model
 <ul>
 <li>adjusting for sex, age, age<span class="math inline">\(^2\)</span>, genotyping array and ancestral principal components 1 through 20</li>
@@ -470,7 +475,7 @@
 <li>phenotypic variance explained by each PGS for each trait in the null model
 <ul>
 <li>linear regression with unrelated subset of individuals with WES data</li>
-<li>adjusting for sex, age, age2, genotyping array and ancestral principal components 1 through 20</li>
+<li>adjusting for sex, age, age<span class="math inline">\(^2\)</span>, genotyping array and ancestral principal components 1 through 20</li>
 <li>extract <span class="math inline">\(R^2\)</span> values for all models</li>
 <li>variance explained by PGS for a given trait was defined as the improvement in <span class="math inline">\(R^2\)</span> in the model with PGS as compared with the model with no PGS</li>
 </ul></li>
@@ -509,6 +514,25 @@
 <li>For paired t-tests, we removed any gene–phenotype pair for which the difference between both models fell outside of 4 s.d. from the mean of differences.</li>
 </ul></li>
 </ul>
+</section>
+<section id="figure-2" class="slide level2">
+<h2>Figure 2</h2>
+
+<img data-src="figures/41588_2023_1342_Fig2_HTML.png" class="r-stretch"><aside class="notes">
+<p>Bar charts for the improvement in deleterious RVAT yield after PGS adjustment at different <span class="math inline">\(\alpha\)</span> levels, expressed in percentage relative to the no-PGS (reference) model.</p>
+<p>b, Violin plots for the difference (<span class="math inline">\(\delta\)</span>) in significance of tests from deleterious RVATs, comparing models with PGS versus models without PGS. Here, the <span class="math inline">\(\delta\)</span> in P values (on the −log10 scale) is displayed for tests reaching <span class="math inline">\(P &lt; 2.6 × 10−6\)</span> (Methods). The P values and distributions are derived from two-sided paired Wilcoxon signed-rank tests (where n gene–trait pairs equals 263, 270, 258, 260, 265 and 278 from left to right), while the <span class="math inline">\(\bar d\)</span> values plotted above the violins are derived from two-sided paired t-tests (after removing outliers). The left plot shows all results, while the right plot is capped at y = 10 for clarity.</p>
+<p>c, Quantile–quantile plots for PGS-adjusted RVAT of the phenotype height. The left plot shows expected versus observed P values for the model with no PGS adjustment, while the second and third plots show results for PGSlead-SNP (out-sample) and PGSCS (out-sample), respectively. Exome-wide significant genes are annotated with gene names; genes highlighted in bold were only identified after PGS adjustment. <span class="math inline">\(\bar d\)</span>, estimated paired group difference; <span class="math inline">\(\delta\)</span>, difference; <span class="math inline">\(\alpha\)</span>, significance cutoff. Ref, reference model (that is, the baseline model without inclusion of PGS).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="secondary-analyses-of-discovery-power" class="slide level2">
 <h2>Secondary analyses of discovery power</h2>
@@ -572,6 +596,25 @@
 <li><span class="math inline">\(\lambda_{GC}\)</span> was computed as the median of the observed <span class="math inline">\(\chi^2\)</span> values divided by the median of the expected <span class="math inline">\(\chi^2\)</span> values under the null hypothesis</li>
 </ul></li>
 </ul>
+</section>
+<section id="figure-3" class="slide level2">
+<h2>Figure 3</h2>
+
+<img data-src="figures/41588_2023_1342_Fig3_HTML.png" class="r-stretch"><aside class="notes">
+<p>a, Boxplots for per-trait association rate from synonymous RVATs at different α levels across the 65 traits. A median of 18,060 genes were analyzed per trait.</p>
+<p>b, Violin plots for genomic inflation factors for exome-wide RVATs of synonymous variants across the 65 traits.</p>
+<p>c, Violin plots for difference (<span class="math inline">\(\delta\)</span>) in significance of tests from synonymous variant RVATs, comparing models with PGSs versus models without PGSs. Here, the <span class="math inline">\(\delta\)</span> in P values (on the −log10 scale) is displayed for tests reaching P &lt; 0.05 (Methods), with the contributing n gene–trait pairs equaling 75,044, 77,524, 75,838, 89,792, 77,784 and 85,187 (from left to right). Boxplots: center line, median; box limits, upper and lower quartiles; whiskers, 1.5 × interquartile range; points, outliers</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 <div class="footer footer-default">
 
 </div>
