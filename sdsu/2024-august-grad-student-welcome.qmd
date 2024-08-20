@@ -12,10 +12,20 @@ format:
 
 ## Research Mission
 
-To develop tools and methods to enable clinical applications of human genetics discoveries
+To develop statistical tools and methods to enable clinical applications of human genetics discoveries
 
 - **Example**: Epidemiology studies identified about a dozen risk factors for heart attacks, and clinicians now assess them in many patients to quantitatively assess heart attack risk in a patient.  
 - Human genetics studies have identified hundreds of genetic variants that associate with heart attacks. Can we create a *better* risk predictor by combining epidemiology and human genetics discoveries?
+
+
+## Example Projects
+
+1. **Multivariate longitudinal modeling of biobank traits**: Many genetic association studies examine traits at a single time point (or averaged over time). By leveraging longitudinal nature of measurements like systolic blood pressure (and other ehr data) we might have more power to identify genes that contribute to disease-related traits (like heart attack occurrence)  
+
+2. 
+
+
+## Mentoring research students
 
 
 
