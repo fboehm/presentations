@@ -1,0 +1,27 @@
+---
+title: "Statistics & Human Genetics at South Dakota State University"
+author: "Fred Boehm (Frederick.Boehm@sdstate.edu)"
+format:
+  revealjs:
+    slide-number: true
+    menu:
+      side: right
+      width: wide
+---
+
+
+## Research Mission
+
+To develop tools and methods to enable clinical applications of human genetics discoveries
+
+- **Example**: Epidemiology studies identified about a dozen risk factors for heart attacks, and clinicians now assess them in many patients to quantitatively assess heart attack risk in a patient.  
+- Human genetics studies have identified hundreds of genetic variants that associate with heart attacks. Can we create a *better* risk predictor by combining epidemiology and human genetics discoveries?
+
+
+
+
+## Genome-wide association studies (GWAS) in Biobanks 
+
+- Identify variant-disease associations in tens or hundreds of thousands of people
+
+
