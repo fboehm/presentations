@@ -1,7 +1,8 @@
 ---
-title: "Welcome to South Dakota State University"
+title: "Welcome to South Dakota State University!"
 format:
   revealjs:
+    embed-resources: true	
     slide-number: true
     menu:
       side: right
