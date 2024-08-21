@@ -1,6 +1,5 @@
 ---
-title: "Statistics & Human Genetics at South Dakota State University"
-author: "Fred Boehm (Frederick.Boehm@sdstate.edu)"
+title: "Welcome to South Dakota State University"
 format:
   revealjs:
     slide-number: true
@@ -10,28 +9,66 @@ format:
 ---
 
 
-## Research Mission
 
-To develop statistical tools and methods to enable clinical applications of human genetics discoveries
 
-- **Example**: Epidemiology studies identified about a dozen risk factors for heart attacks, and clinicians now assess them in many patients to quantitatively assess heart attack risk in a patient.  
-- Human genetics studies have identified hundreds of genetic variants that associate with heart attacks. Can we create a *better* risk predictor by combining epidemiology and human genetics discoveries?
+## Genetics & Statistics Research Mission
+
+```{r}
+
+```
+
+
+```{css}
+<style>
+    .reveal section p {
+    display: inline-block;
+    font-size: 0.6em;
+    line-height: 1.2em;
+    vertical-align: top;
+  }
+</style>
+```
+
+
+
+To develop statistical methods and software tools to enable clinical applications of human genetics discoveries
+
+![]( NRCARDIO-Mar20-Collection-1-9de77e4a0eec28d5411d31eb78510263.png)
 
 
 ## Example Projects
 
-1. **Multivariate longitudinal modeling of biobank traits**: Many genetic association studies examine traits at a single time point (or averaged over time). By leveraging longitudinal nature of measurements like systolic blood pressure (and other ehr data) we might have more power to identify genes that contribute to disease-related traits (like heart attack occurrence)  
+1. **Which PRS methods perform well when combined with epidemiological risk factors?** 
 
-2. 
-
-
-## Mentoring research students
+![](hf.png){.absolute width=150% }
 
 
+## Example Projects
+
+2. **Multivariate longitudinal modeling of biobank traits**  
+
+3. **Joint modeling of longitudinal and time-to-event traits in biobanks**
+
+4. **Can we use genetics-based risk predictors in specific patient populations to guide treatment decisions?**
 
 
-## Genome-wide association studies (GWAS) in Biobanks 
+## Opportunities
 
-- Identify variant-disease associations in tens or hundreds of thousands of people
+- Collaborate with geneticists & clinicians  
+- Develop statistical modeling skills, including Bayesian hierarchical models  
+- Statistical computing skills development, including computing with sample sizes over 100,000 
 
+## About Fred
+
+- Eager to work with research students  
+- Room 254 (Chicoine AME) - please stop by any time   
+- Email: <Frederick.Boehm@sdstate.edu>  
+- Github: <https://github.com/fboehm>  
+- Google Scholar: <https://scholar.google.com/citations?user=k7PBnv4AAAAJ&hl=en>  
+- Instructor for Time series statistics class in Fall 2024    
+
+
+## References
+
+https://media.springernature.com/w580h326/nature-cms/uploads/collections/NRCARDIO-Mar20-Collection-1-9de77e4a0eec28d5411d31eb78510263.png
 
