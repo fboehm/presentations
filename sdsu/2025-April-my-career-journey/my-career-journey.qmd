@@ -1,0 +1,122 @@
+---
+title: "My Career Journey"
+date: "April 9, 2025"
+date-format: full
+format:
+  revealjs:
+    embed-resources: true
+    incremental: true   
+    logo: Logo.jpg
+    footer: "Fred Boehm (<Frederick.Boehm@sdstate.edu>)"
+author: "Fred Boehm"
+---
+
+## Current Position
+
+- Assistant Professor of Statistics at South Dakota State University (August 2024 to present)  
+- Advanced Degrees: M.D., Ph.D. (Statistics), M.S. (Population Health Sciences)
+
+
+
+
+## College studies in Chemistry
+
+- University of Wisconsin-Madison (1996 - 2001)  
+- B.S. in Chemistry, Mathematics, Biochemistry  
+- Research with three chemistry professors:  
+    - Edwin Sibert (1996 to 1997)   
+    - Hyuk Yu (1998)  
+    - Laura Kiessling  (1998 to 2001)  
+
+
+## Graduate studies in Chemistry
+
+- University of California, Berkeley (2001)  
+- Organic Chemistry  
+- National Science Foundation Graduate Research Fellowship  
+- No degree earned  
+- Left early due to isolation and depressive episode  
+
+## Graduate studies in Population Health Sciences 
+
+- University of Wisconsin-Madison (2002 to 2007)  
+- M.S. degree  
+- Courses in epidemiology and biostatistics  
+
+## M.D. studies
+
+- University of Wisconsin-Madison (2003 to 2007)  
+- Earned M.D., but no license or residency  
+- Years 1 & 2: Lectures & labs  
+- Years 3 & 4: Clerkships in hospitals and clinics  
+
+# Traditional M.D. Careers 
+
+## MD Training
+
+- 4 years of medical school  
+- 3 to 10 years of residency training  
+- Fellowship training (1 year to many)  
+- Medical license after year 1 of residency  
+- Board eligibility and board certification after residency completion  
+
+
+
+
+# Back to my story 
+
+## Training in Statistical Genetics in Seattle
+
+- University of Washington's Department of Biostatistics (2007 to 2010)  
+- Research in statistical genetics & Genome-wide association studies  
+- Courses in statistics & biostatistics   
+
+## Ph.D. studies in Statistics  
+
+- University of Wisconsin-Madison (2011 to 2019)  
+- Earned Ph.D. in Statistics  
+- Thesis research in statistical genetics for model organisms (mice)  
+- Extensive training in best practices for teaching, too  
+
+
+## Postdoctoral Training at UMass Medical School 
+
+- Worcester, Massachusetts  
+- 2019 to 2021  
+- Extended my Ph.D. research   
+
+
+## Postdoctoral Training at University of Michigan
+
+- Department of Biostatistics   
+- Statistical methods for human genetics studies  
+- Genome-wide association studies, Polygenic risk scores, Mendelian Randomization & causal inference  
+
+## Assistant Professor of Statistics at South Dakota State University 
+
+- August 2024 to present  
+- Research in statistics and genetics 
+- Teaching: Time series analysis (Fall '24) & Statistical methods (Spring '25)
+
+## Shiny App for Mendelian Randomization studies 
+
+- Interactive web-based software application  
+- User chooses scientific question   
+    - "Does high blood pressure cause chronic kidney failure?"
+- Promotes reproducibility & rigor by providing user with R code to perform the analysis  
+
+
+
+
+## Statistical Methods for Human Genetics 
+
+- Genome-wide association studies  
+- Polygenic risk scores 
+- Causal inference & Mendelian randomization  
+
+## Thank you!
+
+Fred Boehm (<Frederick.Boehm@sdstate.edu>)   
+Department of Mathematics and Statistics 
+Office: Architecture, Mathematics, and Engineering Room 254  
+
