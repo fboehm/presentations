@@ -60,6 +60,13 @@ author: "Fred Boehm"
 - Medical license after year 1 of residency  
 - Board eligibility and board certification after residency completion  
 
+## MD/PhD Training
+
+- Combined degree programs granting both degrees after 8 to 9 years  
+- NIH funds tuition remission & stipend for both programs  
+- Admissions committees typically want significant research experiences  
+- Typically 2 years of MD program, then 4 or 5 years of PhD program, before returning for MD years 3 & 4  
+
 
 
 
@@ -92,11 +99,13 @@ author: "Fred Boehm"
 - Statistical methods for human genetics studies  
 - Genome-wide association studies, Polygenic risk scores, Mendelian Randomization & causal inference  
 
+
 ## Assistant Professor of Statistics at South Dakota State University 
 
-- August 2024 to present  
-- Research in statistics and genetics 
-- Teaching: Time series analysis (Fall '24) & Statistical methods (Spring '25)
+- August 2024 to present   
+- Research in statistics and genetics    
+- Teaching: Time series analysis (Fall '24) & Statistical methods (Spring '25)  
+
 
 ## Shiny App for Mendelian Randomization studies 
 
@@ -106,17 +115,26 @@ author: "Fred Boehm"
 - Promotes reproducibility & rigor by providing user with R code to perform the analysis  
 
 
+## Bison Genomics
+
+- DNA sequence data from 96 bison from Custer State Park  
+- Estimate genetic diversity for ecological and agricultural purposes  
+
+
 
 
 ## Statistical Methods for Human Genetics 
 
 - Genome-wide association studies  
-- Polygenic risk scores 
-- Causal inference & Mendelian randomization  
+- Polygenic risk scores  
+- Causal inference & Mendelian randomization   
 
 ## Thank you!
 
 Fred Boehm (<Frederick.Boehm@sdstate.edu>)   
-Department of Mathematics and Statistics 
-Office: Architecture, Mathematics, and Engineering Room 254  
+Department of Mathematics and Statistics  
+Office: Architecture, Mathematics, and Engineering Room 254    
+
+Slides: <https://github.com/fboehm/presentations/tree/master/sdsu/2025-April-my-career-journey>
+
 
