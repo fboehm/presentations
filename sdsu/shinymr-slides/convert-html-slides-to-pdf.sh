@@ -1,0 +1,1 @@
+python3 print-revealjs-slides-to-pdf.py slides-shinymr.html out.pdf

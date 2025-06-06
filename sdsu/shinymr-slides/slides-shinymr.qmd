@@ -1,7 +1,8 @@
 ---
 title: "A Shiny App for Rigorous and Reproducible Mendelian Randomization"
+subtitle: "Eastern South Dakota Research Symposium"
 author: "Fred Boehm"
-date: "May 21, 2025"
+date: "June 11, 2025"
 date-format: full
 embed-resources: true
 format: 
