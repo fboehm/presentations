@@ -4,6 +4,7 @@ author: "Frederick J. Boehm & Ji Hoon Park"
 format:
   html:
     css: styles.css
+    self-contained: true
     page-layout: custom
 bibliography: references.bib
 csl: apa.csl
