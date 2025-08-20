@@ -1,8 +1,8 @@
 ---
-title: "A Shiny App for Rigorous and Reproducible Mendelian Randomization"
-subtitle: "Eastern South Dakota Research Symposium"
+title: "shinyMR: A Shiny App for Rigorous and Reproducible Mendelian Randomization"
+subtitle: "Joint Statistical Meetings"
 author: "Fred Boehm"
-date: "June 11, 2025"
+date: "August 4, 2025"
 date-format: full
 embed-resources: true
 format: 
@@ -50,6 +50,11 @@ format:
 <!-- insert causal diagram: https://en.wikipedia.org/wiki/Mendelian_randomization#/media/File:Directed_acylic_graph_for_Mendelian_randomization_Wikipedia_page.png -->
 
 
+## Motivation for a Shiny App
+
+
+- Many recent reports have questioned the scientific rigor of published MR studies  
+- To promote rigor and reproducibility, shinyMR users automatically perform MR analysis and sensitivity analyses to evaluate the robustness of MR assumptions    
 
 
 
@@ -67,11 +72,6 @@ format:
 
 
 
-## Motivation for a Shiny App
-
-
-- Many recent reports have questioned the scientific rigor of published MR studies  
-- To promote rigor and reproducibility, users can download R code to perform their MR analyses  
 
 
 ## Shiny App Design Considerations 
@@ -82,15 +82,39 @@ format:
 - Users must manually ensure that there is no subject overlap in the two GWAS  
 
 
-
-## Development version of the app
-
-![](Screenshot%202025-05-17%20183242.png)
+# Development version of the app
 
 
+## Choosing GWASs from OpenGWAS Database
+
+![](../shinymr-poster/choose-traits-cropped.png)
+
+
+
+## Extract SNP instruments  
+
+![](../shinymr-poster/outcome-data-cropped.png)
+
+
+
+## Perform MR analysis
+
+![](../shinymr-poster/plot-cropped.png)
 
 
 
 
-## Thank you!
+## Perform sensitivity analyses  
+
+![](../shinymr-poster/sensitivity-plots-cropped.png)
+
+
+
+## Download a reproducible quarto document  
+
+![](../shinymr-poster/qmd-pic-cropped.png)
+
+
+# Thank you!
+
 

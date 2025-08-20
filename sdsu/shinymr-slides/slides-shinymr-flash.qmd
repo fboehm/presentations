@@ -1,0 +1,52 @@
+---
+title: "shinyMR: A Shiny App for Rigorous and Reproducible Mendelian Randomization"
+subtitle: "New Researchers Conference"
+author: "Fred Boehm"
+date: "July 31, 2025"
+date-format: full
+embed-resources: true
+format: 
+    revealjs: 
+        theme: solarized
+        footer: "Fred Boehm <Frederick.Boehm@sdstate.edu>"
+---
+
+
+## Collaborative Research with Ji Hoon Park  
+
+
+![](park-photo.jpg){.nostretch fig-align="center" width="200px"}
+
+
+
+
+
+## Motivation for a Shiny App
+
+
+- Many recent reports have questioned the scientific rigor of published MR studies  
+- To promote rigor and reproducibility, shinyMR users automatically perform MR analysis and sensitivity analyses to evaluate the robustness of MR assumptions    
+
+
+
+
+
+
+
+
+## Shiny App Design Considerations 
+
+
+- Interface with openGWAS database  
+- Require sensitivity analyses to assess MR assumptions  
+- Users must manually ensure that there is no subject overlap in the two GWAS  
+
+
+## Download a reproducible quarto document  
+
+![](../shinymr-poster/qmd-pic-cropped.png)
+
+
+# Thank you!
+
+

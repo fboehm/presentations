@@ -1,0 +1,36 @@
+---
+title: "Two-sample MR Analysis"
+format: html
+---
+
+```{r}
+library(TwoSampleMR)
+
+# Selected traits
+exp_id <- "ebi-a-GCST90092992"
+out_id <- "ukb-d-I9_MI"
+
+# Extract instruments and outcome data
+exposure <- extract_instruments(outcomes = exp_id)
+outcome <- extract_outcome_data(snps = exposure$SNP, outcomes = out_id)
+
+# Harmonize datasets
+harmonised <- harmonise_data(exposure, outcome)
+
+# Perform MR analysis
+mr_results <- mr(harmonised)
+mr_results
+
+# Plot MR results
+mr_scatter_plot(mr_results, harmonised)
+
+# Sensitivity analyses
+singlesnp_results <- mr_singlesnp(harmonised)
+mr_funnel_plot(singlesnp_results)
+
+loo_results <- mr_leaveoneout(harmonised)
+mr_leaveoneout_plot(loo_results)
+
+# Session Info
+sessioninfo::session_info()
+```
