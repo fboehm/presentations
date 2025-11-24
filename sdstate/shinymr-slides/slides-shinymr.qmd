@@ -1,0 +1,120 @@
+---
+title: "shinyMR: A Shiny App for Rigorous and Reproducible Mendelian Randomization"
+subtitle: "Joint Statistical Meetings"
+author: "Fred Boehm"
+date: "August 4, 2025"
+date-format: full
+embed-resources: true
+format: 
+    revealjs: 
+        theme: solarized
+        footer: "Fred Boehm <Frederick.Boehm@sdstate.edu>"
+---
+
+
+## Collaborative Research with Ji Hoon Park  
+
+
+![](park-photo.jpg){.nostretch fig-align="center" width="200px"}
+
+
+
+
+## What is a SNP?
+
+![](SNP.jpg)  <!-- https://www.genome.gov/genetics-glossary/Single-Nucleotide-Polymorphisms-SNPs -->
+
+
+
+## Genome-wide association studies
+
+
+
+- A study to detect genotype-phenotype associations   
+- Involves thousands of subjects with SNP genotypes and phenotypes  
+- GWAS results per SNP are publicly shared    
+
+<!-- insert data structure printed here for my example data -->
+
+![GWAS for kidney stone disease](Manhattan_plot_from_a_GWAS_of_kidney_stone_disease.png)
+
+
+## What is Mendelian Randomization? {.nostretch} 
+
+![](Directed_acylic_graph_for_Mendelian_randomization_Wikipedia_page.png){.nostretch fig-align="center" width="800px"}
+
+
+- Instrumental variable analysis to characterize evidence for a causal effect of the "exposure" (X) on the "outcome" (Y)   
+
+
+<!-- insert causal diagram: https://en.wikipedia.org/wiki/Mendelian_randomization#/media/File:Directed_acylic_graph_for_Mendelian_randomization_Wikipedia_page.png -->
+
+
+## Motivation for a Shiny App
+
+
+- Many recent reports have questioned the scientific rigor of published MR studies  
+- To promote rigor and reproducibility, shinyMR users automatically perform MR analysis and sensitivity analyses to evaluate the robustness of MR assumptions    
+
+
+
+
+
+
+
+## What is Shiny? 
+
+![](shiny-logo.jpg)
+
+
+- An R package that enables users to build an interactive webpage "App"  
+- App can then be deployed on a website for other scientists to use  
+
+
+
+
+
+## Shiny App Design Considerations 
+
+
+- Interface with openGWAS database  
+- Require sensitivity analyses to assess MR assumptions  
+- Users must manually ensure that there is no subject overlap in the two GWAS  
+
+
+# Development version of the app
+
+
+## Choosing GWASs from OpenGWAS Database
+
+![](../shinymr-poster/choose-traits-cropped.png)
+
+
+
+## Extract SNP instruments  
+
+![](../shinymr-poster/outcome-data-cropped.png)
+
+
+
+## Perform MR analysis
+
+![](../shinymr-poster/plot-cropped.png)
+
+
+
+
+## Perform sensitivity analyses  
+
+![](../shinymr-poster/sensitivity-plots-cropped.png)
+
+
+
+## Download a reproducible quarto document  
+
+![](../shinymr-poster/qmd-pic-cropped.png)
+
+
+# Thank you!
+
+

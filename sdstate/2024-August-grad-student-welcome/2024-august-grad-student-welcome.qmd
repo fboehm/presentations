@@ -1,0 +1,75 @@
+---
+title: "Welcome to South Dakota State University!"
+format:
+  revealjs:
+    embed-resources: true	
+    slide-number: true
+    menu:
+      side: right
+      width: wide
+---
+
+
+
+
+## Genetics & Statistics Research Mission
+
+```{r}
+
+```
+
+
+```{css}
+<style>
+    .reveal section p {
+    display: inline-block;
+    font-size: 0.6em;
+    line-height: 1.2em;
+    vertical-align: top;
+  }
+</style>
+```
+
+
+
+To develop statistical methods and software tools to enable clinical applications of human genetics discoveries
+
+![]( NRCARDIO-Mar20-Collection-1-9de77e4a0eec28d5411d31eb78510263.png)
+
+
+## Example Projects
+
+1. **Which PRS methods perform well when combined with epidemiological risk factors?** 
+
+![](hf.png){.absolute width=150% }
+
+
+## Example Projects
+
+2. **Multivariate longitudinal modeling of biobank traits**  
+
+3. **Joint modeling of longitudinal and time-to-event traits in biobanks**
+
+4. **Can we use genetics-based risk predictors in specific patient populations to guide treatment decisions?**
+
+
+## Opportunities
+
+- Collaborate with geneticists & clinicians  
+- Develop statistical modeling skills, including Bayesian hierarchical models  
+- Statistical computing skills development, including computing with sample sizes over 100,000 
+
+## About Fred
+
+- Eager to work with research students  
+- Room 254 (Chicoine AME) - please stop by any time   
+- Email: <Frederick.Boehm@sdstate.edu>  
+- Github: <https://github.com/fboehm>  
+- Google Scholar: <https://scholar.google.com/citations?user=k7PBnv4AAAAJ&hl=en>  
+- Instructor for Time series statistics class in Fall 2024    
+
+
+## References
+
+https://media.springernature.com/w580h326/nature-cms/uploads/collections/NRCARDIO-Mar20-Collection-1-9de77e4a0eec28d5411d31eb78510263.png
+

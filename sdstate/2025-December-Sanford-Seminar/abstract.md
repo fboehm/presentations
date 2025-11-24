@@ -1,0 +1,4 @@
+Exploring Human Biology with Genome-Wide Association Studies
+
+Genome-wide association studies, where one identifies associations between marker genotypes and trait values, have revealed new aspects of human biology over the last twenty years. The GWAS Catalog reports tens of thousands of genotype-phenotype associations and serves as a repository for GWAS results. With the growing number of GWAS, investigators have developed additional methods that leverage GWAS results to study human biology. Mendelian randomization and polygenic scores are two methods that use GWAS results as inputs. Mendelian randomization aims to identify causal relationships between two complex traits. For example, one could ask "Does LDL cholesterol level cause coronary heart disease?" Polygenic scores, on the other hand, use GWAS results to summarize a person's genetic risk for a disease. I'll give an overview of these topics and discuss open research questions in human genetics. 
+
